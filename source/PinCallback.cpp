@@ -2,7 +2,7 @@
 #include "grp/PinType.h"
 
 #include <painting0/Color.h>
-#include <blueprint/Pins.h>
+#include <blueprint/Pin.h>
 
 #include <string>
 
@@ -47,8 +47,8 @@ bool can_type_cast_func(int type_from, int type_to)
     if (type_from == type_to) {
         return true;
     }
-    if (type_from == bp::PINS_ANY_VAR ||
-        type_to == bp::PINS_ANY_VAR) {
+    if (type_from == bp::PIN_ANY_VAR ||
+        type_to == bp::PIN_ANY_VAR) {
         return true;
     }
     return false;
@@ -61,7 +61,7 @@ namespace grp
 
 void InitPinCallback()
 {
-    bp::Pins::SetExtendFuncs({
+    bp::Pin::SetExtendFuncs({
         get_desc_func,
         get_color_func,
         can_type_cast_func

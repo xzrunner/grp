@@ -1,7 +1,7 @@
 #include "grp/Node.h"
 #include "grp/PinType.h"
 
-#include <blueprint/Pins.h>
+#include <blueprint/Pin.h>
 
 #include <rendergraph/Node.h>
 
@@ -52,10 +52,10 @@ void Node::InitPins(const std::string& name)
             switch (s.var.type)
             {
             case rg::VariableType::Any:
-                d.type = bp::PINS_ANY_VAR;
+                d.type = bp::PIN_ANY_VAR;
                 break;
             case rg::VariableType::Port:
-                d.type = bp::PINS_PORT;
+                d.type = bp::PIN_PORT;
                 break;
             case rg::VariableType::Texture:
                 d.type = PIN_TEXTURE;
@@ -74,8 +74,8 @@ void Node::InitPins(const std::string& name)
 	};
 
 	std::vector<PinDesc> input, output;
-    input.push_back({ bp::PINS_PORT, "In" });
-    output.push_back({ bp::PINS_PORT, "Out" });
+    input.push_back({ bp::PIN_PORT, "In" });
+    output.push_back({ bp::PIN_PORT, "Out" });
 	rg2grp(input, imports);
 	rg2grp(output, exports);
 
@@ -90,8 +90,8 @@ void Node::InitPinsImpl(const std::vector<PinDesc>& pins, bool is_input)
 	int idx = 0;
 	for (auto& d : pins)
 	{
-		auto p = std::make_shared<bp::Pins>(is_input, idx++, d.type, d.name, *this);
-		if (!CheckPinsName(*p, dst)) {
+		auto p = std::make_shared<bp::Pin>(is_input, idx++, d.type, d.name, *this);
+		if (!CheckPinName(*p, dst)) {
 			assert(0);
 			return;
 		}

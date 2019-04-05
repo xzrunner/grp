@@ -32,13 +32,13 @@ void GRP::Init()
 	//cb.on_created = [](bp::Node& node, std::vector<n0::SceneNodePtr>& nodes) {
 	//	NodeBuilder::CreateDefaultInputs(nodes, node);
 	//};
-	//cb.on_connecting = [](bp::Pins& from, bp::Pins& to) {
+	//cb.on_connecting = [](bp::Pin& from, bp::Pin& to) {
 	//	NodeHelper::RemoveDefaultNode(to);
 	//};
-	//cb.on_connected = [](bp::Pins& from, bp::Pins& to) {
+	//cb.on_connected = [](bp::Pin& from, bp::Pin& to) {
  //       TypeDeduction::DeduceConn(from, to);
 	//};
- //   cb.on_disconnected = [](bp::Pins& from, bp::Pins& to) {
+ //   cb.on_disconnected = [](bp::Pin& from, bp::Pin& to) {
  //       TypeDeduction::DeduceNode(from.GetParent());
  //       TypeDeduction::DeduceNode(to.GetParent());
  //   };

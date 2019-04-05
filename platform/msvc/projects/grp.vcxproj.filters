@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="view">
+      <UniqueIdentifier>{d556a1a9-e10e-4ee6-8b0f-3dceb4416573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pin">
+      <UniqueIdentifier>{cc51220e-3194-4196-8f1d-34d1a5819eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rtti">
+      <UniqueIdentifier>{bcaeab07-3cea-4b0a-8e5a-99f14066a8ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node">
+      <UniqueIdentifier>{245dfbc9-ca70-48a6-8724-6024021b0397}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\grp\WxNodeProperty.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\grp\GRP.h" />
+    <ClInclude Include="..\..\..\include\grp\PinType.h">
+      <Filter>pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\grp\PinCallback.h">
+      <Filter>pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\grp\RegistNodes.h">
+      <Filter>rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\grp\Node.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\grp\ReflectPropTypes.h">
+      <Filter>rtti</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\GRP.cpp" />
+    <ClCompile Include="..\..\..\source\PinCallback.cpp">
+      <Filter>pin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RegistNodes.cpp">
+      <Filter>rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Node.cpp">
+      <Filter>node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RegistRTTR.cpp">
+      <Filter>rtti</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp">
+      <Filter>rtti</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

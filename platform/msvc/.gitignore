@@ -1,0 +1,5 @@
+grp/
+projects/*
+
+!projects/grp.vcxproj
+!projects/grp.vcxproj.filters

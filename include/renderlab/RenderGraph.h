@@ -5,7 +5,7 @@
 
 namespace bp { class Node; }
 
-namespace grp
+namespace rlab
 {
 
 class RenderGraph

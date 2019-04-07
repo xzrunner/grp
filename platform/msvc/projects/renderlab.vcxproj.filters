@@ -18,37 +18,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\grp\WxNodeProperty.h">
+    <ClInclude Include="..\..\..\include\renderlab\WxNodeProperty.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\GRP.h" />
-    <ClInclude Include="..\..\..\include\grp\PinType.h">
+    <ClInclude Include="..\..\..\include\renderlab\PinType.h">
       <Filter>pin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\PinCallback.h">
+    <ClInclude Include="..\..\..\include\renderlab\PinCallback.h">
       <Filter>pin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\RegistNodes.h">
+    <ClInclude Include="..\..\..\include\renderlab\RegistNodes.h">
       <Filter>rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\Node.h">
+    <ClInclude Include="..\..\..\include\renderlab\Node.h">
       <Filter>node</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\ReflectPropTypes.h">
+    <ClInclude Include="..\..\..\include\renderlab\ReflectPropTypes.h">
       <Filter>rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\NodePreview.h">
+    <ClInclude Include="..\..\..\include\renderlab\NodePreview.h">
       <Filter>node</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\grp\RenderGraph.h">
+    <ClInclude Include="..\..\..\include\renderlab\RenderGraph.h">
       <Filter>trans</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
       <Filter>view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\GRP.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
       <Filter>pin</Filter>
     </ClCompile>
@@ -70,5 +69,6 @@
     <ClCompile Include="..\..\..\source\RenderGraph.cpp">
       <Filter>trans</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\RenderLab.cpp" />
   </ItemGroup>
 </Project>

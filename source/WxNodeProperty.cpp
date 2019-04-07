@@ -1,5 +1,5 @@
-#include "grp/WxNodeProperty.h"
-#include "grp/ReflectPropTypes.h"
+#include "renderlab/WxNodeProperty.h"
+#include "renderlab/ReflectPropTypes.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -14,7 +14,7 @@
 #include <wx/sizer.h>
 #include <wx/propgrid/propgrid.h>
 
-namespace grp
+namespace rlab
 {
 
 WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr)

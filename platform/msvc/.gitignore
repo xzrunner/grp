@@ -1,5 +1,5 @@
-grp/
+renderlab/
 projects/*
 
-!projects/grp.vcxproj
-!projects/grp.vcxproj.filters
+!projects/renderlab.vcxproj
+!projects/renderlab.vcxproj.filters

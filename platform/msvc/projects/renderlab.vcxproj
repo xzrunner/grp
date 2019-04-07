@@ -11,18 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\grp\GRP.h" />
-    <ClInclude Include="..\..\..\include\grp\Node.h" />
-    <ClInclude Include="..\..\..\include\grp\NodePreview.h" />
-    <ClInclude Include="..\..\..\include\grp\PinCallback.h" />
-    <ClInclude Include="..\..\..\include\grp\PinType.h" />
-    <ClInclude Include="..\..\..\include\grp\ReflectPropTypes.h" />
-    <ClInclude Include="..\..\..\include\grp\RegistNodes.h" />
-    <ClInclude Include="..\..\..\include\grp\RenderGraph.h" />
-    <ClInclude Include="..\..\..\include\grp\WxNodeProperty.h" />
+    <ClInclude Include="..\..\..\include\renderlab\Node.h" />
+    <ClInclude Include="..\..\..\include\renderlab\NodePreview.h" />
+    <ClInclude Include="..\..\..\include\renderlab\PinCallback.h" />
+    <ClInclude Include="..\..\..\include\renderlab\PinType.h" />
+    <ClInclude Include="..\..\..\include\renderlab\ReflectPropTypes.h" />
+    <ClInclude Include="..\..\..\include\renderlab\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\renderlab\RenderGraph.h" />
+    <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
+    <ClInclude Include="..\..\..\include\renderlab\WxNodeProperty.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\source\GRP.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodePreview.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />
@@ -30,12 +29,13 @@
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\RenderGraph.cpp" />
+    <ClCompile Include="..\..\..\source\RenderLab.cpp" />
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>6.grp</ProjectName>
+    <ProjectName>6.renderlab</ProjectName>
     <ProjectGuid>{D16C1C98-16E8-4D60-8209-E6AD7C80E918}</ProjectGuid>
-    <RootNamespace>grp</RootNamespace>
+    <RootNamespace>renderlab</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -65,12 +65,12 @@
     <_ProjectFileVersion>15.0.26730.12</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\grp\x86\Debug\</OutDir>
-    <IntDir>..\grp\x86\Debug\obj\</IntDir>
+    <OutDir>..\renderlab\x86\Debug\</OutDir>
+    <IntDir>..\renderlab\x86\Debug\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\grp\x86\Release\</OutDir>
-    <IntDir>..\grp\x86\Release\obj\</IntDir>
+    <OutDir>..\renderlab\x86\Release\</OutDir>
+    <IntDir>..\renderlab\x86\Release\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

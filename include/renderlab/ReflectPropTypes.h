@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace grp
+namespace rlab
 {
 
 // Clear

@@ -1,11 +1,11 @@
-#include "grp/RegistNodes.h"
+#include "renderlab/RegistNodes.h"
 
 #include <painting0/Color.h>
 
 RTTR_REGISTRATION
 {
 
-rttr::registration::class_<grp::Node>("grp::node");
+rttr::registration::class_<rlab::Node>("rlab::node");
 
 rttr::registration::class_<pt0::Color>("pt0_color")
 	.constructor()(rttr::policy::ctor::as_object)
@@ -17,7 +17,7 @@ rttr::registration::class_<pt0::Color>("pt0_color")
 
 }
 
-namespace grp
+namespace rlab
 {
 
 void regist_rttr()

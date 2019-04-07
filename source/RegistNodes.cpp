@@ -1,4 +1,4 @@
-#include "grp/RegistNodes.h"
+#include "renderlab/RegistNodes.h"
 
 #include <ee0/ReflectPropTypes.h>
 #include <blueprint/NodeHelper.h>
@@ -9,7 +9,7 @@
 #include <js/RTTR.h>
 
 #define REGIST_NODE_RTTI(name, prop)                          \
-	rttr::registration::class_<grp::node::name>("grp::"#name) \
+	rttr::registration::class_<rlab::node::name>("rlab::"#name) \
 		.constructor<>()                                      \
 		prop                                                  \
 	;
@@ -21,55 +21,55 @@ RTTR_REGISTRATION
 {
 
 REGIST_NODE_RTTI(Clear,                                            \
-.property("type", &grp::node::Clear::type)                         \
+.property("type", &rlab::node::Clear::type)                         \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
 )                                                                  \
-.property("color", &grp::node::Clear::color)                       \
+.property("color", &rlab::node::Clear::color)                       \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
 )                                                                  \
 )
 
 REGIST_NODE_RTTI(Viewport,                                          \
-.property("x", &grp::node::Viewport::x)                             \
+.property("x", &rlab::node::Viewport::x)                             \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("X"))      \
 )                                                                   \
-.property("y", &grp::node::Viewport::y)                             \
+.property("y", &rlab::node::Viewport::y)                             \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Y"))      \
 )                                                                   \
-.property("w", &grp::node::Viewport::w)                             \
+.property("w", &rlab::node::Viewport::w)                             \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))  \
 )                                                                   \
-.property("h", &grp::node::Viewport::h)                             \
+.property("h", &rlab::node::Viewport::h)                             \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height")) \
 )                                                                   \
 )
 
 REGIST_NODE_RTTI(Texture,                                              \
-.property("filepath", &grp::node::Texture::filepath)                   \
+.property("filepath", &rlab::node::Texture::filepath)                   \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
     rttr::metadata(js::RTTR::FilePathTag(), true),                     \
     rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.png")) \
 )                                                                      \
-.property("type", &grp::node::Texture::type)                           \
+.property("type", &rlab::node::Texture::type)                           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))      \
 )                                                                      \
-.property("width", &grp::node::Texture::width)                         \
+.property("width", &rlab::node::Texture::width)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))     \
 )                                                                      \
-.property("height", &grp::node::Texture::height)                       \
+.property("height", &rlab::node::Texture::height)                       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height"))    \
 )                                                                      \
-.property("format", &grp::node::Texture::format)                       \
+.property("format", &rlab::node::Texture::format)                       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Format"))    \
 )                                                                      \
@@ -78,12 +78,12 @@ REGIST_NODE_RTTI(Texture,                                              \
 REGIST_NODE_RTTI_DEFAULT(RenderTarget)
 
 REGIST_NODE_RTTI(Shader,                                           \
-.property("vert", &grp::node::Shader::vert)                        \
+.property("vert", &rlab::node::Shader::vert)                        \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")), \
     rttr::metadata(ee0::PropLongStringTag(), true)                 \
 )                                                                  \
-.property("frag", &grp::node::Shader::frag)                        \
+.property("frag", &rlab::node::Shader::frag)                        \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")), \
     rttr::metadata(ee0::PropLongStringTag(), true)                 \
@@ -91,7 +91,7 @@ REGIST_NODE_RTTI(Shader,                                           \
 )
 
 REGIST_NODE_RTTI(Bind,                                               \
-.property("channel", &grp::node::Bind::channel)                      \
+.property("channel", &rlab::node::Bind::channel)                      \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Channel")) \
 )                                                                    \
@@ -101,7 +101,7 @@ REGIST_NODE_RTTI_DEFAULT(Unbind)
 
 }
 
-namespace grp
+namespace rlab
 {
 
 void nodes_regist_rttr()

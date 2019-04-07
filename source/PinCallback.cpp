@@ -1,5 +1,5 @@
-#include "grp/PinCallback.h"
-#include "grp/PinType.h"
+#include "renderlab/PinCallback.h"
+#include "renderlab/PinType.h"
 
 #include <painting0/Color.h>
 #include <blueprint/Pin.h>
@@ -19,10 +19,10 @@ std::string get_desc_func(const std::string& name, int type)
     std::string ret = name;
     switch (type)
     {
-    case grp::PIN_TEXTURE:
+    case rlab::PIN_TEXTURE:
         ret += "(T)";
         break;
-    case grp::PIN_RENDERTARGET:
+    case rlab::PIN_RENDERTARGET:
         ret += "(RT)";
         break;
     }
@@ -33,9 +33,9 @@ const pt0::Color& get_color_func(int type)
 {
     switch (type)
     {
-    case grp::PIN_TEXTURE:
+    case rlab::PIN_TEXTURE:
         return COL_TEXTURE;
-    case grp::PIN_RENDERTARGET:
+    case rlab::PIN_RENDERTARGET:
         return COL_RT;
     default:
         return COL_DEFAULT;
@@ -56,7 +56,7 @@ bool can_type_cast_func(int type_from, int type_to)
 
 }
 
-namespace grp
+namespace rlab
 {
 
 void InitPinCallback()

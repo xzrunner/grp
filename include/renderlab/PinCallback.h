@@ -1,6 +1,6 @@
 #pragma once
 
-namespace grp
+namespace rlab
 {
 
 void InitPinCallback();

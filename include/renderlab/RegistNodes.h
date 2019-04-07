@@ -1,11 +1,11 @@
 #pragma once
 
-#include "grp/Node.h"
-#include "grp/ReflectPropTypes.h"
+#include "renderlab/Node.h"
+#include "renderlab/ReflectPropTypes.h"
 
 #include <painting0/Color.h>
 
-namespace grp
+namespace rlab
 {
 
 void nodes_regist_rttr();
@@ -42,10 +42,10 @@ GRP_DEFINE_NODE(Viewport, true, \
 GRP_DEFINE_NODE(Texture, true,                                                                 \
     virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const override; \
     std::string filepath;                                                                      \
-    grp::TextureType type = grp::TextureType::Tex2D;                                           \
+    rlab::TextureType type = rlab::TextureType::Tex2D;                                           \
     int width = 0;                                                                             \
     int height = 0;                                                                            \
-    grp::TextureFormat format = grp::TextureFormat::RGBA8;                                     \
+    rlab::TextureFormat format = rlab::TextureFormat::RGBA8;                                     \
 )
 GRP_DEFINE_NODE(RenderTarget, true, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Shader, true, \

@@ -1,5 +1,5 @@
-#include "grp/NodePreview.h"
-#include "grp/Node.h"
+#include "renderlab/NodePreview.h"
+#include "renderlab/Node.h"
 
 #include <blueprint/NodeHelper.h>
 
@@ -19,7 +19,7 @@
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/IRenderer.h>
 
-namespace grp
+namespace rlab
 {
 
 NodePreview::NodePreview(const Node& node)

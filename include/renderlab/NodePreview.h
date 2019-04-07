@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grp/RenderGraph.h"
+#include "renderlab/RenderGraph.h"
 
 #include <SM_Matrix2D.h>
 #include <rendergraph/typedef.h>
@@ -10,7 +10,7 @@
 namespace n2 { class RenderParams; }
 namespace rg { class DrawList; }
 
-namespace grp
+namespace rlab
 {
 
 class Node;

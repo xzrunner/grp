@@ -1,20 +1,20 @@
-#include "grp/GRP.h"
-#include "grp/PinCallback.h"
-#include "grp/Node.h"
+#include "renderlab/RenderLab.h"
+#include "renderlab/PinCallback.h"
+#include "renderlab/Node.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
 
 #include <rendergraph/RenderGraph.h>
 
-namespace grp
+namespace rlab
 {
 
-CU_SINGLETON_DEFINITION(GRP);
+CU_SINGLETON_DEFINITION(RenderLab);
 
 extern void regist_rttr();
 
-GRP::GRP()
+RenderLab::RenderLab()
 {
 	rg::RenderGraph::Instance();
 
@@ -26,7 +26,7 @@ GRP::GRP()
     InitPinCallback();
 }
 
-void GRP::Init()
+void RenderLab::Init()
 {
 	//bp::NodeBuilder::Callback cb;
 	//cb.on_created = [](bp::Node& node, std::vector<n0::SceneNodePtr>& nodes) {
@@ -45,7 +45,7 @@ void GRP::Init()
 	//bp::NodeBuilder::Instance()->RegistCB(cb);
 }
 
-void GRP::InitNodes()
+void RenderLab::InitNodes()
 {
     const int bp_count = 1;
 

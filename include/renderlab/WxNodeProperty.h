@@ -10,7 +10,7 @@
 class wxPropertyGrid;
 class wxPropertyGridEvent;
 
-namespace grp
+namespace rlab
 {
 
 class WxNodeProperty : public wxPanel

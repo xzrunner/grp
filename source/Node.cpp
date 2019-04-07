@@ -1,6 +1,6 @@
-#include "grp/Node.h"
-#include "grp/PinType.h"
-#include "grp/NodePreview.h"
+#include "renderlab/Node.h"
+#include "renderlab/PinType.h"
+#include "renderlab/NodePreview.h"
 
 #include <blueprint/Pin.h>
 
@@ -8,7 +8,7 @@
 #include <rendergraph/Node.h>
 #include <node2/RenderSystem.h>
 
-namespace grp
+namespace rlab
 {
 
 Node::Node(const std::string& title, bool preview)

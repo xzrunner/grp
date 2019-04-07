@@ -4,7 +4,7 @@
 
 #include <rendergraph/typedef.h>
 
-namespace grp
+namespace rlab
 {
 
 class NodePreview;

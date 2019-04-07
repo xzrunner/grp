@@ -1,3 +1,3 @@
-# grp
+# renderlab
 
-Graphical Render Pipeline
+Editable Render Pipeline

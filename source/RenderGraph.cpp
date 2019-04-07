@@ -1,6 +1,6 @@
-#include "grp/RenderGraph.h"
-#include "grp/RegistNodes.h"
-#include "grp/Node.h"
+#include "renderlab/RenderGraph.h"
+#include "renderlab/RegistNodes.h"
+#include "renderlab/Node.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
@@ -14,7 +14,7 @@
 #include <rendergraph/node/Bind.h>
 #include <facade/ImageLoader.h>
 
-namespace grp
+namespace rlab
 {
 
 rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
@@ -22,9 +22,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     auto type = node.get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
-    auto find_sg = src_type.find("grp::");
+    auto find_sg = src_type.find("rlab::");
     if (find_sg != std::string::npos) {
-        dst_type = "rg::" + src_type.substr(find_sg + strlen("grp::"));
+        dst_type = "rg::" + src_type.substr(find_sg + strlen("rlab::"));
     }
     if (dst_type.empty()) {
         return nullptr;

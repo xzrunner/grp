@@ -2,13 +2,23 @@
 
 #include <blueprint/Node.h>
 
+#include <rendergraph/typedef.h>
+
 namespace grp
 {
+
+class NodePreview;
 
 class Node : public bp::Node
 {
 public:
-    Node(const std::string& title);
+    Node(const std::string& title, bool preview);
+    virtual ~Node();
+
+    virtual void Draw(const n2::RenderParams& rp) const override;
+    virtual bool Update(const bp::UpdateParams& params) override;
+
+    virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const {}
 
     struct PinDesc
     {
@@ -24,6 +34,9 @@ protected:
 private:
     void InitPinsImpl(const std::vector<PinDesc>& pins,
         bool is_input);
+
+private:
+    std::unique_ptr<NodePreview> m_preview = nullptr;
 
     RTTR_ENABLE(bp::Node)
 

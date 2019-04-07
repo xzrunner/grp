@@ -1,16 +1,41 @@
 #include "grp/Node.h"
 #include "grp/PinType.h"
+#include "grp/NodePreview.h"
 
 #include <blueprint/Pin.h>
 
+#include <unirender/Blackboard.h>
 #include <rendergraph/Node.h>
+#include <node2/RenderSystem.h>
 
 namespace grp
 {
 
-Node::Node(const std::string& title)
+Node::Node(const std::string& title, bool preview)
     : bp::Node(title)
 {
+    if (preview) {
+        m_preview = std::make_unique<NodePreview>(*this);
+    }
+}
+
+Node::~Node() = default;
+
+void Node::Draw(const n2::RenderParams& rp) const
+{
+    bp::Node::Draw(rp);
+    if (m_preview) {
+        m_preview->Draw(rp);
+    }
+}
+
+bool Node::Update(const bp::UpdateParams& params)
+{
+    bool ret = bp::Node::Update(params);
+    if (m_preview) {
+        m_preview->Update();
+    }
+    return ret;
 }
 
 void Node::InitPins(const std::vector<PinDesc>& input,
@@ -74,8 +99,6 @@ void Node::InitPins(const std::string& name)
 	};
 
 	std::vector<PinDesc> input, output;
-    input.push_back({ bp::PIN_PORT, "In" });
-    output.push_back({ bp::PIN_PORT, "Out" });
 	rg2grp(input, imports);
 	rg2grp(output, exports);
 

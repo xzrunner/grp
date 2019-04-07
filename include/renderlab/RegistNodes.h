@@ -3,6 +3,8 @@
 #include "renderlab/Node.h"
 #include "renderlab/ReflectPropTypes.h"
 
+#include <blueprint/Pin.h>
+
 #include <painting0/Color.h>
 
 namespace rlab
@@ -48,14 +50,31 @@ GRP_DEFINE_NODE(Texture, true,                                                  
     rlab::TextureFormat format = rlab::TextureFormat::RGBA8;                                     \
 )
 GRP_DEFINE_NODE(RenderTarget, true, GRP_NODE_PROP)
-GRP_DEFINE_NODE(Shader, true, \
-    std::string vert;         \
-    std::string frag;         \
+GRP_DEFINE_NODE(Shader, false, \
+    std::string vert;          \
+    std::string frag;          \
 )
 GRP_DEFINE_NODE(Bind, false, \
     int channel = 0;         \
 )
 GRP_DEFINE_NODE(Unbind, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(DrawCube, false, GRP_NODE_PROP)
+
+class OutputToScreen : public Node
+{
+public:
+    OutputToScreen()
+        : Node("OutputToScreen", false)
+    {
+        InitPins({
+			{ bp::PIN_ANY_VAR, "prev" }
+		},{
+		});
+    }
+
+    RTTR_ENABLE(Node)
+
+}; // OutputToScreen
 
 }
 

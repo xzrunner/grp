@@ -98,6 +98,9 @@ REGIST_NODE_RTTI(Bind,                                               \
 )
 
 REGIST_NODE_RTTI_DEFAULT(Unbind)
+REGIST_NODE_RTTI_DEFAULT(DrawCube)
+
+REGIST_NODE_RTTI_DEFAULT(OutputToScreen)
 
 }
 

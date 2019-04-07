@@ -11,8 +11,8 @@ struct ClearType
     ClearType(uint32_t type = 0)
 		: type(type) {}
 
-    static const uint32_t CLEAR_COLOR = 0x1;
-    static const uint32_t CLEAR_DEPTH = 0x2;
+    static const uint32_t CLEAR_COLOR   = 0x1;
+    static const uint32_t CLEAR_DEPTH   = 0x2;
     static const uint32_t CLEAR_STENCIL = 0x4;
 
 	uint32_t type = 0;
@@ -33,5 +33,7 @@ enum class TextureFormat
     RGB565,
     A8,
 };
+
+void prop_types_regist_rttr();
 
 }

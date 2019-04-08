@@ -88,6 +88,27 @@ void Node::InitPins(const std::string& name)
             case rg::VariableType::RenderTarget:
                 d.type = PIN_RENDERTARGET;
                 break;
+            case rg::VariableType::Vector1:
+                d.type = PIN_VECTOR1;
+                break;
+            case rg::VariableType::Vector2:
+                d.type = PIN_VECTOR2;
+                break;
+            case rg::VariableType::Vector3:
+                d.type = PIN_VECTOR3;
+                break;
+            case rg::VariableType::Vector4:
+                d.type = PIN_VECTOR4;
+                break;
+            case rg::VariableType::Matrix2:
+                d.type = PIN_MATRIX2;
+                break;
+            case rg::VariableType::Matrix3:
+                d.type = PIN_MATRIX3;
+                break;
+            case rg::VariableType::Matrix4:
+                d.type = PIN_MATRIX4;
+                break;
             default:
                 assert(0);
             }

@@ -76,6 +76,19 @@ public:
 
 }; // OutputToScreen
 
-}
+// value
+GRP_DEFINE_NODE(Vector1, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Vector2, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Vector3, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Vector4, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Matrix2, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Matrix3, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Matrix4, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Add, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Mul, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(PerspectiveMat, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(OrthoMat, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(LookAtMat, false, GRP_NODE_PROP)
 
+}
 }

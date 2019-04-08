@@ -15,6 +15,7 @@ enum PinType
     PIN_MATRIX2,
     PIN_MATRIX3,
     PIN_MATRIX4,
+    PIN_SAMPLER2D,
 };
 
 }

@@ -1,6 +1,7 @@
 #include "renderlab/RenderGraph.h"
 #include "renderlab/RegistNodes.h"
 #include "renderlab/Node.h"
+#include "renderlab/PinType.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
@@ -12,6 +13,8 @@
 #include <rendergraph/node/Texture.h>
 #include <rendergraph/node/Shader.h>
 #include <rendergraph/node/Bind.h>
+#include <rendergraph/node/value_nodes.h>
+#include <rendergraph/node/math_nodes.h>
 #include <facade/ImageLoader.h>
 
 namespace rlab
@@ -114,12 +117,77 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     else if (type == rttr::type::get<node::Shader>())
     {
         auto& src = static_cast<const node::Shader&>(node);
-        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src.vert, src.frag);
+        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src.GetVert(), src.GetFrag());
     }
     else if (type == rttr::type::get<node::Bind>())
     {
         auto& src = static_cast<const node::Bind&>(node);
         std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src.channel);
+    }
+    // value
+    else if (type == rttr::type::get<node::Vector1>())
+    {
+        auto& src = static_cast<const node::Vector1&>(node);
+        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector2>())
+    {
+        auto& src = static_cast<const node::Vector2&>(node);
+        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector3>())
+    {
+        auto& src = static_cast<const node::Vector3&>(node);
+        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector4>())
+    {
+        auto& src = static_cast<const node::Vector4&>(node);
+        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix2>())
+    {
+        auto& src = static_cast<const node::Matrix2&>(node);
+        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix3>())
+    {
+        auto& src = static_cast<const node::Matrix3&>(node);
+        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix4>())
+    {
+        auto& src = static_cast<const node::Matrix4&>(node);
+        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src.val);
+    }
+    // math
+    else if (type == rttr::type::get<node::PerspectiveMat>())
+    {
+        auto& src = static_cast<const node::PerspectiveMat&>(node);
+        auto pm = std::static_pointer_cast<rg::node::PerspectiveMat>(dst);
+        pm->fovy   = src.fovy;
+        pm->aspect = src.aspect;
+        pm->znear  = src.znear;
+        pm->zfar   = src.zfar;
+    }
+    else if (type == rttr::type::get<node::OrthoMat>())
+    {
+        auto& src = static_cast<const node::OrthoMat&>(node);
+        auto om = std::static_pointer_cast<rg::node::OrthoMat>(dst);
+        om->left   = src.left;
+        om->right  = src.right;
+        om->bottom = src.bottom;
+        om->top    = src.top;
+        om->znear  = src.znear;
+        om->zfar   = src.zfar;
+    }
+    else if (type == rttr::type::get<node::LookAtMat>())
+    {
+        auto& src = static_cast<const node::LookAtMat&>(node);
+        auto lm = std::static_pointer_cast<rg::node::LookAtMat>(dst);
+        lm->eye    = src.eye;
+        lm->center = src.center;
+        lm->up     = src.up;
     }
 
     // connect

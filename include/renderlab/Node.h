@@ -22,6 +22,10 @@ public:
 
     struct PinDesc
     {
+        bool operator == (const PinDesc& desc) const {
+            return type == desc.type && name == desc.name;
+        }
+
         int         type;
         std::string name;
     };

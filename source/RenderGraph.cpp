@@ -15,7 +15,12 @@
 #include <rendergraph/node/Bind.h>
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
+#include <rendergraph/node/AlphaTest.h>
+#include <rendergraph/node/BlendEq.h>
+#include <rendergraph/node/BlendFunc.h>
 #include <rendergraph/node/Cull.h>
+#include <rendergraph/node/ZTest.h>
+#include <rendergraph/node/ZWrite.h>
 #include <facade/ImageLoader.h>
 
 namespace rlab
@@ -191,22 +196,174 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         lm->up     = src.up;
     }
     // state
+    else if (type == rttr::type::get<node::AlphaTest>())
+    {
+        auto& src = static_cast<const node::AlphaTest&>(node);
+        rg::node::AlphaTest::Func func;
+        switch (src.func)
+        {
+        case AlphaTestFunc::Off:
+            func = rg::node::AlphaTest::Func::Off;
+            break;
+        case AlphaTestFunc::Never:
+            func = rg::node::AlphaTest::Func::Never;
+            break;
+        case AlphaTestFunc::Less:
+            func = rg::node::AlphaTest::Func::Less;
+            break;
+        case AlphaTestFunc::Equal:
+            func = rg::node::AlphaTest::Func::Equal;
+            break;
+        case AlphaTestFunc::LEqual:
+            func = rg::node::AlphaTest::Func::LEqual;
+            break;
+        case AlphaTestFunc::Greater:
+            func = rg::node::AlphaTest::Func::Greater;
+            break;
+        case AlphaTestFunc::NotEqual:
+            func = rg::node::AlphaTest::Func::NotEqual;
+            break;
+        case AlphaTestFunc::GEqual:
+            func = rg::node::AlphaTest::Func::GEqual;
+            break;
+        case AlphaTestFunc::Always:
+            func = rg::node::AlphaTest::Func::Always;
+            break;
+        }
+        std::static_pointer_cast<rg::node::AlphaTest>(dst)->SetFunc(func);
+    }
+    else if (type == rttr::type::get<node::BlendEq>())
+    {
+        auto& src = static_cast<const node::BlendEq&>(node);
+        rg::node::BlendEq::Mode mode;
+        switch (src.mode)
+        {
+        case BlendEqMode::FuncAdd:
+            mode = rg::node::BlendEq::Mode::FuncAdd;
+            break;
+        case BlendEqMode::FuncSubtract:
+            mode = rg::node::BlendEq::Mode::FuncSubtract;
+            break;
+        case BlendEqMode::FuncReverseSubtract:
+            mode = rg::node::BlendEq::Mode::FuncReverseSubtract;
+            break;
+        case BlendEqMode::Min:
+            mode = rg::node::BlendEq::Mode::Min;
+            break;
+        case BlendEqMode::Max:
+            mode = rg::node::BlendEq::Mode::Max;
+            break;
+        }
+    }
+    else if (type == rttr::type::get<node::BlendFunc>())
+    {
+        auto& src = static_cast<const node::BlendFunc&>(node);
+        auto trans = [](const BlendFuncFactor& factor)->rg::node::BlendFunc::Factor 
+        {
+            rg::node::BlendFunc::Factor ret;
+            switch (factor)
+            {
+            case BlendFuncFactor::Off:
+                ret = rg::node::BlendFunc::Factor::Off;
+                break;
+            case BlendFuncFactor::Zero:
+                ret = rg::node::BlendFunc::Factor::Zero;
+                break;
+            case BlendFuncFactor::One:
+                ret = rg::node::BlendFunc::Factor::One;
+                break;
+            case BlendFuncFactor::SrcColor:
+                ret = rg::node::BlendFunc::Factor::SrcColor;
+                break;
+            case BlendFuncFactor::OneMinusSrcColor:
+                ret = rg::node::BlendFunc::Factor::OneMinusSrcColor;
+                break;
+            case BlendFuncFactor::DstColor:
+                ret = rg::node::BlendFunc::Factor::DstColor;
+                break;
+            case BlendFuncFactor::OneMinusDstColor:
+                ret = rg::node::BlendFunc::Factor::OneMinusDstColor;
+                break;
+            case BlendFuncFactor::SrcAlpha:
+                ret = rg::node::BlendFunc::Factor::SrcAlpha;
+                break;
+            case BlendFuncFactor::OneMinusSrcAlpha:
+                ret = rg::node::BlendFunc::Factor::OneMinusSrcAlpha;
+                break;
+            case BlendFuncFactor::DstAlpha:
+                ret = rg::node::BlendFunc::Factor::DstAlpha;
+                break;
+            case BlendFuncFactor::OneMinusDstAlpha:
+                ret = rg::node::BlendFunc::Factor::OneMinusDstAlpha;
+                break;
+            }
+            return ret;
+        };
+        auto func = std::static_pointer_cast<rg::node::BlendFunc>(dst);
+        func->SetSrcFactor(trans(src.sfactor));
+        func->SetDstFactor(trans(src.dfactor));
+    }
     else if (type == rttr::type::get<node::Cull>())
     {
         auto& src = static_cast<const node::Cull&>(node);
-        auto cull = std::static_pointer_cast<rg::node::Cull>(dst);
+        rg::node::Cull::Mode mode;
         switch (src.type)
         {
-        case CullType::Off:
-            cull->SetCullType(rg::node::Cull::CullType::Off);
+        case CullMode::Off:
+            mode = rg::node::Cull::Mode::Off;
             break;
-        case CullType::Back:
-            cull->SetCullType(rg::node::Cull::CullType::Back);
+        case CullMode::Front:
+            mode = rg::node::Cull::Mode::Front;
             break;
-        case CullType::Front:
-            cull->SetCullType(rg::node::Cull::CullType::Front);
+        case CullMode::Back:
+            mode = rg::node::Cull::Mode::Back;
+            break;
+        case CullMode::FrontAndBack:
+            mode = rg::node::Cull::Mode::FrontAndBack;
             break;
         }
+        std::static_pointer_cast<rg::node::Cull>(dst)->SetMode(mode);
+    }
+    else if (type == rttr::type::get<node::ZTest>())
+    {
+        auto& src = static_cast<const node::ZTest&>(node);
+        rg::node::ZTest::Func func;
+        switch (src.func)
+        {
+        case ZTestFunc::Off:
+            func = rg::node::ZTest::Func::Off;
+            break;
+        case ZTestFunc::Never:
+            func = rg::node::ZTest::Func::Never;
+            break;
+        case ZTestFunc::Less:
+            func = rg::node::ZTest::Func::Less;
+            break;
+        case ZTestFunc::Equal:
+            func = rg::node::ZTest::Func::Equal;
+            break;
+        case ZTestFunc::LEqual:
+            func = rg::node::ZTest::Func::LEqual;
+            break;
+        case ZTestFunc::Greater:
+            func = rg::node::ZTest::Func::Greater;
+            break;
+        case ZTestFunc::NotEqual:
+            func = rg::node::ZTest::Func::NotEqual;
+            break;
+        case ZTestFunc::GEqual:
+            func = rg::node::ZTest::Func::GEqual;
+            break;
+        case ZTestFunc::Always:
+            func = rg::node::ZTest::Func::Always;
+            break;
+        }
+        std::static_pointer_cast<rg::node::ZTest>(dst)->SetFunc(func);
+    }
+    else if (type == rttr::type::get<node::ZWrite>())
+    {
+        auto& src = static_cast<const node::ZWrite&>(node);
+        std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src.enable);
     }
 
     // connect

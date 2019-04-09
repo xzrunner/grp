@@ -71,11 +71,46 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
             format_prop->SetValue(static_cast<int>(format));
             m_pg->Append(format_prop);
         }
-        else if (prop_type == rttr::type::get<CullType>())
+        else if (prop_type == rttr::type::get<AlphaTestFunc>())
         {
-			const wxChar* TYPES[] = { wxT("Off"), wxT("Back"), wxT("Front"), NULL };
+            const wxChar* FUNCS[] = { wxT("Off"), wxT("Never"), wxT("Less"), wxT("Equal"), wxT("LEqual"), 
+                wxT("Greater"), wxT("NotEqual"), wxT("GEqual"), wxT("Always"),NULL };
+            auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FUNCS);
+            auto type = prop.get_value(node).get_value<AlphaTestFunc>();
+            type_prop->SetValue(static_cast<int>(type));
+            m_pg->Append(type_prop);
+        }
+        else if (prop_type == rttr::type::get<BlendEqMode>())
+        {
+            const wxChar* MODES[] = { wxT("FuncAdd"), wxT("FuncSubtract"), wxT("FuncReverseSubtract"), wxT("Min"), wxT("Max"), NULL };
+            auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, MODES);
+            auto type = prop.get_value(node).get_value<BlendEqMode>();
+            type_prop->SetValue(static_cast<int>(type));
+            m_pg->Append(type_prop);
+        }
+        else if (prop_type == rttr::type::get<BlendFuncFactor>())
+        {
+            const wxChar* FACTORS[] = { wxT("Off"), wxT("Zero"), wxT("One"), wxT("SrcColor"), wxT("OneMinusSrcColor"),
+                wxT("DstColor"), wxT("OneMinusDstColor"), wxT("SrcAlpha"), wxT("OneMinusSrcAlpha"), wxT("DstAlpha"), wxT("OneMinusDstAlpha"), NULL };
+            auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FACTORS);
+            auto type = prop.get_value(node).get_value<BlendFuncFactor>();
+            type_prop->SetValue(static_cast<int>(type));
+            m_pg->Append(type_prop);
+        }
+        else if (prop_type == rttr::type::get<CullMode>())
+        {
+			const wxChar* TYPES[] = { wxT("Off"), wxT("Front"), wxT("Back"), wxT("FrontAndBack"), NULL };
 			auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-			auto type = prop.get_value(node).get_value<CullType>();
+			auto type = prop.get_value(node).get_value<CullMode>();
+            type_prop->SetValue(static_cast<int>(type));
+			m_pg->Append(type_prop);
+        }
+        else if (prop_type == rttr::type::get<ZTestFunc>())
+        {
+			const wxChar* FUNCS[] = { wxT("Off"), wxT("Never"), wxT("Less"), wxT("Equal"), wxT("LEqual"), 
+                wxT("Greater"), wxT("NotEqual"), wxT("GEqual"), wxT("Always"), NULL };
+			auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FUNCS);
+			auto type = prop.get_value(node).get_value<ZTestFunc>();
             type_prop->SetValue(static_cast<int>(type));
 			m_pg->Append(type_prop);
         }
@@ -166,9 +201,25 @@ void WxNodeProperty::OnPropertyGridChanged(wxPropertyGridEvent& event)
         {
             prop.set_value(m_node, TextureFormat(wxANY_AS(val, int)));
         }
-        else if (prop_type == rttr::type::get<CullType>() && key == ui_info.desc)
+        else if (prop_type == rttr::type::get<AlphaTestFunc>() && key == ui_info.desc)
         {
-            prop.set_value(m_node, CullType(wxANY_AS(val, int)));
+            prop.set_value(m_node, AlphaTestFunc(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<BlendEqMode>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, BlendEqMode(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<BlendFuncFactor>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, BlendFuncFactor(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<CullMode>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, CullMode(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<ZTestFunc>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, ZTestFunc(wxANY_AS(val, int)));
         }
         else
         {

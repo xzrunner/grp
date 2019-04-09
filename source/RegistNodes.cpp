@@ -215,11 +215,45 @@ REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
 
 // state
+REGIST_NODE_RTTI(AlphaTest,                                       \
+.property("func", &rlab::node::AlphaTest::func)                   \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(BlendEq,                                         \
+.property("mode", &rlab::node::BlendEq::mode)                     \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Mode")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(BlendFunc,                                          \
+.property("src_factor", &rlab::node::BlendFunc::sfactor)             \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SFactor")) \
+)                                                                    \
+.property("dst_factor", &rlab::node::BlendFunc::dfactor)             \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DFactor")) \
+)                                                                    \
+)
 REGIST_NODE_RTTI(Cull,                                            \
 .property("type", &rlab::node::Cull::type)                        \
 (                                                                 \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cull")) \
 )                                                                 \
+)
+REGIST_NODE_RTTI(ZTest,                                           \
+.property("func", &rlab::node::ZTest::func)                       \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(ZWrite,                                            \
+.property("enable", &rlab::node::ZWrite::enable)                    \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Enable")) \
+)                                                                   \
 )
 
 }

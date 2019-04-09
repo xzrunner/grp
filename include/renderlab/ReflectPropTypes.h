@@ -34,12 +34,64 @@ enum class TextureFormat
     A8,
 };
 
-// cull
-enum class CullType
+// state
+
+enum class AlphaTestFunc
 {
     Off,
+    Never,
+    Less,
+    Equal,
+    LEqual,
+    Greater,
+    NotEqual,
+    GEqual,
+    Always
+};
+
+enum class BlendEqMode
+{
+    FuncAdd,
+    FuncSubtract,
+    FuncReverseSubtract,
+    Min,
+    Max
+};
+
+enum class BlendFuncFactor
+{
+    Off = 0,
+    Zero,
+    One,
+    SrcColor,
+    OneMinusSrcColor,
+    DstColor,
+    OneMinusDstColor,
+    SrcAlpha,
+    OneMinusSrcAlpha,
+    DstAlpha,
+    OneMinusDstAlpha
+};
+
+enum class CullMode
+{
+    Off,
+    Front,
     Back,
-    Front
+    FrontAndBack,
+};
+
+enum class ZTestFunc
+{
+    Off = 0,
+    Never,
+    Less,
+    Equal,
+    LEqual,
+    Greater,
+    NotEqual,
+    GEqual,
+    Always
 };
 
 void prop_types_regist_rttr();

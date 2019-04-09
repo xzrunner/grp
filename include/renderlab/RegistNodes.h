@@ -138,8 +138,24 @@ GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
 
 // state
-GRP_DEFINE_NODE(Cull, false, \
-    CullType type;           \
+GRP_DEFINE_NODE(AlphaTest, false,               \
+    AlphaTestFunc func = AlphaTestFunc::Always; \
+)
+GRP_DEFINE_NODE(BlendEq, false,              \
+    BlendEqMode mode = BlendEqMode::FuncAdd; \
+)
+GRP_DEFINE_NODE(BlendFunc, false,                    \
+    BlendFuncFactor sfactor = BlendFuncFactor::One;  \
+    BlendFuncFactor dfactor = BlendFuncFactor::Zero; \
+)
+GRP_DEFINE_NODE(Cull, false,        \
+    CullMode type = CullMode::Back; \
+)
+GRP_DEFINE_NODE(ZTest, false,         \
+    ZTestFunc func = ZTestFunc::Less; \
+)
+GRP_DEFINE_NODE(ZWrite, false, \
+    bool enable = false;       \
 )
 
 }

@@ -51,6 +51,11 @@ bool can_type_cast_func(int type_from, int type_to)
         type_to == bp::PIN_ANY_VAR) {
         return true;
     }
+    if (type_from == rlab::PIN_TEXTURE && type_to == rlab::PIN_SAMPLER2D ||
+        type_from == rlab::PIN_SAMPLER2D && type_to == rlab::PIN_TEXTURE) {
+        return true;
+    }
+
     return false;
 }
 

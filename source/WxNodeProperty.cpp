@@ -71,6 +71,14 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
             format_prop->SetValue(static_cast<int>(format));
             m_pg->Append(format_prop);
         }
+        else if (prop_type == rttr::type::get<CullType>())
+        {
+			const wxChar* TYPES[] = { wxT("Off"), wxT("Back"), wxT("Front"), NULL };
+			auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+			auto type = prop.get_value(node).get_value<CullType>();
+            type_prop->SetValue(static_cast<int>(type));
+			m_pg->Append(type_prop);
+        }
         else
         {
             ee0::WxPropHelper::CreateProp(m_pg, ui_info, node, prop, [&](const std::string& filepath)
@@ -157,6 +165,10 @@ void WxNodeProperty::OnPropertyGridChanged(wxPropertyGridEvent& event)
         else if (prop_type == rttr::type::get<TextureFormat>() && key == ui_info.desc)
         {
             prop.set_value(m_node, TextureFormat(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<CullType>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, CullType(wxANY_AS(val, int)));
         }
         else
         {

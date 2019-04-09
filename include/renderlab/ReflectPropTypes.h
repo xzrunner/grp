@@ -34,6 +34,14 @@ enum class TextureFormat
     A8,
 };
 
+// cull
+enum class CullType
+{
+    Off,
+    Back,
+    Front
+};
+
 void prop_types_regist_rttr();
 
 }

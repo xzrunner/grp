@@ -15,6 +15,7 @@
 #include <rendergraph/node/Bind.h>
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
+#include <rendergraph/node/Cull.h>
 #include <facade/ImageLoader.h>
 
 namespace rlab
@@ -188,6 +189,24 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         lm->eye    = src.eye;
         lm->center = src.center;
         lm->up     = src.up;
+    }
+    // state
+    else if (type == rttr::type::get<node::Cull>())
+    {
+        auto& src = static_cast<const node::Cull&>(node);
+        auto cull = std::static_pointer_cast<rg::node::Cull>(dst);
+        switch (src.type)
+        {
+        case CullType::Off:
+            cull->SetCullType(rg::node::Cull::CullType::Off);
+            break;
+        case CullType::Back:
+            cull->SetCullType(rg::node::Cull::CullType::Back);
+            break;
+        case CullType::Front:
+            cull->SetCullType(rg::node::Cull::CullType::Front);
+            break;
+        }
     }
 
     // connect

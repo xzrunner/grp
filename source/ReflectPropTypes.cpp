@@ -24,6 +24,13 @@ rttr::registration::enumeration<rlab::TextureFormat>("grp_tex_fmt")
     rttr::value("a8",     rlab::TextureFormat::A8)
 );
 
+rttr::registration::enumeration<rlab::CullType>("grp_cull_type")
+(
+	rttr::value("off",   rlab::CullType::Off),
+	rttr::value("back",  rlab::CullType::Back),
+    rttr::value("front", rlab::CullType::Front)
+);
+
 }
 
 namespace rlab

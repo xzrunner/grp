@@ -137,5 +137,10 @@ GRP_DEFINE_NODE(CamViewMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
 
+// state
+GRP_DEFINE_NODE(Cull, false, \
+    CullType type;           \
+)
+
 }
 }

@@ -214,6 +214,14 @@ REGIST_NODE_RTTI_DEFAULT(CamViewMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
 
+// state
+REGIST_NODE_RTTI(Cull,                                            \
+.property("type", &rlab::node::Cull::type)                        \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cull")) \
+)                                                                 \
+)
+
 }
 
 namespace rlab
@@ -281,7 +289,7 @@ void Shader::InitInputsFromUniforms()
 {
     std::vector<Node::PinDesc> uniforms = m_vert_uniforms;
     std::copy(m_frag_uniforms.begin(), m_frag_uniforms.end(), std::back_inserter(uniforms));
-    
+
     bool same = true;
     if (uniforms.size() == m_all_input.size() - 1) {
         for (int i = 0, n = uniforms.size(); i < n; ++i) {

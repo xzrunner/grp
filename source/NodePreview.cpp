@@ -16,6 +16,7 @@
 #include <node2/RenderSystem.h>
 #include <rendergraph/Node.h>
 #include <rendergraph/DrawList.h>
+#include <rendergraph/RenderContext.h>
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/IRenderer.h>
 
@@ -67,7 +68,7 @@ void NodePreview::Draw(const n2::RenderParams& rp) const
         auto shader = std::static_pointer_cast<pt2::Shader>(renderer->GetAllShaders()[0]);
         pt2::RenderTargetCtx ctx(rc, shader, rt_mgr.WIDTH, rt_mgr.HEIGHT);
 
-        m_draw_list->Draw(rc);
+        m_draw_list->Draw(rg::RenderContext(rc));
 
         sm::Matrix2D mat;
         mat.Scale(

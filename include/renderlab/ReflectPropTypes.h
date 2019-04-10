@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace rlab
 {
@@ -32,6 +33,26 @@ enum class TextureFormat
     RGB,
     RGB565,
     A8,
+};
+
+// VertexArray
+
+enum class VertexDataType
+{
+    Char,
+    Float,
+};
+
+struct VertexAttrib
+{
+    std::string    name;
+    size_t         num = 0;
+    VertexDataType type = VertexDataType::Float;
+};
+
+enum class PrimitiveShapeType
+{
+    Cube,
 };
 
 // state

@@ -24,6 +24,23 @@ rttr::registration::enumeration<rlab::TextureFormat>("rlab_tex_fmt")
     rttr::value("a8",     rlab::TextureFormat::A8)
 );
 
+rttr::registration::enumeration<rlab::VertexDataType>("rlab_vert_data_type")
+(
+	rttr::value("char",  rlab::VertexDataType::Char),
+    rttr::value("float", rlab::VertexDataType::Float)
+);
+
+rttr::registration::class_<rlab::VertexAttrib>("rlab_vert_attrib")
+	.property("name", &rlab::VertexAttrib::name)
+    .property("num",  &rlab::VertexAttrib::num)
+    .property("type", &rlab::VertexAttrib::type)
+;
+
+rttr::registration::enumeration<rlab::PrimitiveShapeType>("rlab_prim_type")
+(
+	rttr::value("cube", rlab::PrimitiveShapeType::Cube)
+);
+
 rttr::registration::enumeration<rlab::AlphaTestFunc>("rlab_alpha_test_func")
 (
 	rttr::value("off",       rlab::AlphaTestFunc::Off),

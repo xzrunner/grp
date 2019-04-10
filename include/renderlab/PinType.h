@@ -7,6 +7,7 @@ enum PinType
 {
     PIN_TEXTURE = 1000,
     PIN_RENDERTARGET,
+    PIN_MODEL,
 
     PIN_VECTOR1,
     PIN_VECTOR2,

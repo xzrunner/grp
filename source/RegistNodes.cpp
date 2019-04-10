@@ -22,36 +22,20 @@
 RTTR_REGISTRATION
 {
 
-REGIST_NODE_RTTI(Clear,                                            \
-.property("type", &rlab::node::Clear::type)                        \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
-)                                                                  \
-.property("color", &rlab::node::Clear::color)                      \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
-)                                                                  \
+// resource
+REGIST_NODE_RTTI(Shader,                                                      \
+.property("vert", &rlab::node::Shader::GetVert, &rlab::node::Shader::SetVert) \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),            \
+    rttr::metadata(ee0::PropLongStringTag(), true)                            \
+)                                                                             \
+.property("frag", &rlab::node::Shader::GetFrag, &rlab::node::Shader::SetFrag) \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),            \
+    rttr::metadata(ee0::PropLongStringTag(), true)                            \
+)                                                                             \
 )
-
-REGIST_NODE_RTTI(Viewport,                                          \
-.property("x", &rlab::node::Viewport::x)                            \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("X"))      \
-)                                                                   \
-.property("y", &rlab::node::Viewport::y)                            \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Y"))      \
-)                                                                   \
-.property("w", &rlab::node::Viewport::w)                            \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))  \
-)                                                                   \
-.property("h", &rlab::node::Viewport::h)                            \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height")) \
-)                                                                   \
-)
-
+REGIST_NODE_RTTI_DEFAULT(RenderTarget)
 REGIST_NODE_RTTI(Texture,                                              \
 .property("filepath", &rlab::node::Texture::filepath)                  \
 (                                                                      \
@@ -76,33 +60,115 @@ REGIST_NODE_RTTI(Texture,                                              \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Format"))    \
 )                                                                      \
 )
-
-REGIST_NODE_RTTI_DEFAULT(RenderTarget)
-
-REGIST_NODE_RTTI(Shader,                                                      \
-.property("vert", &rlab::node::Shader::GetVert, &rlab::node::Shader::SetVert) \
-(                                                                             \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),            \
-    rttr::metadata(ee0::PropLongStringTag(), true)                            \
-)                                                                             \
-.property("frag", &rlab::node::Shader::GetFrag, &rlab::node::Shader::SetFrag) \
-(                                                                             \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),            \
-    rttr::metadata(ee0::PropLongStringTag(), true)                            \
-)                                                                             \
+REGIST_NODE_RTTI(VertexArray,                                             \
+.property("vertices_data", &rlab::node::VertexArray::vertices_data)       \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VerticesData")) \
+)                                                                         \
+.property("indices_data", &rlab::node::VertexArray::indices_data)         \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("IndicesData"))  \
+)                                                                         \
+.property("position", &rlab::node::VertexArray::position)                 \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Position"))     \
+)                                                                         \
+.property("normal", &rlab::node::VertexArray::normal)                     \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Normal"))       \
+)                                                                         \
+.property("texture", &rlab::node::VertexArray::texture)                   \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Texture"))      \
+)                                                                         \
+)
+REGIST_NODE_RTTI(PrimitiveShape,                                   \
+.property("type", &rlab::node::PrimitiveShape::type)               \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
+)                                                                  \
 )
 
+// op
+REGIST_NODE_RTTI(Clear,                                            \
+.property("type", &rlab::node::Clear::type)                        \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
+)                                                                  \
+.property("color", &rlab::node::Clear::color)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
+)                                                                  \
+)
 REGIST_NODE_RTTI(Bind,                                               \
 .property("channel", &rlab::node::Bind::channel)                     \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Channel")) \
 )                                                                    \
 )
-
 REGIST_NODE_RTTI_DEFAULT(Unbind)
-REGIST_NODE_RTTI_DEFAULT(DrawCube)
-
+REGIST_NODE_RTTI_DEFAULT(Draw)
 REGIST_NODE_RTTI_DEFAULT(OutputToScreen)
+
+// state
+REGIST_NODE_RTTI(Viewport,                                          \
+.property("x", &rlab::node::Viewport::x)                            \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("X"))      \
+)                                                                   \
+.property("y", &rlab::node::Viewport::y)                            \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Y"))      \
+)                                                                   \
+.property("w", &rlab::node::Viewport::w)                            \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))  \
+)                                                                   \
+.property("h", &rlab::node::Viewport::h)                            \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height")) \
+)                                                                   \
+)
+REGIST_NODE_RTTI(AlphaTest,                                       \
+.property("func", &rlab::node::AlphaTest::func)                   \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(BlendEq,                                         \
+.property("mode", &rlab::node::BlendEq::mode)                     \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Mode")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(BlendFunc,                                          \
+.property("src_factor", &rlab::node::BlendFunc::sfactor)             \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SFactor")) \
+)                                                                    \
+.property("dst_factor", &rlab::node::BlendFunc::dfactor)             \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DFactor")) \
+)                                                                    \
+)
+REGIST_NODE_RTTI(Cull,                                            \
+.property("type", &rlab::node::Cull::type)                        \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cull")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(ZTest,                                           \
+.property("func", &rlab::node::ZTest::func)                       \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
+)                                                                 \
+)
+REGIST_NODE_RTTI(ZWrite,                                            \
+.property("enable", &rlab::node::ZWrite::enable)                    \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Enable")) \
+)                                                                   \
+)
 
 // value
 REGIST_NODE_RTTI(Vector1,                                        \
@@ -147,6 +213,7 @@ REGIST_NODE_RTTI(Matrix4,                                        \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Val")) \
 )                                                                \
 )
+
 // math
 REGIST_NODE_RTTI_DEFAULT(Add)
 REGIST_NODE_RTTI_DEFAULT(Mul)
@@ -208,53 +275,12 @@ REGIST_NODE_RTTI(LookAtMat,                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Up"))     \
 )                                                                   \
 )
+
 // input
 REGIST_NODE_RTTI_DEFAULT(CamProjMat)
 REGIST_NODE_RTTI_DEFAULT(CamViewMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
-
-// state
-REGIST_NODE_RTTI(AlphaTest,                                       \
-.property("func", &rlab::node::AlphaTest::func)                   \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
-)                                                                 \
-)
-REGIST_NODE_RTTI(BlendEq,                                         \
-.property("mode", &rlab::node::BlendEq::mode)                     \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Mode")) \
-)                                                                 \
-)
-REGIST_NODE_RTTI(BlendFunc,                                          \
-.property("src_factor", &rlab::node::BlendFunc::sfactor)             \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SFactor")) \
-)                                                                    \
-.property("dst_factor", &rlab::node::BlendFunc::dfactor)             \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DFactor")) \
-)                                                                    \
-)
-REGIST_NODE_RTTI(Cull,                                            \
-.property("type", &rlab::node::Cull::type)                        \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Cull")) \
-)                                                                 \
-)
-REGIST_NODE_RTTI(ZTest,                                           \
-.property("func", &rlab::node::ZTest::func)                       \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Func")) \
-)                                                                 \
-)
-REGIST_NODE_RTTI(ZWrite,                                            \
-.property("enable", &rlab::node::ZWrite::enable)                    \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Enable")) \
-)                                                                   \
-)
 
 }
 

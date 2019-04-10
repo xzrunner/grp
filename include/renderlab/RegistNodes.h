@@ -31,25 +31,7 @@ public:                                      \
 
 #define GRP_NODE_PROP
 
-GRP_DEFINE_NODE(Clear, true, \
-    ClearType  type;         \
-    pt0::Color color;        \
-)
-GRP_DEFINE_NODE(Viewport, true, \
-    int x = 0;                  \
-    int y = 0;                  \
-    int w = 0;                  \
-    int h = 0;                  \
-)
-GRP_DEFINE_NODE(Texture, true,                                                                 \
-    virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const override; \
-    std::string filepath;                                                                      \
-    rlab::TextureType type = rlab::TextureType::Tex2D;                                         \
-    int width = 0;                                                                             \
-    int height = 0;                                                                            \
-    rlab::TextureFormat format = rlab::TextureFormat::RGBA8;                                   \
-)
-GRP_DEFINE_NODE(RenderTarget, true, GRP_NODE_PROP)
+// resource
 GRP_DEFINE_NODE(Shader, false,                            \
     auto& GetVert() const { return m_vert; }              \
     void  SetVert(const std::string& vert);               \
@@ -65,12 +47,36 @@ private:                                                  \
     std::vector<Node::PinDesc> m_vert_uniforms;           \
     std::vector<Node::PinDesc> m_frag_uniforms;           \
 )
+GRP_DEFINE_NODE(RenderTarget, true, GRP_NODE_PROP)
+GRP_DEFINE_NODE(Texture, true,                                                                 \
+    virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const override; \
+    std::string filepath;                                                                      \
+    rlab::TextureType type = rlab::TextureType::Tex2D;                                         \
+    int width = 0;                                                                             \
+    int height = 0;                                                                            \
+    rlab::TextureFormat format = rlab::TextureFormat::RGBA8;                                   \
+)
+GRP_DEFINE_NODE(VertexArray, false, \
+    std::string vertices_data;      \
+    std::string indices_data;       \
+    VertexAttrib position;          \
+    VertexAttrib normal;            \
+    VertexAttrib texture;           \
+)
+GRP_DEFINE_NODE(PrimitiveShape, false, \
+    PrimitiveShapeType type;           \
+)
+
+// op
+GRP_DEFINE_NODE(Clear, true, \
+    ClearType  type;         \
+    pt0::Color color;        \
+)
 GRP_DEFINE_NODE(Bind, false, \
     int channel = 0;         \
 )
 GRP_DEFINE_NODE(Unbind, false, GRP_NODE_PROP)
-GRP_DEFINE_NODE(DrawCube, false, GRP_NODE_PROP)
-
+GRP_DEFINE_NODE(Draw, false, GRP_NODE_PROP)
 class OutputToScreen : public Node
 {
 public:
@@ -86,6 +92,33 @@ public:
     RTTR_ENABLE(Node)
 
 }; // OutputToScreen
+
+// state
+GRP_DEFINE_NODE(Viewport, true, \
+    int x = 0;                  \
+    int y = 0;                  \
+    int w = 0;                  \
+    int h = 0;                  \
+)
+GRP_DEFINE_NODE(AlphaTest, false,               \
+    AlphaTestFunc func = AlphaTestFunc::Always; \
+)
+GRP_DEFINE_NODE(BlendEq, false,              \
+    BlendEqMode mode = BlendEqMode::FuncAdd; \
+)
+GRP_DEFINE_NODE(BlendFunc, false,                    \
+    BlendFuncFactor sfactor = BlendFuncFactor::One;  \
+    BlendFuncFactor dfactor = BlendFuncFactor::Zero; \
+)
+GRP_DEFINE_NODE(Cull, false,        \
+    CullMode type = CullMode::Back; \
+)
+GRP_DEFINE_NODE(ZTest, false,         \
+    ZTestFunc func = ZTestFunc::Less; \
+)
+GRP_DEFINE_NODE(ZWrite, false, \
+    bool enable = false;       \
+)
 
 // value
 GRP_DEFINE_NODE(Vector1, false, \
@@ -109,6 +142,7 @@ GRP_DEFINE_NODE(Matrix3, false, \
 GRP_DEFINE_NODE(Matrix4, false, \
     sm::mat4 val;               \
 )
+
 // math
 GRP_DEFINE_NODE(Add, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Mul, false, GRP_NODE_PROP)
@@ -131,32 +165,12 @@ GRP_DEFINE_NODE(LookAtMat, false,    \
     sm::vec3 center;                 \
     sm::vec3 up = sm::vec3(0, 1, 0); \
 )
+
 // input
 GRP_DEFINE_NODE(CamProjMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CamViewMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
-
-// state
-GRP_DEFINE_NODE(AlphaTest, false,               \
-    AlphaTestFunc func = AlphaTestFunc::Always; \
-)
-GRP_DEFINE_NODE(BlendEq, false,              \
-    BlendEqMode mode = BlendEqMode::FuncAdd; \
-)
-GRP_DEFINE_NODE(BlendFunc, false,                    \
-    BlendFuncFactor sfactor = BlendFuncFactor::One;  \
-    BlendFuncFactor dfactor = BlendFuncFactor::Zero; \
-)
-GRP_DEFINE_NODE(Cull, false,        \
-    CullMode type = CullMode::Back; \
-)
-GRP_DEFINE_NODE(ZTest, false,         \
-    ZTestFunc func = ZTestFunc::Less; \
-)
-GRP_DEFINE_NODE(ZWrite, false, \
-    bool enable = false;       \
-)
 
 }
 }

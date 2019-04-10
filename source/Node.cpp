@@ -88,6 +88,9 @@ void Node::InitPins(const std::string& name)
             case rg::VariableType::RenderTarget:
                 d.type = PIN_RENDERTARGET;
                 break;
+            case rg::VariableType::Model:
+                d.type = PIN_MODEL;
+                break;
             case rg::VariableType::Vector1:
                 d.type = PIN_VECTOR1;
                 break;

@@ -7,21 +7,29 @@
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
 
-#include <unirender/typedef.h>
-#include <rendergraph/node/Clear.h>
-#include <rendergraph/node/Viewport.h>
-#include <rendergraph/node/Texture.h>
+// resource
 #include <rendergraph/node/Shader.h>
+#include <rendergraph/node/Texture.h>
+#include <rendergraph/node/VertexArray.h>
+#include <rendergraph/node/PrimitiveShape.h>
+// op
+#include <rendergraph/node/Clear.h>
 #include <rendergraph/node/Bind.h>
-#include <rendergraph/node/value_nodes.h>
-#include <rendergraph/node/math_nodes.h>
+// state
+#include <rendergraph/node/Viewport.h>
 #include <rendergraph/node/AlphaTest.h>
 #include <rendergraph/node/BlendEq.h>
 #include <rendergraph/node/BlendFunc.h>
 #include <rendergraph/node/Cull.h>
 #include <rendergraph/node/ZTest.h>
 #include <rendergraph/node/ZWrite.h>
+// others
+#include <rendergraph/node/value_nodes.h>
+#include <rendergraph/node/math_nodes.h>
+
+#include <unirender/typedef.h>
 #include <facade/ImageLoader.h>
+#include <cpputil/StringHelper.h>
 
 namespace rlab
 {
@@ -50,30 +58,11 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     rg::NodePtr dst = var.get_value<std::shared_ptr<rg::Node>>();
 	assert(dst);
 
-    if (type == rttr::type::get<node::Clear>())
+    // resource
+    if (type == rttr::type::get<node::Shader>())
     {
-        auto& src = static_cast<const node::Clear&>(node);
-        auto clear = std::static_pointer_cast<rg::node::Clear>(dst);
-
-        uint32_t type = 0;
-        if (src.type.type & ClearType::CLEAR_COLOR) {
-            type |= rg::node::Clear::CLEAR_COLOR;
-        }
-        if (src.type.type & ClearType::CLEAR_DEPTH) {
-            type |= rg::node::Clear::CLEAR_DEPTH;
-        }
-        if (src.type.type & ClearType::CLEAR_STENCIL) {
-            type |= rg::node::Clear::CLEAR_STENCIL;
-        }
-        clear->SetClearType(type);
-
-        clear->SetColor(src.color);
-    }
-    else if (type == rttr::type::get<node::Viewport>())
-    {
-        auto& src = static_cast<const node::Viewport&>(node);
-        auto vp = std::static_pointer_cast<rg::node::Viewport>(dst);
-        vp->SetParams(src.x, src.y, src.w, src.h);
+        auto& src = static_cast<const node::Shader&>(node);
+        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src.GetVert(), src.GetFrag());
     }
     else if (type == rttr::type::get<node::Texture>())
     {
@@ -120,82 +109,91 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         loader.Load();
         tex->SetTexID(loader.GetID());
     }
-    else if (type == rttr::type::get<node::Shader>())
+    else if (type == rttr::type::get<node::VertexArray>())
     {
-        auto& src = static_cast<const node::Shader&>(node);
-        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src.GetVert(), src.GetFrag());
+        auto& src = static_cast<const node::VertexArray&>(node);
+        auto va = std::static_pointer_cast<rg::node::VertexArray>(dst);
+
+        std::vector<std::string> tokens;
+        cpputil::StringHelper::Split(src.vertices_data, ",", tokens);
+        std::vector<float> vertex_buf;
+        vertex_buf.reserve(tokens.size());
+        for (auto& t : tokens) {
+            vertex_buf.push_back(std::stof(t));
+        }
+        va->SetVertexBuf(vertex_buf);
+
+        std::vector<rg::node::VertexArray::VertexAttrib> va_list;
+        auto get_type_size = [](VertexDataType type)->size_t
+        {
+            size_t ret = 0;
+            switch (type)
+            {
+            case VertexDataType::Char:
+                ret = 1;
+                break;
+            case VertexDataType::Float:
+                ret = 4;
+                break;
+            }
+            return ret;
+        };
+        if (src.position.num > 0) {
+            va_list.push_back({ src.position.name, src.position.num, get_type_size(src.position.type) });
+        }
+        if (src.normal.num > 0) {
+            va_list.push_back({ src.normal.name, src.normal.num, get_type_size(src.normal.type) });
+        }
+        if (src.texture.num > 0) {
+            va_list.push_back({ src.texture.name, src.texture.num, get_type_size(src.texture.type) });
+        }
+        va->SetVertList(va_list);
+    }
+    else if (type == rttr::type::get<node::PrimitiveShape>())
+    {
+        auto& src = static_cast<const node::PrimitiveShape&>(node);
+
+        rg::node::PrimitiveShape::Type type;
+        switch (src.type)
+        {
+        case PrimitiveShapeType::Cube:
+            type = rg::node::PrimitiveShape::Type::Cube;
+            break;
+        }
+        std::static_pointer_cast<rg::node::PrimitiveShape>(dst)->SetType(type);
+    }
+    // op
+    else if (type == rttr::type::get<node::Clear>())
+    {
+        auto& src = static_cast<const node::Clear&>(node);
+        auto clear = std::static_pointer_cast<rg::node::Clear>(dst);
+
+        uint32_t type = 0;
+        if (src.type.type & ClearType::CLEAR_COLOR) {
+            type |= rg::node::Clear::CLEAR_COLOR;
+        }
+        if (src.type.type & ClearType::CLEAR_DEPTH) {
+            type |= rg::node::Clear::CLEAR_DEPTH;
+        }
+        if (src.type.type & ClearType::CLEAR_STENCIL) {
+            type |= rg::node::Clear::CLEAR_STENCIL;
+        }
+        clear->SetClearType(type);
+
+        clear->SetColor(src.color);
     }
     else if (type == rttr::type::get<node::Bind>())
     {
         auto& src = static_cast<const node::Bind&>(node);
         std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src.channel);
     }
-    // value
-    else if (type == rttr::type::get<node::Vector1>())
-    {
-        auto& src = static_cast<const node::Vector1&>(node);
-        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Vector2>())
-    {
-        auto& src = static_cast<const node::Vector2&>(node);
-        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Vector3>())
-    {
-        auto& src = static_cast<const node::Vector3&>(node);
-        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Vector4>())
-    {
-        auto& src = static_cast<const node::Vector4&>(node);
-        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Matrix2>())
-    {
-        auto& src = static_cast<const node::Matrix2&>(node);
-        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Matrix3>())
-    {
-        auto& src = static_cast<const node::Matrix3&>(node);
-        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src.val);
-    }
-    else if (type == rttr::type::get<node::Matrix4>())
-    {
-        auto& src = static_cast<const node::Matrix4&>(node);
-        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src.val);
-    }
-    // math
-    else if (type == rttr::type::get<node::PerspectiveMat>())
-    {
-        auto& src = static_cast<const node::PerspectiveMat&>(node);
-        auto pm = std::static_pointer_cast<rg::node::PerspectiveMat>(dst);
-        pm->fovy   = src.fovy;
-        pm->aspect = src.aspect;
-        pm->znear  = src.znear;
-        pm->zfar   = src.zfar;
-    }
-    else if (type == rttr::type::get<node::OrthoMat>())
-    {
-        auto& src = static_cast<const node::OrthoMat&>(node);
-        auto om = std::static_pointer_cast<rg::node::OrthoMat>(dst);
-        om->left   = src.left;
-        om->right  = src.right;
-        om->bottom = src.bottom;
-        om->top    = src.top;
-        om->znear  = src.znear;
-        om->zfar   = src.zfar;
-    }
-    else if (type == rttr::type::get<node::LookAtMat>())
-    {
-        auto& src = static_cast<const node::LookAtMat&>(node);
-        auto lm = std::static_pointer_cast<rg::node::LookAtMat>(dst);
-        lm->eye    = src.eye;
-        lm->center = src.center;
-        lm->up     = src.up;
-    }
     // state
+    else if (type == rttr::type::get<node::Viewport>())
+    {
+        auto& src = static_cast<const node::Viewport&>(node);
+        auto vp = std::static_pointer_cast<rg::node::Viewport>(dst);
+        vp->SetParams(src.x, src.y, src.w, src.h);
+    }
     else if (type == rttr::type::get<node::AlphaTest>())
     {
         auto& src = static_cast<const node::AlphaTest&>(node);
@@ -258,7 +256,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     else if (type == rttr::type::get<node::BlendFunc>())
     {
         auto& src = static_cast<const node::BlendFunc&>(node);
-        auto trans = [](const BlendFuncFactor& factor)->rg::node::BlendFunc::Factor 
+        auto trans = [](const BlendFuncFactor& factor)->rg::node::BlendFunc::Factor
         {
             rg::node::BlendFunc::Factor ret;
             switch (factor)
@@ -364,6 +362,71 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     {
         auto& src = static_cast<const node::ZWrite&>(node);
         std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src.enable);
+    }
+    // value
+    else if (type == rttr::type::get<node::Vector1>())
+    {
+        auto& src = static_cast<const node::Vector1&>(node);
+        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector2>())
+    {
+        auto& src = static_cast<const node::Vector2&>(node);
+        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector3>())
+    {
+        auto& src = static_cast<const node::Vector3&>(node);
+        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Vector4>())
+    {
+        auto& src = static_cast<const node::Vector4&>(node);
+        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix2>())
+    {
+        auto& src = static_cast<const node::Matrix2&>(node);
+        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix3>())
+    {
+        auto& src = static_cast<const node::Matrix3&>(node);
+        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src.val);
+    }
+    else if (type == rttr::type::get<node::Matrix4>())
+    {
+        auto& src = static_cast<const node::Matrix4&>(node);
+        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src.val);
+    }
+    // math
+    else if (type == rttr::type::get<node::PerspectiveMat>())
+    {
+        auto& src = static_cast<const node::PerspectiveMat&>(node);
+        auto pm = std::static_pointer_cast<rg::node::PerspectiveMat>(dst);
+        pm->fovy   = src.fovy;
+        pm->aspect = src.aspect;
+        pm->znear  = src.znear;
+        pm->zfar   = src.zfar;
+    }
+    else if (type == rttr::type::get<node::OrthoMat>())
+    {
+        auto& src = static_cast<const node::OrthoMat&>(node);
+        auto om = std::static_pointer_cast<rg::node::OrthoMat>(dst);
+        om->left   = src.left;
+        om->right  = src.right;
+        om->bottom = src.bottom;
+        om->top    = src.top;
+        om->znear  = src.znear;
+        om->zfar   = src.zfar;
+    }
+    else if (type == rttr::type::get<node::LookAtMat>())
+    {
+        auto& src = static_cast<const node::LookAtMat&>(node);
+        auto lm = std::static_pointer_cast<rg::node::LookAtMat>(dst);
+        lm->eye    = src.eye;
+        lm->center = src.center;
+        lm->up     = src.up;
     }
 
     // connect

@@ -35,6 +35,20 @@ enum class TextureFormat
     A8,
 };
 
+enum class TextureWrapping
+{
+    Repeat,
+    MirroredRepeat,
+    ClampToEdge,
+    ClampToBorder,
+};
+
+enum class TextureFiltering
+{
+    Nearest,
+    Linear,
+};
+
 // VertexArray
 
 enum class VertexDataType

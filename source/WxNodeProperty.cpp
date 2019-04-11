@@ -67,6 +67,22 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
             type_prop->SetValue(static_cast<int>(type));
 			m_pg->Append(type_prop);
         }
+        else if (prop_type == rttr::type::get<TextureWrapping>())
+        {
+            const wxChar* WRAPS[] = { wxT("Repeat"), wxT("MirroredRepeat"), wxT("ClampToEdge"), wxT("ClampToBorder"), NULL };
+            auto wrap_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, WRAPS);
+            auto wrap = prop.get_value(node).get_value<TextureWrapping>();
+            wrap_prop->SetValue(static_cast<int>(wrap));
+            m_pg->Append(wrap_prop);
+        }
+        else if (prop_type == rttr::type::get<TextureFiltering>())
+        {
+            const wxChar* FILTER[] = { wxT("Nearest"), wxT("Linear"), NULL };
+            auto filter_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FILTER);
+            auto filter = prop.get_value(node).get_value<TextureFiltering>();
+            filter_prop->SetValue(static_cast<int>(filter));
+            m_pg->Append(filter_prop);
+        }
         else if (prop_type == rttr::type::get<TextureFormat>())
         {
             const wxChar* FORMATS[] = { wxT("rgba8"), wxT("rgba4"), wxT("rgb"), wxT("rgb565"), wxT("a8"), NULL };
@@ -233,6 +249,14 @@ void WxNodeProperty::OnPropertyGridChanged(wxPropertyGridEvent& event)
         else if (prop_type == rttr::type::get<TextureFormat>() && key == ui_info.desc)
         {
             prop.set_value(m_node, TextureFormat(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<TextureWrapping>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, TextureWrapping(wxANY_AS(val, int)));
+        }
+        else if (prop_type == rttr::type::get<TextureFiltering>() && key == ui_info.desc)
+        {
+            prop.set_value(m_node, TextureFiltering(wxANY_AS(val, int)));
         }
         //else if (prop_type == rttr::type::get<VertexDataType>() && key == ui_info.desc)
         //{

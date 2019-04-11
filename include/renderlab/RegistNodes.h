@@ -54,7 +54,9 @@ GRP_DEFINE_NODE(Texture, true,                                                  
     rlab::TextureType type = rlab::TextureType::Tex2D;                                         \
     int width = 0;                                                                             \
     int height = 0;                                                                            \
-    rlab::TextureFormat format = rlab::TextureFormat::RGBA8;                                   \
+    rlab::TextureFormat format    = rlab::TextureFormat::RGBA8;                                \
+    rlab::TextureWrapping wrap    = rlab::TextureWrapping::Repeat;                             \
+    rlab::TextureFiltering filter = rlab::TextureFiltering::Linear;                            \
 )
 GRP_DEFINE_NODE(VertexArray, false, \
     std::string vertices_data;      \

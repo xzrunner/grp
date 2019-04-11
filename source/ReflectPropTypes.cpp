@@ -24,6 +24,20 @@ rttr::registration::enumeration<rlab::TextureFormat>("rlab_tex_fmt")
     rttr::value("a8",     rlab::TextureFormat::A8)
 );
 
+rttr::registration::enumeration<rlab::TextureWrapping>("rlab_tex_wrap")
+(
+	rttr::value("repeat",          rlab::TextureWrapping::Repeat),
+    rttr::value("mirrored_repeat", rlab::TextureWrapping::MirroredRepeat),
+    rttr::value("clamp_to_edge",   rlab::TextureWrapping::ClampToEdge),
+    rttr::value("clamp_to_border", rlab::TextureWrapping::ClampToBorder)
+);
+
+rttr::registration::enumeration<rlab::TextureFiltering>("rlab_tex_filter")
+(
+	rttr::value("nearest", rlab::TextureFiltering::Nearest),
+    rttr::value("linear",  rlab::TextureFiltering::Linear)
+);
+
 rttr::registration::enumeration<rlab::VertexDataType>("rlab_vert_data_type")
 (
 	rttr::value("char",  rlab::VertexDataType::Char),

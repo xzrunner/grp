@@ -59,6 +59,14 @@ REGIST_NODE_RTTI(Texture,                                              \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Format"))    \
 )                                                                      \
+.property("wrap", &rlab::node::Texture::wrap)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Wrap"))      \
+)                                                                      \
+.property("filter", &rlab::node::Texture::filter)                      \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filter"))    \
+)                                                                      \
 )
 REGIST_NODE_RTTI(VertexArray,                                             \
 .property("vertices_data", &rlab::node::VertexArray::vertices_data)       \

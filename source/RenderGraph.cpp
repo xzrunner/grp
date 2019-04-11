@@ -101,12 +101,42 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
             format = ur::TEXTURE_A8;
             break;
         }
-
         tex->SetParams(type, src.width, src.height, format);
+
+        rg::node::Texture::Wrapping wrap;
+        switch (src.wrap)
+        {
+        case TextureWrapping::Repeat:
+            wrap = rg::node::Texture::Wrapping::Repeat;
+            break;
+        case TextureWrapping::MirroredRepeat:
+            wrap = rg::node::Texture::Wrapping::MirroredRepeat;
+            break;
+        case TextureWrapping::ClampToEdge:
+            wrap = rg::node::Texture::Wrapping::ClampToEdge;
+            break;
+        case TextureWrapping::ClampToBorder:
+            wrap = rg::node::Texture::Wrapping::ClampToBorder;
+            break;
+        }
+        tex->SetWrapping(wrap);
+
+        rg::node::Texture::Filtering filter;
+        switch (src.filter)
+        {
+        case TextureFiltering::Nearest:
+            filter = rg::node::Texture::Filtering::Nearest;
+            break;
+        case TextureFiltering::Linear:
+            filter = rg::node::Texture::Filtering::Linear;
+            break;
+        }
+        tex->SetFiltering(filter);
 
         // todo
         facade::ImageLoader loader(src.filepath);
-        loader.Load();
+        loader.Load(static_cast<ur::TEXTURE_WRAP>(wrap),
+            static_cast<ur::TEXTURE_FILTER>(filter));
         tex->SetTexID(loader.GetID());
     }
     else if (type == rttr::type::get<node::VertexArray>())

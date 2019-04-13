@@ -21,7 +21,8 @@ rttr::registration::enumeration<rlab::TextureFormat>("rlab_tex_fmt")
     rttr::value("rgba4",  rlab::TextureFormat::RGBA4),
     rttr::value("rgb",    rlab::TextureFormat::RGB),
     rttr::value("rgb565", rlab::TextureFormat::RGB565),
-    rttr::value("a8",     rlab::TextureFormat::A8)
+    rttr::value("a8",     rlab::TextureFormat::A8),
+    rttr::value("depth",  rlab::TextureFormat::Depth)
 );
 
 rttr::registration::enumeration<rlab::TextureWrapping>("rlab_tex_wrap")

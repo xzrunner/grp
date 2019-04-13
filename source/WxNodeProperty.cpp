@@ -85,7 +85,7 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
         }
         else if (prop_type == rttr::type::get<TextureFormat>())
         {
-            const wxChar* FORMATS[] = { wxT("rgba8"), wxT("rgba4"), wxT("rgb"), wxT("rgb565"), wxT("a8"), NULL };
+            const wxChar* FORMATS[] = { wxT("rgba8"), wxT("rgba4"), wxT("rgb"), wxT("rgb565"), wxT("a8"), wxT("depth"), NULL };
             auto format_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FORMATS);
             auto format = prop.get_value(node).get_value<TextureType>();
             format_prop->SetValue(static_cast<int>(format));

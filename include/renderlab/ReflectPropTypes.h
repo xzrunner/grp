@@ -33,6 +33,7 @@ enum class TextureFormat
     RGB,
     RGB565,
     A8,
+    Depth,
 };
 
 enum class TextureWrapping

@@ -20,6 +20,9 @@ public:
 
     virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const {}
 
+    auto& GetRGNode() const { return m_rg_node; }
+    void SetRGNode(const rg::NodePtr& node) { m_rg_node = node; }
+
     struct PinDesc
     {
         bool operator == (const PinDesc& desc) const {
@@ -41,6 +44,8 @@ private:
 
 private:
     std::unique_ptr<NodePreview> m_preview = nullptr;
+
+    rg::NodePtr m_rg_node = nullptr;
 
     RTTR_ENABLE(bp::Node)
 

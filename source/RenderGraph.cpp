@@ -34,9 +34,14 @@
 namespace rlab
 {
 
-rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
+rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node* node)
 {
-    auto type = node.get_type();
+    auto itr = m_cached_nodes.find(node);
+    if (itr != m_cached_nodes.end()) {
+        return itr->second;
+    }
+
+    auto type = node->get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
     auto find_sg = src_type.find("rlab::");
@@ -61,50 +66,54 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     // resource
     if (type == rttr::type::get<node::Shader>())
     {
-        auto& src = static_cast<const node::Shader&>(node);
-        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src.GetVert(), src.GetFrag());
+        auto src = static_cast<const node::Shader*>(node);
+        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src->GetVert(), src->GetFrag());
     }
     else if (type == rttr::type::get<node::Texture>())
     {
-        auto& src = static_cast<const node::Texture&>(node);
+        auto src = static_cast<const node::Texture*>(node);
         auto tex = std::static_pointer_cast<rg::node::Texture>(dst);
 
-        tex->SetFilepath(src.filepath);
+        tex->SetSize(src->width, src->height);
 
-        int type = 0;
-        switch (src.type)
+        rg::node::Texture::Type type;
+        switch (src->type)
         {
         case TextureType::Tex2D:
-            type = ur::TEXTURE_2D;
+            type = rg::node::Texture::Type::Tex2D;
             break;
         case TextureType::TexCube:
-            type = ur::TEXTURE_CUBE;
+            type = rg::node::Texture::Type::TexCube;
             break;
         }
+        tex->SetType(type);
 
-        int format = 0;
-        switch (src.format)
+        rg::node::Texture::Format format;
+        switch (src->format)
         {
         case TextureFormat::RGBA8:
-            format = ur::TEXTURE_RGBA8;
+            format = rg::node::Texture::Format::RGBA8;
             break;
         case TextureFormat::RGBA4:
-            format = ur::TEXTURE_RGBA4;
+            format = rg::node::Texture::Format::RGBA4;
             break;
         case TextureFormat::RGB:
-            format = ur::TEXTURE_RGB;
+            format = rg::node::Texture::Format::RGB;
             break;
         case TextureFormat::RGB565:
-            format = ur::TEXTURE_RGB565;
+            format = rg::node::Texture::Format::RGB565;
             break;
         case TextureFormat::A8:
-            format = ur::TEXTURE_A8;
+            format = rg::node::Texture::Format::A8;
+            break;
+        case TextureFormat::Depth:
+            format = rg::node::Texture::Format::Depth;
             break;
         }
-        tex->SetParams(type, src.width, src.height, format);
+        tex->SetFormat(format);
 
         rg::node::Texture::Wrapping wrap;
-        switch (src.wrap)
+        switch (src->wrap)
         {
         case TextureWrapping::Repeat:
             wrap = rg::node::Texture::Wrapping::Repeat;
@@ -122,7 +131,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         tex->SetWrapping(wrap);
 
         rg::node::Texture::Filtering filter;
-        switch (src.filter)
+        switch (src->filter)
         {
         case TextureFiltering::Nearest:
             filter = rg::node::Texture::Filtering::Nearest;
@@ -134,18 +143,21 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         tex->SetFiltering(filter);
 
         // todo
-        facade::ImageLoader loader(src.filepath);
-        loader.Load(static_cast<ur::TEXTURE_WRAP>(wrap),
-            static_cast<ur::TEXTURE_FILTER>(filter));
-        tex->SetTexID(loader.GetID());
+        facade::ImageLoader loader(src->filepath);
+        auto ur_wrap = static_cast<ur::TEXTURE_WRAP>(wrap);
+        auto ur_filter = static_cast<ur::TEXTURE_FILTER>(filter);
+        if (loader.Load(ur_wrap, ur_filter)) {
+            tex->SetTexID(loader.GetID());
+            tex->SetFilepath(src->filepath);
+        }
     }
     else if (type == rttr::type::get<node::VertexArray>())
     {
-        auto& src = static_cast<const node::VertexArray&>(node);
+        auto src = static_cast<const node::VertexArray*>(node);
         auto va = std::static_pointer_cast<rg::node::VertexArray>(dst);
 
         std::vector<std::string> tokens;
-        cpputil::StringHelper::Split(src.vertices_data, ",", tokens);
+        cpputil::StringHelper::Split(src->vertices_data, ",", tokens);
         std::vector<float> vertex_buf;
         vertex_buf.reserve(tokens.size());
         for (auto& t : tokens) {
@@ -168,23 +180,23 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
             }
             return ret;
         };
-        if (src.position.num > 0) {
-            va_list.push_back({ src.position.name, src.position.num, get_type_size(src.position.type) });
+        if (src->position.num > 0) {
+            va_list.push_back({ src->position.name, src->position.num, get_type_size(src->position.type) });
         }
-        if (src.normal.num > 0) {
-            va_list.push_back({ src.normal.name, src.normal.num, get_type_size(src.normal.type) });
+        if (src->normal.num > 0) {
+            va_list.push_back({ src->normal.name, src->normal.num, get_type_size(src->normal.type) });
         }
-        if (src.texture.num > 0) {
-            va_list.push_back({ src.texture.name, src.texture.num, get_type_size(src.texture.type) });
+        if (src->texture.num > 0) {
+            va_list.push_back({ src->texture.name, src->texture.num, get_type_size(src->texture.type) });
         }
         va->SetVertList(va_list);
     }
     else if (type == rttr::type::get<node::PrimitiveShape>())
     {
-        auto& src = static_cast<const node::PrimitiveShape&>(node);
+        auto src = static_cast<const node::PrimitiveShape*>(node);
 
         rg::node::PrimitiveShape::Type type;
-        switch (src.type)
+        switch (src->type)
         {
         case PrimitiveShapeType::Cube:
             type = rg::node::PrimitiveShape::Type::Cube;
@@ -195,40 +207,40 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     // op
     else if (type == rttr::type::get<node::Clear>())
     {
-        auto& src = static_cast<const node::Clear&>(node);
+        auto src = static_cast<const node::Clear*>(node);
         auto clear = std::static_pointer_cast<rg::node::Clear>(dst);
 
         uint32_t type = 0;
-        if (src.type.type & ClearType::CLEAR_COLOR) {
+        if (src->type.type & ClearType::CLEAR_COLOR) {
             type |= rg::node::Clear::CLEAR_COLOR;
         }
-        if (src.type.type & ClearType::CLEAR_DEPTH) {
+        if (src->type.type & ClearType::CLEAR_DEPTH) {
             type |= rg::node::Clear::CLEAR_DEPTH;
         }
-        if (src.type.type & ClearType::CLEAR_STENCIL) {
+        if (src->type.type & ClearType::CLEAR_STENCIL) {
             type |= rg::node::Clear::CLEAR_STENCIL;
         }
         clear->SetClearType(type);
 
-        clear->SetColor(src.color);
+        clear->SetColor(src->color);
     }
     else if (type == rttr::type::get<node::Bind>())
     {
-        auto& src = static_cast<const node::Bind&>(node);
-        std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src.channel);
+        auto src = static_cast<const node::Bind*>(node);
+        std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src->channel);
     }
     // state
     else if (type == rttr::type::get<node::Viewport>())
     {
-        auto& src = static_cast<const node::Viewport&>(node);
+        auto src = static_cast<const node::Viewport*>(node);
         auto vp = std::static_pointer_cast<rg::node::Viewport>(dst);
-        vp->SetParams(src.x, src.y, src.w, src.h);
+        vp->SetParams(src->x, src->y, src->w, src->h);
     }
     else if (type == rttr::type::get<node::AlphaTest>())
     {
-        auto& src = static_cast<const node::AlphaTest&>(node);
+        auto src = static_cast<const node::AlphaTest*>(node);
         rg::node::AlphaTest::Func func;
-        switch (src.func)
+        switch (src->func)
         {
         case AlphaTestFunc::Off:
             func = rg::node::AlphaTest::Func::Off;
@@ -262,9 +274,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     }
     else if (type == rttr::type::get<node::BlendEq>())
     {
-        auto& src = static_cast<const node::BlendEq&>(node);
+        auto src = static_cast<const node::BlendEq*>(node);
         rg::node::BlendEq::Mode mode;
-        switch (src.mode)
+        switch (src->mode)
         {
         case BlendEqMode::FuncAdd:
             mode = rg::node::BlendEq::Mode::FuncAdd;
@@ -285,7 +297,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     }
     else if (type == rttr::type::get<node::BlendFunc>())
     {
-        auto& src = static_cast<const node::BlendFunc&>(node);
+        auto src = static_cast<const node::BlendFunc*>(node);
         auto trans = [](const BlendFuncFactor& factor)->rg::node::BlendFunc::Factor
         {
             rg::node::BlendFunc::Factor ret;
@@ -328,14 +340,14 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
             return ret;
         };
         auto func = std::static_pointer_cast<rg::node::BlendFunc>(dst);
-        func->SetSrcFactor(trans(src.sfactor));
-        func->SetDstFactor(trans(src.dfactor));
+        func->SetSrcFactor(trans(src->sfactor));
+        func->SetDstFactor(trans(src->dfactor));
     }
     else if (type == rttr::type::get<node::Cull>())
     {
-        auto& src = static_cast<const node::Cull&>(node);
+        auto src = static_cast<const node::Cull*>(node);
         rg::node::Cull::Mode mode;
-        switch (src.type)
+        switch (src->type)
         {
         case CullMode::Off:
             mode = rg::node::Cull::Mode::Off;
@@ -354,9 +366,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     }
     else if (type == rttr::type::get<node::ZTest>())
     {
-        auto& src = static_cast<const node::ZTest&>(node);
+        auto src = static_cast<const node::ZTest*>(node);
         rg::node::ZTest::Func func;
-        switch (src.func)
+        switch (src->func)
         {
         case ZTestFunc::Off:
             func = rg::node::ZTest::Func::Off;
@@ -390,80 +402,80 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
     }
     else if (type == rttr::type::get<node::ZWrite>())
     {
-        auto& src = static_cast<const node::ZWrite&>(node);
-        std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src.enable);
+        auto src = static_cast<const node::ZWrite*>(node);
+        std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src->enable);
     }
     // value
     else if (type == rttr::type::get<node::Vector1>())
     {
-        auto& src = static_cast<const node::Vector1&>(node);
-        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Vector1*>(node);
+        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector2>())
     {
-        auto& src = static_cast<const node::Vector2&>(node);
-        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Vector2*>(node);
+        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector3>())
     {
-        auto& src = static_cast<const node::Vector3&>(node);
-        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Vector3*>(node);
+        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector4>())
     {
-        auto& src = static_cast<const node::Vector4&>(node);
-        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Vector4*>(node);
+        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix2>())
     {
-        auto& src = static_cast<const node::Matrix2&>(node);
-        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Matrix2*>(node);
+        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix3>())
     {
-        auto& src = static_cast<const node::Matrix3&>(node);
-        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Matrix3*>(node);
+        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix4>())
     {
-        auto& src = static_cast<const node::Matrix4&>(node);
-        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src.val);
+        auto src = static_cast<const node::Matrix4*>(node);
+        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src->val);
     }
     // math
     else if (type == rttr::type::get<node::PerspectiveMat>())
     {
-        auto& src = static_cast<const node::PerspectiveMat&>(node);
+        auto src = static_cast<const node::PerspectiveMat*>(node);
         auto pm = std::static_pointer_cast<rg::node::PerspectiveMat>(dst);
-        pm->fovy   = src.fovy;
-        pm->aspect = src.aspect;
-        pm->znear  = src.znear;
-        pm->zfar   = src.zfar;
+        pm->fovy   = src->fovy;
+        pm->aspect = src->aspect;
+        pm->znear  = src->znear;
+        pm->zfar   = src->zfar;
     }
     else if (type == rttr::type::get<node::OrthoMat>())
     {
-        auto& src = static_cast<const node::OrthoMat&>(node);
+        auto src = static_cast<const node::OrthoMat*>(node);
         auto om = std::static_pointer_cast<rg::node::OrthoMat>(dst);
-        om->left   = src.left;
-        om->right  = src.right;
-        om->bottom = src.bottom;
-        om->top    = src.top;
-        om->znear  = src.znear;
-        om->zfar   = src.zfar;
+        om->left   = src->left;
+        om->right  = src->right;
+        om->bottom = src->bottom;
+        om->top    = src->top;
+        om->znear  = src->znear;
+        om->zfar   = src->zfar;
     }
     else if (type == rttr::type::get<node::LookAtMat>())
     {
-        auto& src = static_cast<const node::LookAtMat&>(node);
+        auto src = static_cast<const node::LookAtMat*>(node);
         auto lm = std::static_pointer_cast<rg::node::LookAtMat>(dst);
-        lm->eye    = src.eye;
-        lm->center = src.center;
-        lm->up     = src.up;
+        lm->eye    = src->eye;
+        lm->center = src->center;
+        lm->up     = src->up;
     }
 
     // connect
-    for (int i = 0, n = node.GetAllInput().size(); i < n; ++i)
+    for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
     {
         auto& imports = dst->GetImports();
-        if (node.IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
+        if (node->IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
             continue;
         }
         rg::Node::PortAddr from_port;
@@ -474,14 +486,16 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node& node)
         rg::make_connecting(from_port, { dst, i });
     }
 
-    m_cached_nodes.push_back(dst);
+    const_cast<Node*>(static_cast<const Node*>(node))->SetRGNode(dst);
+
+    m_cached_nodes.insert({ node, dst });
 
     return dst;
 }
 
-bool RenderGraph::CreateFromNode(const bp::Node& node, int input_idx, rg::Node::PortAddr& from_port)
+bool RenderGraph::CreateFromNode(const bp::Node* node, int input_idx, rg::Node::PortAddr& from_port)
 {
-    auto& to_port = node.GetAllInput()[input_idx];
+    auto& to_port = node->GetAllInput()[input_idx];
     auto& conns = to_port->GetConnecting();
     if (conns.empty()) {
         return false;
@@ -490,7 +504,7 @@ bool RenderGraph::CreateFromNode(const bp::Node& node, int input_idx, rg::Node::
     auto& bp_from_port = conns[0]->GetFrom();
     assert(bp_from_port);
 
-    from_port.node = CreateGraphNode(bp_from_port->GetParent());
+    from_port.node = CreateGraphNode(&bp_from_port->GetParent());
     from_port.idx  = bp_from_port->GetPosIdx();
     return true;
 }

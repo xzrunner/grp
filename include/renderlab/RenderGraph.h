@@ -11,15 +11,15 @@ namespace rlab
 class RenderGraph
 {
 public:
-    rg::NodePtr CreateGraphNode(const bp::Node& node);
+    rg::NodePtr CreateGraphNode(const bp::Node* node);
 
     void ClearCache() { m_cached_nodes.clear(); }
 
 private:
-    bool CreateFromNode(const bp::Node& node, int input_idx, rg::Node::PortAddr& from_port);
+    bool CreateFromNode(const bp::Node* node, int input_idx, rg::Node::PortAddr& from_port);
 
 private:
-    std::vector<rg::NodePtr> m_cached_nodes;
+    std::map<const bp::Node*, rg::NodePtr> m_cached_nodes;
 
 }; // RenderGraph
 

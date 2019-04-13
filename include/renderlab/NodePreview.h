@@ -28,7 +28,6 @@ private:
 
     RenderGraph m_rg;
 
-    rg::NodePtr m_rg_node = nullptr;
     std::shared_ptr<rg::DrawList> m_draw_list;
 
 }; // NodePreview

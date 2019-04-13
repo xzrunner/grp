@@ -47,7 +47,7 @@ private:                                                  \
     std::vector<Node::PinDesc> m_vert_uniforms;           \
     std::vector<Node::PinDesc> m_frag_uniforms;           \
 )
-GRP_DEFINE_NODE(RenderTarget, true, GRP_NODE_PROP)
+GRP_DEFINE_NODE(RenderTarget, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Texture, true,                                                                 \
     virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const override; \
     std::string filepath;                                                                      \
@@ -96,11 +96,11 @@ public:
 }; // OutputToScreen
 
 // state
-GRP_DEFINE_NODE(Viewport, true, \
-    int x = 0;                  \
-    int y = 0;                  \
-    int w = 0;                  \
-    int h = 0;                  \
+GRP_DEFINE_NODE(Viewport, false, \
+    int x = 0;                   \
+    int y = 0;                   \
+    int w = 0;                   \
+    int h = 0;                   \
 )
 GRP_DEFINE_NODE(AlphaTest, false,               \
     AlphaTestFunc func = AlphaTestFunc::Always; \

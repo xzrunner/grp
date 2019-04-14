@@ -34,11 +34,10 @@
 namespace rlab
 {
 
-rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node* node)
+rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
 {
-    auto itr = m_cached_nodes.find(node);
-    if (itr != m_cached_nodes.end()) {
-        return itr->second;
+    if (auto& rg_node = node->GetRGNode()) {
+        return rg_node;
     }
 
     auto type = node->get_type();
@@ -49,12 +48,24 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node* node)
         dst_type = "rg::" + src_type.substr(find_sg + strlen("rlab::"));
     }
     if (dst_type.empty()) {
+        node->SetRGNode(nullptr);
         return nullptr;
     }
 
 	rttr::type t = rttr::type::get_by_name(dst_type);
-	if (!t.is_valid()) {
-		return nullptr;
+    // fixme: specify node type
+	if (!t.is_valid())
+    {
+        rg::NodePtr ret = nullptr;
+        auto& inputs = node->GetAllInput();
+        if (!inputs.empty()) {
+            auto& conns = inputs[0]->GetConnecting();
+            if (!conns.empty()) {
+                ret = CreateGraphNode(&static_cast<const Node&>(conns[0]->GetFrom()->GetParent()));
+            }
+        }
+        node->SetRGNode(ret);
+        return ret;
 	}
 	assert(t.is_valid());
 	rttr::variant var = t.create();
@@ -62,6 +73,8 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node* node)
 
     rg::NodePtr dst = var.get_value<std::shared_ptr<rg::Node>>();
 	assert(dst);
+
+    dst->SetEnable(node->GetEnable());
 
     // resource
     if (type == rttr::type::get<node::Shader>())
@@ -486,14 +499,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(const bp::Node* node)
         rg::make_connecting(from_port, { dst, i });
     }
 
-    const_cast<Node*>(static_cast<const Node*>(node))->SetRGNode(dst);
-
-    m_cached_nodes.insert({ node, dst });
+    node->SetRGNode(dst);
 
     return dst;
 }
 
-bool RenderGraph::CreateFromNode(const bp::Node* node, int input_idx, rg::Node::PortAddr& from_port)
+bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::PortAddr& from_port)
 {
     auto& to_port = node->GetAllInput()[input_idx];
     auto& conns = to_port->GetConnecting();
@@ -504,7 +515,7 @@ bool RenderGraph::CreateFromNode(const bp::Node* node, int input_idx, rg::Node::
     auto& bp_from_port = conns[0]->GetFrom();
     assert(bp_from_port);
 
-    from_port.node = CreateGraphNode(&bp_from_port->GetParent());
+    from_port.node = CreateGraphNode(&static_cast<const Node&>(bp_from_port->GetParent()));
     from_port.idx  = bp_from_port->GetPosIdx();
     return true;
 }

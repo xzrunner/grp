@@ -116,7 +116,6 @@ REGIST_NODE_RTTI(Bind,                                               \
 )
 REGIST_NODE_RTTI_DEFAULT(Unbind)
 REGIST_NODE_RTTI_DEFAULT(Draw)
-REGIST_NODE_RTTI_DEFAULT(OutputToScreen)
 
 // state
 REGIST_NODE_RTTI(Viewport,                                          \
@@ -289,6 +288,15 @@ REGIST_NODE_RTTI_DEFAULT(CamProjMat)
 REGIST_NODE_RTTI_DEFAULT(CamViewMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
+
+// control
+REGIST_NODE_RTTI_DEFAULT(OutputToScreen)
+REGIST_NODE_RTTI(PassEnd,                                                             \
+.property("pass_end", &rlab::node::PassEnd::GetOrder, &rlab::node::PassEnd::SetOrder) \
+(                                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Order"))                    \
+)
+)
 
 }
 

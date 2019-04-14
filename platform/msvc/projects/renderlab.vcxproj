@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\renderlab\Blackboard.h" />
+    <ClInclude Include="..\..\..\include\renderlab\Evaluator.h" />
     <ClInclude Include="..\..\..\include\renderlab\Node.h" />
     <ClInclude Include="..\..\..\include\renderlab\NodePreview.h" />
     <ClInclude Include="..\..\..\include\renderlab\PinCallback.h" />
@@ -22,6 +24,8 @@
     <ClInclude Include="..\..\..\include\renderlab\WxNodeProperty.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\Blackboard.cpp" />
+    <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodePreview.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />

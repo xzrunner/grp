@@ -79,21 +79,6 @@ GRP_DEFINE_NODE(Bind, false, \
 )
 GRP_DEFINE_NODE(Unbind, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Draw, false, GRP_NODE_PROP)
-class OutputToScreen : public Node
-{
-public:
-    OutputToScreen()
-        : Node("OutputToScreen", false)
-    {
-        InitPins({
-			{ bp::PIN_ANY_VAR, "prev" }
-		},{
-		});
-    }
-
-    RTTR_ENABLE(Node)
-
-}; // OutputToScreen
 
 // state
 GRP_DEFINE_NODE(Viewport, false, \
@@ -173,6 +158,56 @@ GRP_DEFINE_NODE(CamProjMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CamViewMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
+
+// control
+class OutputToScreen : public Node
+{
+public:
+    OutputToScreen()
+        : Node("OutputToScreen", false)
+    {
+        InitPins({
+			{ bp::PIN_ANY_VAR, "prev" }
+		},{
+            { bp::PIN_ANY_VAR, "next" }
+		});
+    }
+
+    RTTR_ENABLE(Node)
+
+}; // OutputToScreen
+
+class PassEnd : public Node
+{
+public:
+    PassEnd()
+        : Node("PassEnd", false)
+    {
+        InitPins({
+			{ bp::PIN_ANY_VAR, "prev" }
+		},{
+		});
+
+        UpdateTitle();
+    }
+
+    int  GetOrder() const { return m_order; }
+    void SetOrder(int order) {
+        m_order = order;
+        UpdateTitle();
+    }
+
+private:
+    void UpdateTitle() {
+        m_title = "PassEnd" + std::to_string(m_order);
+    }
+
+private:
+    int m_order = 0;
+
+    RTTR_ENABLE(Node)
+
+}; // PassEnd
 
 }
 }

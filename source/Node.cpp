@@ -1,6 +1,7 @@
 #include "renderlab/Node.h"
 #include "renderlab/PinType.h"
 #include "renderlab/NodePreview.h"
+#include "renderlab/Blackboard.h"
 
 #include <blueprint/Pin.h>
 
@@ -13,10 +14,8 @@ namespace rlab
 
 Node::Node(const std::string& title, bool preview)
     : bp::Node(title)
+    , m_preview(preview)
 {
-    if (preview) {
-        m_preview = std::make_unique<NodePreview>(*this);
-    }
 }
 
 Node::~Node() = default;
@@ -24,18 +23,13 @@ Node::~Node() = default;
 void Node::Draw(const n2::RenderParams& rp) const
 {
     bp::Node::Draw(rp);
-    if (m_preview) {
-        m_preview->Draw(rp);
-    }
-}
 
-bool Node::Update(const bp::UpdateParams& params)
-{
-    bool ret = bp::Node::Update(params);
     if (m_preview) {
-        m_preview->Update();
+        auto eval = Blackboard::Instance()->GetEval();
+        if (eval) {
+            NodePreview::Draw(*eval, *this, rp);
+        }
     }
-    return ret;
 }
 
 void Node::InitPins(const std::vector<PinDesc>& input,

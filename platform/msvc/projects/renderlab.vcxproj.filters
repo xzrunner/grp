@@ -4,16 +4,25 @@
     <Filter Include="view">
       <UniqueIdentifier>{d556a1a9-e10e-4ee6-8b0f-3dceb4416573}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pin">
-      <UniqueIdentifier>{cc51220e-3194-4196-8f1d-34d1a5819eb1}</UniqueIdentifier>
+    <Filter Include="dataset">
+      <UniqueIdentifier>{65eb17e9-2d22-44e4-a71e-69c45babdd92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rtti">
-      <UniqueIdentifier>{bcaeab07-3cea-4b0a-8e5a-99f14066a8ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="node">
+    <Filter Include="dataset\node">
       <UniqueIdentifier>{245dfbc9-ca70-48a6-8724-6024021b0397}</UniqueIdentifier>
     </Filter>
-    <Filter Include="trans">
+    <Filter Include="dataset\pin">
+      <UniqueIdentifier>{cc51220e-3194-4196-8f1d-34d1a5819eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{d8000ef7-e89b-444a-92b7-e96fa194c86f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\eval">
+      <UniqueIdentifier>{fa2da5dc-44c4-4d7e-9ba7-c30d1e048235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\rtti">
+      <UniqueIdentifier>{bcaeab07-3cea-4b0a-8e5a-99f14066a8ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\trans">
       <UniqueIdentifier>{d5bfa290-17a3-4c1b-bc0f-ded0032d2cfe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -22,53 +31,65 @@
       <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\PinType.h">
-      <Filter>pin</Filter>
+      <Filter>dataset\pin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\PinCallback.h">
-      <Filter>pin</Filter>
+      <Filter>dataset\pin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\RegistNodes.h">
-      <Filter>rtti</Filter>
+      <Filter>tools\rtti</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\Node.h">
-      <Filter>node</Filter>
+      <Filter>dataset\node</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\ReflectPropTypes.h">
-      <Filter>rtti</Filter>
+      <Filter>tools\rtti</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\NodePreview.h">
-      <Filter>node</Filter>
+      <Filter>dataset\node</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\RenderGraph.h">
-      <Filter>trans</Filter>
+      <Filter>tools\trans</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
+    <ClInclude Include="..\..\..\include\renderlab\Evaluator.h">
+      <Filter>tools\eval</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\Blackboard.h">
+      <Filter>tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
       <Filter>view</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
-      <Filter>pin</Filter>
+      <Filter>dataset\pin</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RegistNodes.cpp">
-      <Filter>rtti</Filter>
+      <Filter>tools\rtti</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\Node.cpp">
-      <Filter>node</Filter>
+      <Filter>dataset\node</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp">
-      <Filter>rtti</Filter>
+      <Filter>tools\rtti</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp">
-      <Filter>rtti</Filter>
+      <Filter>tools\rtti</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\NodePreview.cpp">
-      <Filter>node</Filter>
+      <Filter>dataset\node</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderGraph.cpp">
-      <Filter>trans</Filter>
+      <Filter>tools\trans</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderLab.cpp" />
+    <ClCompile Include="..\..\..\source\Evaluator.cpp">
+      <Filter>tools\eval</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Blackboard.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include "renderlab/NodePreview.h"
 #include "renderlab/Node.h"
+#include "renderlab/Evaluator.h"
 
 #include <blueprint/NodeHelper.h>
 
@@ -24,14 +25,9 @@
 namespace rlab
 {
 
-NodePreview::NodePreview(const Node& node)
-    : m_node(node)
+void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::RenderParams& rp)
 {
-}
-
-void NodePreview::Draw(const n2::RenderParams& rp) const
-{
-    if (!m_draw_list || !m_node.GetRGNode()) {
+    if (!node.GetRGNode()) {
         return;
     }
 
@@ -46,28 +42,19 @@ void NodePreview::Draw(const n2::RenderParams& rp) const
         auto shader = std::static_pointer_cast<pt2::Shader>(renderer->GetAllShaders()[0]);
         pt2::RenderTargetCtx ctx(rc, shader, rt_mgr.WIDTH, rt_mgr.HEIGHT);
 
-        rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::EXTERN);
-
-        int shader_id = rc.GetBindedShader();
-        size_t rt_depth = rc.GetRenderTargetDepth();
-        m_draw_list->Draw(rg::RenderContext(rc));
-        size_t rt_depth2 = rc.GetRenderTargetDepth();
-        for (int i = 0; i < rt_depth2 - rt_depth; ++i) {
-            rc.UnbindRenderTarget();
-        }
-        rc.BindShader(shader_id);
+        eval.Draw(rg::RenderContext(rc), &node);
 
         sm::Matrix2D mat;
         mat.Scale(
             static_cast<float>(rt_mgr.WIDTH),
             static_cast<float>(rt_mgr.HEIGHT)
         );
-        m_node.PreviewDraw(m_node.GetRGNode(), mat);
+        node.PreviewDraw(node.GetRGNode(), mat);
     }
     rt->Unbind();
 
     // draw rt to screen
-    auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(m_node, rp.GetMatrix()));
+    auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(node, rp.GetMatrix()));
     const auto scale = mt4.GetScale();
     const float hw = scale.x * 0.5f;
     const float hh = scale.y * 0.5f;
@@ -87,16 +74,6 @@ void NodePreview::Draw(const n2::RenderParams& rp) const
     pt2::RenderSystem::DrawTexQuad(vertices, texcoords, rt->GetTexID(), 0xffffffff);
 
     rt_mgr.Return(rt);
-}
-
-void NodePreview::Update()
-{
-    if (!m_draw_list) {
-        auto& rg_node = m_node.GetRGNode();
-        if (rg_node) {
-            m_draw_list = std::make_shared<rg::DrawList>(rg_node);
-        }
-    }
 }
 
 }

@@ -28,11 +28,13 @@ namespace rlab
 void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
 {
     Clear();
+    for (auto& n : nodes) {
+        n->SetRGNode(nullptr);
+    }
 
     std::vector<std::shared_ptr<node::PassEnd>> passes;
     for (auto& n : nodes)
     {
-        n->SetRGNode(nullptr);
         if (n->get_type() == rttr::type::get<node::PassEnd>()) {
             RenderGraph::CreateGraphNode(n.get());
             passes.push_back(std::static_pointer_cast<node::PassEnd>(n));

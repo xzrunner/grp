@@ -1,6 +1,7 @@
 #include "renderlab/NodePreview.h"
 #include "renderlab/Node.h"
 #include "renderlab/Evaluator.h"
+#include "renderlab/RegistNodes.h"
 
 #include <blueprint/NodeHelper.h>
 
@@ -19,6 +20,7 @@
 #include <rendergraph/Node.h>
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
+#include <rendergraph/node/Texture.h>
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/IRenderer.h>
 
@@ -32,28 +34,56 @@ void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::Render
     }
 
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
-
-    // draw to rt
     auto rt = rt_mgr.Fetch();
-    rt->Bind();
-    {
-        auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-        auto renderer = rp::RenderMgr::Instance()->GetRenderer(rp::RenderType::SPRITE);
-        auto shader = std::static_pointer_cast<pt2::Shader>(renderer->GetAllShaders()[0]);
-        pt2::RenderTargetCtx ctx(rc, shader, rt_mgr.WIDTH, rt_mgr.HEIGHT);
 
-        eval.Draw(rg::RenderContext(rc), &node);
+    rt->Bind();
+    bool succ = DrawToRT(eval, node);
+    rt->Unbind();
+
+    if (succ) {
+        DrawFromRT(node, rp, *rt);
+    }
+
+    rt_mgr.Return(rt);
+}
+
+bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
+{
+    bool ret = false;
+
+    auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
+
+    auto& rc = ur::Blackboard::Instance()->GetRenderContext();
+    auto renderer = rp::RenderMgr::Instance()->GetRenderer(rp::RenderType::SPRITE);
+    auto shader = std::static_pointer_cast<pt2::Shader>(renderer->GetAllShaders()[0]);
+    pt2::RenderTargetCtx ctx(rc, shader, rt_mgr.WIDTH, rt_mgr.HEIGHT);
+
+    auto type = node.get_type();
+    if (type == rttr::type::get<node::Texture>())
+    {
+        auto rg_node = node.GetRGNode();
+        assert(rg_node && rg_node->get_type() == rttr::type::get<rg::node::Texture>());
+        auto tex = std::static_pointer_cast<rg::node::Texture>(rg_node);
 
         sm::Matrix2D mat;
         mat.Scale(
             static_cast<float>(rt_mgr.WIDTH),
             static_cast<float>(rt_mgr.HEIGHT)
         );
-        node.PreviewDraw(node.GetRGNode(), mat);
-    }
-    rt->Unbind();
+        pt2::RenderSystem::DrawTexture(tex->GetWidth(), tex->GetHeight(), tex->GetTexID(), sm::rect(1, 1), mat);
 
-    // draw rt to screen
+        ret = true;
+    }
+    else
+    {
+//        eval.Draw(rg::RenderContext(rc), &node);
+    }
+
+    return ret;
+}
+
+void NodePreview::DrawFromRT(const Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt)
+{
     auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(node, rp.GetMatrix()));
     const auto scale = mt4.GetScale();
     const float hw = scale.x * 0.5f;
@@ -71,9 +101,7 @@ void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::Render
         1, 1,
         0, 1
     };
-    pt2::RenderSystem::DrawTexQuad(vertices, texcoords, rt->GetTexID(), 0xffffffff);
-
-    rt_mgr.Return(rt);
+    pt2::RenderSystem::DrawTexQuad(vertices, texcoords, rt.GetTexID(), 0xffffffff);
 }
 
 }

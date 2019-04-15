@@ -49,7 +49,6 @@ private:                                                  \
 )
 GRP_DEFINE_NODE(RenderTarget, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Texture, true,                                                                 \
-    virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const override; \
     std::string filepath;                                                                      \
     rlab::TextureType type = rlab::TextureType::Tex2D;                                         \
     int width = 0;                                                                             \

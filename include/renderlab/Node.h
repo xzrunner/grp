@@ -15,8 +15,6 @@ public:
 
     virtual void Draw(const n2::RenderParams& rp) const override;
 
-    virtual void PreviewDraw(const rg::NodePtr& node, const sm::Matrix2D& mat) const {}
-
     bool GetEnable() const { return m_enable; }
     void SetEnable(bool enable) { m_enable = enable; }
 

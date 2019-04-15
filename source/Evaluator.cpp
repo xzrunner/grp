@@ -27,7 +27,7 @@ namespace rlab
 
 void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
 {
-    m_passes.clear();
+    Clear();
 
     std::vector<std::shared_ptr<node::PassEnd>> passes;
     for (auto& n : nodes)
@@ -68,6 +68,11 @@ void Evaluator::Draw(const rg::RenderContext& rc, const Node* end) const
             break;
         }
     }
+}
+
+void Evaluator::Clear()
+{
+    m_passes.clear();
 }
 
 }

@@ -24,6 +24,9 @@ public:
     bool IsEmpty() const { return m_passes.empty(); }
 
 private:
+    void Clear();
+
+private:
     std::vector<std::shared_ptr<rg::DrawList>> m_passes;
 
 }; // Evaluator

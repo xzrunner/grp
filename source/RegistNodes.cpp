@@ -96,6 +96,14 @@ REGIST_NODE_RTTI(PrimitiveShape,                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
 )                                                                  \
 )
+REGIST_NODE_RTTI(Model,                                                \
+.property("filepath", &rlab::node::Model::filepath)                    \
+(                                                                      \
+    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
+    rttr::metadata(js::RTTR::FilePathTag(), true),                     \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
+)                                                                      \
+)
 
 // op
 REGIST_NODE_RTTI(Clear,                                            \

@@ -67,6 +67,9 @@ GRP_DEFINE_NODE(VertexArray, false, \
 GRP_DEFINE_NODE(PrimitiveShape, false, \
     PrimitiveShapeType type;           \
 )
+GRP_DEFINE_NODE(Model, false, \
+    std::string filepath;     \
+)
 
 // op
 GRP_DEFINE_NODE(Clear, true, \

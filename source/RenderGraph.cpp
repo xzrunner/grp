@@ -12,6 +12,7 @@
 #include <rendergraph/node/Texture.h>
 #include <rendergraph/node/VertexArray.h>
 #include <rendergraph/node/PrimitiveShape.h>
+#include <rendergraph/node/Model.h>
 // op
 #include <rendergraph/node/Clear.h>
 #include <rendergraph/node/Bind.h>
@@ -27,8 +28,11 @@
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
 
+#include <model/Model.h>
+#include <model/ModelInstance.h>
 #include <unirender/typedef.h>
 #include <facade/ImageLoader.h>
+#include <facade/ResPool.h>
 #include <cpputil/StringHelper.h>
 
 namespace rlab
@@ -216,6 +220,13 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
             break;
         }
         std::static_pointer_cast<rg::node::PrimitiveShape>(dst)->SetType(type);
+    }
+    else if (type == rttr::type::get<node::Model>())
+    {
+        auto src = static_cast<const node::Model*>(node);
+        auto model = facade::ResPool::Instance().Fetch<model::Model>(src->filepath);
+        auto model_inst = std::make_shared<model::ModelInstance>(model);
+        std::static_pointer_cast<rg::node::Model>(dst)->SetModel(model_inst);
     }
     // op
     else if (type == rttr::type::get<node::Clear>())

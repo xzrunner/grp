@@ -184,6 +184,12 @@ REGIST_NODE_RTTI(ZWrite,                                            \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Enable")) \
 )                                                                   \
 )
+REGIST_NODE_RTTI(FrontFace,                                            \
+.property("clockwise", &rlab::node::FrontFace::clockwise)              \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Clockwise")) \
+)                                                                      \
+)
 
 // value
 REGIST_NODE_RTTI(Vector1,                                        \
@@ -294,6 +300,7 @@ REGIST_NODE_RTTI(LookAtMat,                                         \
 // input
 REGIST_NODE_RTTI_DEFAULT(CamProjMat)
 REGIST_NODE_RTTI_DEFAULT(CamViewMat)
+REGIST_NODE_RTTI_DEFAULT(ModelMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
 

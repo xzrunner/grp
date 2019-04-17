@@ -108,6 +108,9 @@ GRP_DEFINE_NODE(ZTest, false,         \
 GRP_DEFINE_NODE(ZWrite, false, \
     bool enable = false;       \
 )
+GRP_DEFINE_NODE(FrontFace, false, \
+    bool clockwise = false;       \
+)
 
 // value
 GRP_DEFINE_NODE(Vector1, false, \
@@ -158,6 +161,7 @@ GRP_DEFINE_NODE(LookAtMat, false,    \
 // input
 GRP_DEFINE_NODE(CamProjMat,     false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CamViewMat,     false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(ModelMat,    false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
 

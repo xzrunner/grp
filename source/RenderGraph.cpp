@@ -24,6 +24,7 @@
 #include <rendergraph/node/Cull.h>
 #include <rendergraph/node/ZTest.h>
 #include <rendergraph/node/ZWrite.h>
+#include <rendergraph/node/FrontFace.h>
 // others
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
@@ -428,6 +429,11 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     {
         auto src = static_cast<const node::ZWrite*>(node);
         std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src->enable);
+    }
+    else if (type == rttr::type::get<node::FrontFace>())
+    {
+        auto src = static_cast<const node::FrontFace*>(node);
+        std::static_pointer_cast<rg::node::FrontFace>(dst)->SetClockwise(src->clockwise);
     }
     // value
     else if (type == rttr::type::get<node::Vector1>())

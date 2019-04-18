@@ -475,30 +475,23 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     else if (type == rttr::type::get<node::PerspectiveMat>())
     {
         auto src = static_cast<const node::PerspectiveMat*>(node);
-        auto pm = std::static_pointer_cast<rg::node::PerspectiveMat>(dst);
-        pm->fovy   = src->fovy;
-        pm->aspect = src->aspect;
-        pm->znear  = src->znear;
-        pm->zfar   = src->zfar;
+        std::static_pointer_cast<rg::node::PerspectiveMat>(dst)->SetProps(
+            src->fovy, src->aspect, src->znear, src->zfar
+        );
     }
     else if (type == rttr::type::get<node::OrthoMat>())
     {
         auto src = static_cast<const node::OrthoMat*>(node);
-        auto om = std::static_pointer_cast<rg::node::OrthoMat>(dst);
-        om->left   = src->left;
-        om->right  = src->right;
-        om->bottom = src->bottom;
-        om->top    = src->top;
-        om->znear  = src->znear;
-        om->zfar   = src->zfar;
+        std::static_pointer_cast<rg::node::OrthoMat>(dst)->SetProps(
+            src->left, src->right, src->bottom, src->top, src->znear, src->zfar
+        );
     }
     else if (type == rttr::type::get<node::LookAtMat>())
     {
         auto src = static_cast<const node::LookAtMat*>(node);
-        auto lm = std::static_pointer_cast<rg::node::LookAtMat>(dst);
-        lm->eye    = src->eye;
-        lm->center = src->center;
-        lm->up     = src->up;
+        std::static_pointer_cast<rg::node::LookAtMat>(dst)->SetProps(
+            src->eye, src->center, src->up
+        );
     }
 
     // connect

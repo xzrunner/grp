@@ -215,5 +215,12 @@ private:
 
 }; // PassEnd
 
+// pipeline
+GRP_DEFINE_NODE(SeparableSSS, false,                   \
+    int      nsamples = 7;                             \
+    sm::vec3 strength = sm::vec3(0.48f, 0.41f, 0.28f); \
+    sm::vec3 falloff  = sm::vec3(1.0f, 0.37f, 0.3f);   \
+)
+
 }
 }

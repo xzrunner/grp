@@ -6,6 +6,7 @@
 #include <blueprint/node/Commentary.h>
 
 #include <rendergraph/RenderGraph.h>
+#include <renderpipeline/RenderPipeline.h>
 
 namespace rlab
 {
@@ -17,6 +18,7 @@ extern void regist_rttr();
 RenderLab::RenderLab()
 {
 	rg::RenderGraph::Instance();
+    rp::RenderPipeline::Instance();
 
 	regist_rttr();
 

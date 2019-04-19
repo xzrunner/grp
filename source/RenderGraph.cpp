@@ -28,6 +28,8 @@
 // others
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
+// features
+#include <renderpipeline/SeparableSSS.h>
 
 #include <model/Model.h>
 #include <model/ModelInstance.h>
@@ -491,6 +493,14 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::LookAtMat*>(node);
         std::static_pointer_cast<rg::node::LookAtMat>(dst)->SetProps(
             src->eye, src->center, src->up
+        );
+    }
+    // features
+    else if (type == rttr::type::get<node::SeparableSSS>())
+    {
+        auto src = static_cast<const node::SeparableSSS*>(node);
+        std::static_pointer_cast<rp::node::SeparableSSS>(dst)->SetProps(
+            src->nsamples, src->strength, src->falloff
         );
     }
 

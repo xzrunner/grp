@@ -43,7 +43,13 @@ void Node::InitPins(const std::vector<PinDesc>& input,
 void Node::InitPins(const std::string& name)
 {
 	rttr::type t = rttr::type::get_by_name("rg::" + name);
-    assert(t.is_valid());
+    if (!t.is_valid()) {
+        t = rttr::type::get_by_name("rp::" + name);
+    }
+    if (!t.is_valid()) {
+        return;
+    }
+
 	rttr::variant var = t.create();
 	assert(var.is_valid());
 
@@ -96,6 +102,9 @@ void Node::InitPins(const std::string& name)
                 break;
             case rg::VariableType::Vector4:
                 d.type = PIN_VECTOR4;
+                break;
+            case rg::VariableType::Vec4Array:
+                d.type = PIN_VEC4_ARRAY;
                 break;
             case rg::VariableType::Matrix2:
                 d.type = PIN_MATRIX2;

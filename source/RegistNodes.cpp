@@ -313,6 +313,22 @@ REGIST_NODE_RTTI(PassEnd,                                                       
 )
 )
 
+// pipeline
+REGIST_NODE_RTTI(SeparableSSS,                                        \
+.property("nsamples", &rlab::node::SeparableSSS::nsamples)            \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("nSamples")) \
+)                                                                     \
+.property("strength", &rlab::node::SeparableSSS::strength)            \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Strength")) \
+)                                                                     \
+.property("falloff", &rlab::node::SeparableSSS::falloff)              \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Falloff"))  \
+)                                                                     \
+)
+
 }
 
 namespace rlab

@@ -13,6 +13,7 @@ enum PinType
     PIN_VECTOR2,
     PIN_VECTOR3,
     PIN_VECTOR4,
+    PIN_VEC4_ARRAY,
     PIN_MATRIX2,
     PIN_MATRIX3,
     PIN_MATRIX4,

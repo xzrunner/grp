@@ -218,6 +218,8 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         rg::node::PrimitiveShape::Type type;
         switch (src->type)
         {
+        case PrimitiveShapeType::Quad:
+            type = rg::node::PrimitiveShape::Type::Quad;
         case PrimitiveShapeType::Cube:
             type = rg::node::PrimitiveShape::Type::Cube;
             break;

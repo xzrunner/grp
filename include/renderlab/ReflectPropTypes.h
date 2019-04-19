@@ -67,6 +67,7 @@ struct VertexAttrib
 
 enum class PrimitiveShapeType
 {
+    Quad,
     Cube,
 };
 

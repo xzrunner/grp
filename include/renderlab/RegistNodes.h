@@ -47,15 +47,20 @@ private:                                                  \
     std::vector<Node::PinDesc> m_vert_uniforms;           \
     std::vector<Node::PinDesc> m_frag_uniforms;           \
 )
-GRP_DEFINE_NODE(RenderTarget, false, GRP_NODE_PROP)
-GRP_DEFINE_NODE(Texture, true,                                                                 \
-    std::string filepath;                                                                      \
-    rlab::TextureType type = rlab::TextureType::Tex2D;                                         \
-    int width = 0;                                                                             \
-    int height = 0;                                                                            \
-    rlab::TextureFormat format    = rlab::TextureFormat::RGBA8;                                \
-    rlab::TextureWrapping wrap    = rlab::TextureWrapping::Repeat;                             \
-    rlab::TextureFiltering filter = rlab::TextureFiltering::Linear;                            \
+GRP_DEFINE_NODE(RenderTarget, false, \
+    size_t width = 0;                \
+    size_t height = 0;               \
+    bool depth_buf = false;          \
+    bool color_buf = false;          \
+)
+GRP_DEFINE_NODE(Texture, true,                                      \
+    std::string filepath;                                           \
+    rlab::TextureType type = rlab::TextureType::Tex2D;              \
+    size_t width = 0;                                               \
+    size_t height = 0;                                              \
+    rlab::TextureFormat format    = rlab::TextureFormat::RGBA8;     \
+    rlab::TextureWrapping wrap    = rlab::TextureWrapping::Repeat;  \
+    rlab::TextureFiltering filter = rlab::TextureFiltering::Linear; \
 )
 GRP_DEFINE_NODE(VertexArray, false, \
     std::string vertices_data;      \

@@ -9,6 +9,7 @@
 
 // resource
 #include <rendergraph/node/Shader.h>
+#include <rendergraph/node/RenderTarget.h>
 #include <rendergraph/node/Texture.h>
 #include <rendergraph/node/VertexArray.h>
 #include <rendergraph/node/PrimitiveShape.h>
@@ -88,6 +89,29 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     {
         auto src = static_cast<const node::Shader*>(node);
         std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src->GetVert(), src->GetFrag());
+    }
+    else if (type == rttr::type::get<node::RenderTarget>())
+    {
+        auto src = static_cast<const node::RenderTarget*>(node);
+        auto rt = std::static_pointer_cast<rg::node::RenderTarget>(dst);
+
+        auto& conns = src->GetAllInput()[1]->GetConnecting();
+        if (!conns.empty()) {
+            auto& tex_node = conns[0]->GetFrom()->GetParent();
+            if (tex_node.get_type() == rttr::type::get<node::Texture>()) {
+                auto tex = static_cast<const node::Texture&>(tex_node);
+                const_cast<node::RenderTarget*>(src)->width  = tex.width;
+                const_cast<node::RenderTarget*>(src)->height = tex.height;
+            }
+        }
+
+        rt->SetSize(src->width, src->height);
+        if (src->depth_buf) {
+            rt->EnableDepthRBO();
+        }
+        if (src->color_buf) {
+            rt->EnableColorRBO();
+        }
     }
     else if (type == rttr::type::get<node::Texture>())
     {

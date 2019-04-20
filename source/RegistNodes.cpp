@@ -35,7 +35,24 @@ REGIST_NODE_RTTI(Shader,                                                      \
     rttr::metadata(ee0::PropLongStringTag(), true)                            \
 )                                                                             \
 )
-REGIST_NODE_RTTI_DEFAULT(RenderTarget)
+REGIST_NODE_RTTI(RenderTarget,                                        \
+.property("width", &rlab::node::RenderTarget::width)                  \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))    \
+)                                                                     \
+.property("height", &rlab::node::RenderTarget::height)                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height"))   \
+)                                                                     \
+.property("depth_buf", &rlab::node::RenderTarget::depth_buf)          \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DepthBuf")) \
+)                                                                     \
+.property("color_buf", &rlab::node::RenderTarget::color_buf)          \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ColorBuf")) \
+)                                                                     \
+)
 REGIST_NODE_RTTI(Texture,                                              \
 .property("filepath", &rlab::node::Texture::filepath)                  \
 (                                                                      \

@@ -114,7 +114,7 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
         }
         else if (prop_type == rttr::type::get<PrimitiveShapeType>())
         {
-            const wxChar* TYPES[] = { wxT("Cube"), NULL };
+            const wxChar* TYPES[] = { wxT("Quad"), wxT("Cube"), NULL };
             auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
             auto type = prop.get_value(node).get_value<PrimitiveShapeType>();
             type_prop->SetValue(static_cast<int>(type));

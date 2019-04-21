@@ -58,7 +58,7 @@ REGIST_NODE_RTTI(Texture,                                              \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
     rttr::metadata(js::RTTR::FilePathTag(), true),                     \
-    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.png")) \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
 )                                                                      \
 .property("type", &rlab::node::Texture::type)                          \
 (                                                                      \

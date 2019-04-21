@@ -118,6 +118,81 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::Texture*>(node);
         auto tex = std::static_pointer_cast<rg::node::Texture>(dst);
 
+        rg::node::Texture::Wrapping wrap;
+        switch (src->wrap)
+        {
+        case TextureWrapping::Repeat:
+            wrap = rg::node::Texture::Wrapping::Repeat;
+            break;
+        case TextureWrapping::MirroredRepeat:
+            wrap = rg::node::Texture::Wrapping::MirroredRepeat;
+            break;
+        case TextureWrapping::ClampToEdge:
+            wrap = rg::node::Texture::Wrapping::ClampToEdge;
+            break;
+        case TextureWrapping::ClampToBorder:
+            wrap = rg::node::Texture::Wrapping::ClampToBorder;
+            break;
+        }
+        tex->SetWrapping(wrap);
+
+        rg::node::Texture::Filtering filter;
+        switch (src->filter)
+        {
+        case TextureFiltering::Nearest:
+            filter = rg::node::Texture::Filtering::Nearest;
+            break;
+        case TextureFiltering::Linear:
+            filter = rg::node::Texture::Filtering::Linear;
+            break;
+        }
+        tex->SetFiltering(filter);
+
+        facade::ImageLoader loader(src->filepath);
+        auto ur_wrap = static_cast<ur::TEXTURE_WRAP>(wrap);
+        auto ur_filter = static_cast<ur::TEXTURE_FILTER>(filter);
+        if (loader.Load(ur_wrap, ur_filter))
+        {
+            tex->SetTexID(loader.GetID());
+            tex->SetFilepath(src->filepath);
+
+            auto src_tex = const_cast<node::Texture*>(src);
+            src_tex->width  = loader.GetWidth();
+            src_tex->height = loader.GetHeight();
+
+            switch (loader.GetType())
+            {
+            case ur::TEXTURE_2D:
+                src_tex->type = TextureType::Tex2D;
+                break;
+            case ur::TEXTURE_CUBE:
+                src_tex->type = TextureType::TexCube;
+                break;
+            }
+
+            switch (loader.GetFormat())
+            {
+            case ur::TEXTURE_RGBA8:
+                src_tex->format = TextureFormat::RGBA8;
+                break;
+            case ur::TEXTURE_RGBA4:
+                src_tex->format = TextureFormat::RGBA4;
+                break;
+            case ur::TEXTURE_RGB:
+                src_tex->format = TextureFormat::RGB;
+                break;
+            case ur::TEXTURE_RGB565:
+                src_tex->format = TextureFormat::RGB565;
+                break;
+            case ur::TEXTURE_A8:
+                src_tex->format = TextureFormat::A8;
+                break;
+            case ur::TEXTURE_DEPTH:
+                src_tex->format = TextureFormat::Depth;
+                break;
+            }
+        }
+
         tex->SetSize(src->width, src->height);
 
         rg::node::Texture::Type type;
@@ -155,45 +230,6 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
             break;
         }
         tex->SetFormat(format);
-
-        rg::node::Texture::Wrapping wrap;
-        switch (src->wrap)
-        {
-        case TextureWrapping::Repeat:
-            wrap = rg::node::Texture::Wrapping::Repeat;
-            break;
-        case TextureWrapping::MirroredRepeat:
-            wrap = rg::node::Texture::Wrapping::MirroredRepeat;
-            break;
-        case TextureWrapping::ClampToEdge:
-            wrap = rg::node::Texture::Wrapping::ClampToEdge;
-            break;
-        case TextureWrapping::ClampToBorder:
-            wrap = rg::node::Texture::Wrapping::ClampToBorder;
-            break;
-        }
-        tex->SetWrapping(wrap);
-
-        rg::node::Texture::Filtering filter;
-        switch (src->filter)
-        {
-        case TextureFiltering::Nearest:
-            filter = rg::node::Texture::Filtering::Nearest;
-            break;
-        case TextureFiltering::Linear:
-            filter = rg::node::Texture::Filtering::Linear;
-            break;
-        }
-        tex->SetFiltering(filter);
-
-        // todo
-        facade::ImageLoader loader(src->filepath);
-        auto ur_wrap = static_cast<ur::TEXTURE_WRAP>(wrap);
-        auto ur_filter = static_cast<ur::TEXTURE_FILTER>(filter);
-        if (loader.Load(ur_wrap, ur_filter)) {
-            tex->SetTexID(loader.GetID());
-            tex->SetFilepath(src->filepath);
-        }
     }
     else if (type == rttr::type::get<node::VertexArray>())
     {

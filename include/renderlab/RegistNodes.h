@@ -31,6 +31,19 @@ public:                                      \
 
 #define GRP_NODE_PROP
 
+// renderlab
+class Preview : public Node
+{
+public:
+    Preview() : Node("Preview", true) {
+        InitPins({
+			{ bp::PIN_ANY_VAR, "in" }
+		},{
+		});
+    }
+    RTTR_ENABLE(Node)
+}; // Preview
+
 // resource
 GRP_DEFINE_NODE(Shader, false,                            \
     auto& GetVert() const { return m_vert; }              \
@@ -226,6 +239,7 @@ GRP_DEFINE_NODE(SeparableSSS, false,                   \
     sm::vec3 strength = sm::vec3(0.48f, 0.41f, 0.28f); \
     sm::vec3 falloff  = sm::vec3(1.0f, 0.37f, 0.3f);   \
 )
+GRP_DEFINE_NODE(GlobalIllumination, false, GRP_NODE_PROP)
 
 }
 }

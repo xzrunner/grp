@@ -35,6 +35,7 @@
 #include <model/Model.h>
 #include <model/ModelInstance.h>
 #include <unirender/typedef.h>
+#include <rendergraph/Variable.h>
 #include <facade/ImageLoader.h>
 #include <facade/ResPool.h>
 #include <cpputil/StringHelper.h>
@@ -51,36 +52,59 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     auto type = node->get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
-    auto find_sg = src_type.find("rlab::");
-    if (find_sg != std::string::npos) {
-        dst_type = "rg::" + src_type.substr(find_sg + strlen("rlab::"));
+    std::string lib_str = "rg";
+    if (type == rttr::type::get<rlab::node::GlobalIllumination>() ||
+        type == rttr::type::get<rlab::node::SeparableSSS>()) {
+        lib_str = "rp";
+    }
+    auto find_lib = src_type.find("rlab::");
+    if (find_lib != std::string::npos) {
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("rlab::"));
     }
     if (dst_type.empty()) {
         node->SetRGNode(nullptr);
         return nullptr;
     }
 
+    rg::NodePtr dst = nullptr;
+
 	rttr::type t = rttr::type::get_by_name(dst_type);
     // fixme: specify node type
 	if (!t.is_valid())
     {
-        rg::NodePtr ret = nullptr;
-        auto& inputs = node->GetAllInput();
-        if (!inputs.empty()) {
-            auto& conns = inputs[0]->GetConnecting();
-            if (!conns.empty()) {
-                ret = CreateGraphNode(&static_cast<const Node&>(conns[0]->GetFrom()->GetParent()));
-            }
-        }
-        node->SetRGNode(ret);
-        return ret;
-	}
-	assert(t.is_valid());
-	rttr::variant var = t.create();
-	assert(var.is_valid());
+        dst = std::make_shared<rg::Node>();
 
-    rg::NodePtr dst = var.get_value<std::shared_ptr<rg::Node>>();
-	assert(dst);
+        auto& inputs  = node->GetAllInput();
+        auto& outputs = node->GetAllOutput();
+
+        std::vector<rg::Node::Port> imports, exports;
+        imports.reserve(inputs.size());
+        for (size_t i = 0, n = inputs.size(); i < n; ++i)
+        {
+            rg::Variable var;
+            var.type = TypeFrontToBack(inputs[i]->GetOldType());
+            var.name = std::string("in") + std::to_string(i);
+            imports.push_back(var);
+        }
+        exports.reserve(outputs.size());
+        for (size_t i = 0, n = outputs.size(); i < n; ++i)
+        {
+            rg::Variable var;
+            var.type = TypeFrontToBack(outputs[i]->GetOldType());
+            var.name = std::string("in") + std::to_string(i);
+            exports.push_back(var);
+        }
+        dst->SetImports(imports);
+        dst->SetExports(exports);
+	}
+    else
+    {
+        rttr::variant var = t.create();
+        assert(var.is_valid());
+
+        dst = var.get_value<std::shared_ptr<rg::Node>>();
+        assert(dst);
+    }
 
     dst->SetEnable(node->GetEnable());
 
@@ -584,6 +608,113 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     node->SetRGNode(dst);
 
     return dst;
+}
+
+int RenderGraph::TypeBackToFront(rg::VariableType type)
+{
+    int ret = -1;
+    switch (type)
+    {
+    case rg::VariableType::Any:
+        ret = bp::PIN_ANY_VAR;
+        break;
+    case rg::VariableType::Port:
+        ret = bp::PIN_PORT;
+        break;
+    case rg::VariableType::Texture:
+        ret = PIN_TEXTURE;
+        break;
+    case rg::VariableType::RenderTarget:
+        ret = PIN_RENDERTARGET;
+        break;
+    case rg::VariableType::Model:
+        ret = PIN_MODEL;
+        break;
+    case rg::VariableType::Vector1:
+        ret = PIN_VECTOR1;
+        break;
+    case rg::VariableType::Vector2:
+        ret = PIN_VECTOR2;
+        break;
+    case rg::VariableType::Vector3:
+        ret = PIN_VECTOR3;
+        break;
+    case rg::VariableType::Vector4:
+        ret = PIN_VECTOR4;
+        break;
+    case rg::VariableType::Vec4Array:
+        ret = PIN_VEC4_ARRAY;
+        break;
+    case rg::VariableType::Matrix2:
+        ret = PIN_MATRIX2;
+        break;
+    case rg::VariableType::Matrix3:
+        ret = PIN_MATRIX3;
+        break;
+    case rg::VariableType::Matrix4:
+        ret = PIN_MATRIX4;
+        break;
+    case rg::VariableType::Sampler2D:
+        ret = PIN_SAMPLER2D;
+        break;
+    case rg::VariableType::SamplerCube:
+        ret = PIN_SAMPLE_CUBE;
+        break;
+    default:
+        assert(0);
+    }
+    return ret;
+}
+
+rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
+{
+    rg::VariableType ret = rg::VariableType::Any;
+    switch (pin_type)
+    {
+    case bp::PIN_ANY_VAR:
+        ret = rg::VariableType::Any;
+        break;
+    case bp::PIN_PORT:
+        ret = rg::VariableType::Port;
+        break;
+    case PIN_TEXTURE:
+        ret = rg::VariableType::Texture;
+        break;
+    case PIN_RENDERTARGET:
+        ret = rg::VariableType::RenderTarget;
+        break;
+    case PIN_MODEL:
+        ret = rg::VariableType::Model;
+        break;
+    case PIN_VECTOR1:
+        ret = rg::VariableType::Vector1;
+        break;
+    case PIN_VECTOR2:
+        ret = rg::VariableType::Vector2;
+        break;
+    case PIN_VECTOR3:
+        ret = rg::VariableType::Vector3;
+        break;
+    case PIN_VECTOR4:
+        ret = rg::VariableType::Vector4;
+        break;
+    case PIN_MATRIX2:
+        ret = rg::VariableType::Matrix2;
+        break;
+    case PIN_MATRIX3:
+        ret = rg::VariableType::Matrix3;
+        break;
+    case PIN_MATRIX4:
+        ret = rg::VariableType::Matrix4;
+        break;
+    case PIN_SAMPLER2D:
+        ret = rg::VariableType::Sampler2D;
+        break;
+    case PIN_SAMPLE_CUBE:
+        ret = rg::VariableType::SamplerCube;
+        break;
+    }
+    return ret;
 }
 
 bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::PortAddr& from_port)

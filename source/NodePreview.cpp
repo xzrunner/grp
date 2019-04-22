@@ -2,6 +2,7 @@
 #include "renderlab/Node.h"
 #include "renderlab/Evaluator.h"
 #include "renderlab/RegistNodes.h"
+#include "renderlab/PinType.h"
 
 #include <blueprint/NodeHelper.h>
 
@@ -20,6 +21,7 @@
 #include <rendergraph/Node.h>
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
+#include <rendergraph/RenderContext.h>
 #include <rendergraph/node/Texture.h>
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/IRenderer.h>
@@ -29,10 +31,6 @@ namespace rlab
 
 void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::RenderParams& rp)
 {
-    if (!node.GetRGNode()) {
-        return;
-    }
-
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
     auto rt = rt_mgr.Fetch();
 
@@ -49,8 +47,6 @@ void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::Render
 
 bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
 {
-    bool ret = false;
-
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
 
     auto& rc = ur::Blackboard::Instance()->GetRenderContext();
@@ -62,6 +58,9 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
     if (type == rttr::type::get<node::Texture>())
     {
         auto rg_node = node.GetRGNode();
+        if (!rg_node) {
+            return false;
+        }
         assert(rg_node && rg_node->get_type() == rttr::type::get<rg::node::Texture>());
         auto tex = std::static_pointer_cast<rg::node::Texture>(rg_node);
 
@@ -72,14 +71,49 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
         );
         pt2::RenderSystem::DrawTexture(tex->GetWidth(), tex->GetHeight(), tex->GetTexID(), sm::rect(1, 1), mat);
 
-        ret = true;
+        return true;
+    }
+    else if (type == rttr::type::get<node::Preview>())
+    {
+        auto& conns = node.GetAllInput()[0]->GetConnecting();
+        if (conns.empty()) {
+            return false;
+        }
+        auto f_pin = conns[0]->GetFrom();
+        if (f_pin->GetOldType() != PIN_SAMPLER2D && f_pin->GetOldType() != PIN_SAMPLE_CUBE) {
+            return false;
+        }
+        auto rg_node = static_cast<const Node&>(f_pin->GetParent()).GetRGNode();
+
+        rg::RenderContext rg_rc(rc);
+        const int port_idx = f_pin->GetPosIdx();
+        rg::ShaderVariant var;
+        uint32_t flags;
+        rg_node->Eval(rg_rc, port_idx, var, flags);
+        if (var.id == 0) {
+            return false;
+        }
+        if (var.type != rg::VariableType::Sampler2D &&
+            var.type != rg::VariableType::SamplerCube) {
+            return false;
+        }
+
+        sm::Matrix2D mat;
+        mat.Scale(
+            static_cast<float>(rt_mgr.WIDTH),
+            static_cast<float>(rt_mgr.HEIGHT)
+        );
+
+        pt2::RenderSystem::DrawTexture(0, 0, var.id, sm::rect(1, 1), mat);
+
+        return true;
     }
     else
     {
 //        eval.Draw(rg::RenderContext(rc), &node);
     }
 
-    return ret;
+    return false;
 }
 
 void NodePreview::DrawFromRT(const Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt)

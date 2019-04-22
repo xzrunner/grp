@@ -22,6 +22,9 @@
 RTTR_REGISTRATION
 {
 
+// renderlab
+REGIST_NODE_RTTI_DEFAULT(Preview)
+
 // resource
 REGIST_NODE_RTTI(Shader,                                                      \
 .property("vert", &rlab::node::Shader::GetVert, &rlab::node::Shader::SetVert) \
@@ -345,6 +348,7 @@ REGIST_NODE_RTTI(SeparableSSS,                                        \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Falloff"))  \
 )                                                                     \
 )
+REGIST_NODE_RTTI_DEFAULT(GlobalIllumination)
 
 }
 
@@ -465,6 +469,9 @@ void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>
             break;
         case rg::VariableType::Sampler2D:
             desc.type = PIN_SAMPLER2D;
+            break;
+        case rg::VariableType::SamplerCube:
+            desc.type = PIN_SAMPLE_CUBE;
             break;
         default:
             assert(0);

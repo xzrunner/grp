@@ -2,6 +2,7 @@
 #include "renderlab/PinType.h"
 #include "renderlab/NodePreview.h"
 #include "renderlab/Blackboard.h"
+#include "renderlab/RenderGraph.h"
 
 #include <blueprint/Pin.h>
 
@@ -73,52 +74,9 @@ void Node::InitPins(const std::string& name)
 		for (int i = 0, n = src.size(); i < n; ++i)
 		{
             PinDesc d;
-			auto& s = src[i];
-            switch (s.var.type)
-            {
-            case rg::VariableType::Any:
-                d.type = bp::PIN_ANY_VAR;
-                break;
-            case rg::VariableType::Port:
-                d.type = bp::PIN_PORT;
-                break;
-            case rg::VariableType::Texture:
-                d.type = PIN_TEXTURE;
-                break;
-            case rg::VariableType::RenderTarget:
-                d.type = PIN_RENDERTARGET;
-                break;
-            case rg::VariableType::Model:
-                d.type = PIN_MODEL;
-                break;
-            case rg::VariableType::Vector1:
-                d.type = PIN_VECTOR1;
-                break;
-            case rg::VariableType::Vector2:
-                d.type = PIN_VECTOR2;
-                break;
-            case rg::VariableType::Vector3:
-                d.type = PIN_VECTOR3;
-                break;
-            case rg::VariableType::Vector4:
-                d.type = PIN_VECTOR4;
-                break;
-            case rg::VariableType::Vec4Array:
-                d.type = PIN_VEC4_ARRAY;
-                break;
-            case rg::VariableType::Matrix2:
-                d.type = PIN_MATRIX2;
-                break;
-            case rg::VariableType::Matrix3:
-                d.type = PIN_MATRIX3;
-                break;
-            case rg::VariableType::Matrix4:
-                d.type = PIN_MATRIX4;
-                break;
-            default:
-                assert(0);
-            }
 
+			auto& s = src[i];
+            d.type = RenderGraph::TypeBackToFront(s.var.type);
             d.name = s.var.name;
 
             dst.push_back(d);

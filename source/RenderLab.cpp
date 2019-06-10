@@ -4,6 +4,7 @@
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
+#include <blueprint/node/Script.h>
 
 #include <rendergraph/RenderGraph.h>
 #include <renderpipeline/RenderPipeline.h>
@@ -55,6 +56,7 @@ void RenderLab::InitNodes()
 	m_nodes.reserve(bp_count + list.size());
 
     m_nodes.push_back(std::make_shared<bp::node::Commentary>());
+    m_nodes.push_back(std::make_shared<bp::node::Script>());
 
 	for (auto& t : list)
 	{

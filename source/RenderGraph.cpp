@@ -631,6 +631,9 @@ int RenderGraph::TypeBackToFront(rg::VariableType type)
     case rg::VariableType::Model:
         ret = PIN_MODEL;
         break;
+    case rg::VariableType::Bool:
+        ret = PIN_BOOL;
+        break;
     case rg::VariableType::Vector1:
         ret = PIN_VECTOR1;
         break;
@@ -686,6 +689,9 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
         break;
     case PIN_MODEL:
         ret = rg::VariableType::Model;
+        break;
+    case PIN_BOOL:
+        ret = rg::VariableType::Bool;
         break;
     case PIN_VECTOR1:
         ret = rg::VariableType::Vector1;

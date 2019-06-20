@@ -9,6 +9,7 @@ enum PinType
     PIN_RENDERTARGET,
     PIN_MODEL,
 
+    PIN_BOOL,
     PIN_VECTOR1,
     PIN_VECTOR2,
     PIN_VECTOR3,

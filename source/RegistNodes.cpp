@@ -446,6 +446,9 @@ void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>
         desc.name = u.name;
         switch (u.type)
         {
+        case rg::VariableType::Bool:
+            desc.type = PIN_BOOL;
+            break;
         case rg::VariableType::Vector1:
             desc.type = PIN_VECTOR1;
             break;

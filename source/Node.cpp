@@ -76,7 +76,7 @@ void Node::InitPins(const std::string& name)
             PinDesc d;
 
 			auto& s = src[i];
-            d.type = RenderGraph::TypeBackToFront(s.var.type);
+            d.type = RenderGraph::TypeBackToFront(s.var.type, 1);
             d.name = s.var.name;
 
             dst.push_back(d);

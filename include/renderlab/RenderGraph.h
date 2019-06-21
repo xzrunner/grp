@@ -13,7 +13,7 @@ class RenderGraph
 public:
     static rg::NodePtr CreateGraphNode(const Node* node);
 
-    static int TypeBackToFront(rg::VariableType type);
+    static int TypeBackToFront(rg::VariableType type, int count);
     static rg::VariableType TypeFrontToBack(int pin_type);
 
 private:

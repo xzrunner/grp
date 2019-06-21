@@ -611,9 +611,10 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     return dst;
 }
 
-int RenderGraph::TypeBackToFront(rg::VariableType type)
+int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
 {
     int ret = -1;
+
     switch (type)
     {
     case rg::VariableType::Any:
@@ -646,9 +647,6 @@ int RenderGraph::TypeBackToFront(rg::VariableType type)
     case rg::VariableType::Vector4:
         ret = PIN_VECTOR4;
         break;
-    case rg::VariableType::Vec4Array:
-        ret = PIN_VEC4_ARRAY;
-        break;
     case rg::VariableType::Matrix2:
         ret = PIN_MATRIX2;
         break;
@@ -664,9 +662,25 @@ int RenderGraph::TypeBackToFront(rg::VariableType type)
     case rg::VariableType::SamplerCube:
         ret = PIN_SAMPLE_CUBE;
         break;
+    case rg::VariableType::UserType:
+        ret = bp::PIN_ANY_VAR;
+        break;
     default:
         assert(0);
     }
+
+    if (count > 1)
+    {
+        switch (type)
+        {
+        case rg::VariableType::Vector3:
+            ret = PIN_VECTOR3_ARRAY;
+            break;
+        default:
+            assert(0);
+        }
+    }
+
     return ret;
 }
 

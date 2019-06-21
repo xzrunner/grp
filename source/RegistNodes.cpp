@@ -443,42 +443,10 @@ void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>
     for (auto& u : rg_unifs)
     {
         Node::PinDesc desc;
-        desc.name = u.name;
-        switch (u.type)
-        {
-        case rg::VariableType::Bool:
-            desc.type = PIN_BOOL;
-            break;
-        case rg::VariableType::Vector1:
-            desc.type = PIN_VECTOR1;
-            break;
-        case rg::VariableType::Vector2:
-            desc.type = PIN_VECTOR2;
-            break;
-        case rg::VariableType::Vector3:
-            desc.type = PIN_VECTOR3;
-            break;
-        case rg::VariableType::Vector4:
-            desc.type = PIN_VECTOR4;
-            break;
-        case rg::VariableType::Matrix2:
-            desc.type = PIN_MATRIX2;
-            break;
-        case rg::VariableType::Matrix3:
-            desc.type = PIN_MATRIX3;
-            break;
-        case rg::VariableType::Matrix4:
-            desc.type = PIN_MATRIX4;
-            break;
-        case rg::VariableType::Sampler2D:
-            desc.type = PIN_SAMPLER2D;
-            break;
-        case rg::VariableType::SamplerCube:
-            desc.type = PIN_SAMPLE_CUBE;
-            break;
-        default:
-            assert(0);
-        }
+
+        desc.name = u.GetDisplayName();
+        desc.type = RenderGraph::TypeBackToFront(u.type, u.count);
+
         uniforms.push_back(desc);
     }
 }

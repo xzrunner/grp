@@ -756,8 +756,13 @@ bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::Port
     auto& bp_from_port = conns[0]->GetFrom();
     assert(bp_from_port);
 
-    from_port.node = CreateGraphNode(&static_cast<const Node&>(bp_from_port->GetParent()));
-    from_port.idx  = bp_from_port->GetPosIdx();
+    auto& parent = bp_from_port->GetParent();
+    auto p_type = parent.get_type();
+    if (p_type.is_derived_from<Node>()) {
+        from_port.node = CreateGraphNode(&static_cast<const Node&>(bp_from_port->GetParent()));
+    } 
+    from_port.idx = bp_from_port->GetPosIdx();
+
     return true;
 }
 

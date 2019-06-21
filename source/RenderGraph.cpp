@@ -27,6 +27,7 @@
 #include <rendergraph/node/ZWrite.h>
 #include <rendergraph/node/FrontFace.h>
 // others
+#include <rendergraph/node/input_nodes.h>
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
 // features
@@ -523,6 +524,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     {
         auto src = static_cast<const node::FrontFace*>(node);
         std::static_pointer_cast<rg::node::FrontFace>(dst)->SetClockwise(src->clockwise);
+    }
+    // input
+    else if (type == rttr::type::get<node::UserScript>())
+    {
+        auto src = static_cast<const node::UserScript*>(node);
+        std::static_pointer_cast<rg::node::UserScript>(dst)->SetValue(src->code);
     }
     // value
     else if (type == rttr::type::get<node::Vector1>())

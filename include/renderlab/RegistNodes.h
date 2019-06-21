@@ -182,6 +182,9 @@ GRP_DEFINE_NODE(ViewMat,        false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(ModelMat,       false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(UserScript,     false, \
+    std::string code;                  \
+)
 
 // control
 class OutputToScreen : public Node

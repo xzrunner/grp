@@ -1,5 +1,6 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/PinType.h"
+#include "renderlab/RenderGraph.h"
 
 #include <ee0/ReflectPropTypes.h>
 #include <blueprint/NodeHelper.h>
@@ -323,6 +324,13 @@ REGIST_NODE_RTTI_DEFAULT(ViewMat)
 REGIST_NODE_RTTI_DEFAULT(ModelMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
+REGIST_NODE_RTTI(UserScript,                                        \
+.property("code", &rlab::node::UserScript::code)                    \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),  \
+    rttr::metadata(ee0::PropLongStringTag(), true)                  \
+)
+)
 
 // control
 REGIST_NODE_RTTI_DEFAULT(OutputToScreen)

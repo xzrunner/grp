@@ -561,6 +561,11 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         std::static_pointer_cast<rg::node::UserScript>(dst)->SetValue(src->code);
     }
     // value
+    else if (type == rttr::type::get<node::Bool>())
+    {
+        auto src = static_cast<const node::Bool*>(node);
+        std::static_pointer_cast<rg::node::Bool>(dst)->SetValue(src->val);
+    }
     else if (type == rttr::type::get<node::Vector1>())
     {
         auto src = static_cast<const node::Vector1*>(node);
@@ -617,6 +622,23 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         std::static_pointer_cast<rg::node::LookAtMat>(dst)->SetProps(
             src->eye, src->center, src->up
         );
+    }
+    else if (type == rttr::type::get<node::Translate>())
+    {
+        auto src = static_cast<const node::Translate*>(node);
+        std::static_pointer_cast<rg::node::Translate>(dst)->SetOffset(src->offset);
+    }
+    else if (type == rttr::type::get<node::Rotate>())
+    {
+        auto src = static_cast<const node::Rotate*>(node);
+        auto dst_rot = std::static_pointer_cast<rg::node::Rotate>(dst);
+        dst_rot->SetAngle(src->angle);
+        dst_rot->SetAxis(src->axis);
+    }
+    else if (type == rttr::type::get<node::Scale>())
+    {
+        auto src = static_cast<const node::Scale*>(node);
+        std::static_pointer_cast<rg::node::Scale>(dst)->SetScale(src->scale);
     }
     // features
     else if (type == rttr::type::get<node::SeparableSSS>())

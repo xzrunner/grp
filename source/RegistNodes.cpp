@@ -217,6 +217,12 @@ REGIST_NODE_RTTI(FrontFace,                                            \
 )
 
 // value
+REGIST_NODE_RTTI(Bool,                                           \
+.property("val", &rlab::node::Bool::val)                         \
+(                                                                \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Val")) \
+)                                                                \
+)
 REGIST_NODE_RTTI(Vector1,                                        \
 .property("val", &rlab::node::Vector1::val)                      \
 (                                                                \
@@ -319,6 +325,28 @@ REGIST_NODE_RTTI(LookAtMat,                                         \
 .property("up", &rlab::node::LookAtMat::up)                         \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Up"))     \
+)                                                                   \
+)
+REGIST_NODE_RTTI(Translate,                                         \
+.property("offset", &rlab::node::Translate::offset)                 \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Offset")) \
+)                                                                   \
+)
+REGIST_NODE_RTTI(Rotate,                                            \
+.property("angle", &rlab::node::Rotate::angle)                      \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Angle"))  \
+)                                                                   \
+.property("axis", &rlab::node::Rotate::axis)                        \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Axis"))   \
+)                                                                   \
+)
+REGIST_NODE_RTTI(Scale,                                             \
+.property("scale", &rlab::node::Scale::scale)                       \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))  \
 )                                                                   \
 )
 

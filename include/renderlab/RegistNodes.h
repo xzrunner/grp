@@ -132,6 +132,9 @@ GRP_DEFINE_NODE(FrontFace, false, \
 )
 
 // value
+GRP_DEFINE_NODE(Bool, false,    \
+    bool val = false;           \
+)
 GRP_DEFINE_NODE(Vector1, false, \
     float val = 0;              \
 )
@@ -175,6 +178,16 @@ GRP_DEFINE_NODE(LookAtMat, false,    \
     sm::vec3 eye;                    \
     sm::vec3 center;                 \
     sm::vec3 up = sm::vec3(0, 1, 0); \
+)
+GRP_DEFINE_NODE(Translate, false,    \
+    sm::vec3 offset;                 \
+)
+GRP_DEFINE_NODE(Rotate, false,       \
+    float angle = 0;                 \
+    sm::vec3 axis;                   \
+)
+GRP_DEFINE_NODE(Scale, false,        \
+    sm::vec3 scale;                  \
 )
 
 // input

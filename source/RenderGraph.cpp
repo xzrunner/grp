@@ -267,14 +267,23 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::VertexArray*>(node);
         auto va = std::static_pointer_cast<rg::node::VertexArray>(dst);
 
-        std::vector<std::string> tokens;
-        cpputil::StringHelper::Split(src->vertices_data, ",", tokens);
+        std::vector<std::string> vert_tokens;
+        cpputil::StringHelper::Split(src->vertices_data, ",", vert_tokens);
         std::vector<float> vertex_buf;
-        vertex_buf.reserve(tokens.size());
-        for (auto& t : tokens) {
+        vertex_buf.reserve(vert_tokens.size());
+        for (auto& t : vert_tokens) {
             vertex_buf.push_back(std::stof(t));
         }
         va->SetVertexBuf(vertex_buf);
+
+        std::vector<std::string> index_tokens;
+        cpputil::StringHelper::Split(src->indices_data, ",", index_tokens);
+        std::vector<unsigned short> index_buf;
+        index_buf.reserve(index_tokens.size());
+        for (auto& t : index_tokens) {
+            index_buf.push_back(std::stoi(t));
+        }
+        va->SetIndexBuf(index_buf);
 
         std::vector<rg::node::VertexArray::VertexAttrib> va_list;
         auto get_type_size = [](VertexDataType type)->size_t

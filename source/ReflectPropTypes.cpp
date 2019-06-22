@@ -17,6 +17,7 @@ rttr::registration::enumeration<rlab::TextureType>("rlab_tex_type")
 
 rttr::registration::enumeration<rlab::TextureFormat>("rlab_tex_fmt")
 (
+    rttr::value("rgba16", rlab::TextureFormat::RGBA16),
 	rttr::value("rgba8",  rlab::TextureFormat::RGBA8),
     rttr::value("rgba4",  rlab::TextureFormat::RGBA4),
     rttr::value("rgb",    rlab::TextureFormat::RGB),

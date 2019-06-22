@@ -28,12 +28,13 @@ enum class TextureType
 
 enum class TextureFormat
 {
+    RGBA16,
     RGBA8,
     RGBA4,
     RGB,
     RGB565,
     A8,
-    Depth,
+    Depth
 };
 
 enum class TextureWrapping

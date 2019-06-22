@@ -197,6 +197,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
 
             switch (loader.GetFormat())
             {
+            case ur::TEXTURE_RGBA16F:
+                src_tex->format = TextureFormat::RGBA16;
+                break;
             case ur::TEXTURE_RGBA8:
                 src_tex->format = TextureFormat::RGBA8;
                 break;
@@ -235,6 +238,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         rg::node::Texture::Format format;
         switch (src->format)
         {
+        case TextureFormat::RGBA16:
+            format = rg::node::Texture::Format::RGBA16;
+            break;
         case TextureFormat::RGBA8:
             format = rg::node::Texture::Format::RGBA8;
             break;

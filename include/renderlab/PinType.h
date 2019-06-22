@@ -21,6 +21,7 @@ enum PinType
     PIN_SAMPLE_CUBE,
 
     PIN_VECTOR3_ARRAY,
+    PIN_VECTOR4_ARRAY,
 };
 
 }

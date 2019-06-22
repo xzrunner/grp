@@ -698,6 +698,12 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     case rg::VariableType::SamplerCube:
         ret = PIN_SAMPLE_CUBE;
         break;
+    case rg::VariableType::Vec3Array:
+        ret = PIN_VECTOR3_ARRAY;
+        break;
+    case rg::VariableType::Vec4Array:
+        ret = PIN_VECTOR4_ARRAY;
+        break;
     case rg::VariableType::UserType:
         ret = bp::PIN_ANY_VAR;
         break;
@@ -789,7 +795,7 @@ bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::Port
     auto p_type = parent.get_type();
     if (p_type.is_derived_from<Node>()) {
         from_port.node = CreateGraphNode(&static_cast<const Node&>(bp_from_port->GetParent()));
-    } 
+    }
     from_port.idx = bp_from_port->GetPosIdx();
 
     return true;

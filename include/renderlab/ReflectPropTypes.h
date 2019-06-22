@@ -72,6 +72,14 @@ enum class PrimitiveShapeType
     Cube,
 };
 
+enum class PrimitiveVertLayout
+{
+    Pos,
+    PosTex,
+    PosNormTex,
+    PosNormTexTB,
+};
+
 // state
 
 enum class AlphaTestFunc

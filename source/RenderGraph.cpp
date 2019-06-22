@@ -305,6 +305,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     else if (type == rttr::type::get<node::PrimitiveShape>())
     {
         auto src = static_cast<const node::PrimitiveShape*>(node);
+        auto dst_shape = std::static_pointer_cast<rg::node::PrimitiveShape>(dst);
 
         rg::node::PrimitiveShape::Type type;
         switch (src->type)
@@ -315,8 +316,30 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         case PrimitiveShapeType::Cube:
             type = rg::node::PrimitiveShape::Type::Cube;
             break;
+        default:
+            assert(0);
         }
-        std::static_pointer_cast<rg::node::PrimitiveShape>(dst)->SetType(type);
+        dst_shape->SetType(type);
+
+        rg::node::PrimitiveShape::VertLayout layout;
+        switch (src->layout)
+        {
+        case PrimitiveVertLayout::Pos:
+            layout = rg::node::PrimitiveShape::VertLayout::Pos;
+            break;
+        case PrimitiveVertLayout::PosTex:
+            layout = rg::node::PrimitiveShape::VertLayout::PosTex;
+            break;
+        case PrimitiveVertLayout::PosNormTex:
+            layout = rg::node::PrimitiveShape::VertLayout::PosNormTex;
+            break;
+        case PrimitiveVertLayout::PosNormTexTB:
+            layout = rg::node::PrimitiveShape::VertLayout::PosNormTexTB;
+            break;
+        default:
+            assert(0);
+        }
+        dst_shape->SetVertLayout(layout);
     }
     else if (type == rttr::type::get<node::Model>())
     {

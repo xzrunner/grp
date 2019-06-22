@@ -111,11 +111,15 @@ REGIST_NODE_RTTI(VertexArray,                                             \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Texture"))      \
 )                                                                         \
 )
-REGIST_NODE_RTTI(PrimitiveShape,                                   \
-.property("type", &rlab::node::PrimitiveShape::type)               \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))  \
-)                                                                  \
+REGIST_NODE_RTTI(PrimitiveShape,                                    \
+.property("type", &rlab::node::PrimitiveShape::type)                \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))   \
+)                                                                   \
+.property("layout", &rlab::node::PrimitiveShape::layout)            \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Layout")) \
+)                                                                   \
 )
 REGIST_NODE_RTTI(Model,                                                \
 .property("filepath", &rlab::node::Model::filepath)                    \

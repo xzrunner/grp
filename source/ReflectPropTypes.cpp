@@ -54,7 +54,16 @@ rttr::registration::class_<rlab::VertexAttrib>("rlab_vert_attrib")
 
 rttr::registration::enumeration<rlab::PrimitiveShapeType>("rlab_prim_type")
 (
+    rttr::value("quad", rlab::PrimitiveShapeType::Quad),
 	rttr::value("cube", rlab::PrimitiveShapeType::Cube)
+);
+
+rttr::registration::enumeration<rlab::PrimitiveVertLayout>("rlab_prim_vert_layout")
+(
+    rttr::value("pos",             rlab::PrimitiveVertLayout::Pos),
+	rttr::value("pos_tex",         rlab::PrimitiveVertLayout::PosTex),
+    rttr::value("pos_norm_tex",    rlab::PrimitiveVertLayout::PosNormTex),
+    rttr::value("pos_norm_tex_tb", rlab::PrimitiveVertLayout::PosNormTexTB)
 );
 
 rttr::registration::enumeration<rlab::AlphaTestFunc>("rlab_alpha_test_func")

@@ -82,8 +82,9 @@ GRP_DEFINE_NODE(VertexArray, false, \
     VertexAttrib normal;            \
     VertexAttrib texture;           \
 )
-GRP_DEFINE_NODE(PrimitiveShape, false,                  \
-    PrimitiveShapeType type = PrimitiveShapeType::Quad; \
+GRP_DEFINE_NODE(PrimitiveShape, false,                     \
+    PrimitiveShapeType  type   = PrimitiveShapeType::Quad; \
+    PrimitiveVertLayout layout = PrimitiveVertLayout::Pos; \
 )
 GRP_DEFINE_NODE(Model, false, \
     std::string filepath;     \

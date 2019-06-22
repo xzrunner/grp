@@ -110,6 +110,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
     }
+    else if (prop_type == rttr::type::get<PrimitiveVertLayout>())
+    {
+        const wxChar* TYPES[] = { wxT("Pos"), wxT("PosTex"), wxT("PosNormTex"), wxT("PosNormTexTB"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<PrimitiveVertLayout>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
+    }
     else if (prop_type == rttr::type::get<AlphaTestFunc>())
     {
         const wxChar* FUNCS[] = { wxT("Off"), wxT("Never"), wxT("Less"), wxT("Equal"), wxT("LEqual"),
@@ -222,6 +230,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<PrimitiveShapeType>() && key == ui_info.desc)
     {
         prop.set_value(m_node, PrimitiveShapeType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<PrimitiveVertLayout>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, PrimitiveVertLayout(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<AlphaTestFunc>() && key == ui_info.desc)
     {

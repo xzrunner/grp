@@ -415,7 +415,13 @@ void Shader::SetVert(const std::string& vert)
     m_vert = vert;
 
     std::vector<Node::PinDesc> uniforms;
-    GetCodeUniforms(m_vert, uniforms);
+
+    std::set<std::string> names;
+    for (auto& p : m_frag_uniforms) {
+        names.insert(p.name);
+    }
+
+    GetCodeUniforms(m_vert, uniforms, names);
     if (uniforms != m_vert_uniforms) {
         m_vert_uniforms = uniforms;
         InitInputsFromUniforms();
@@ -431,7 +437,13 @@ void Shader::SetFrag(const std::string& frag)
     m_frag = frag;
 
     std::vector<Node::PinDesc> uniforms;
-    GetCodeUniforms(m_frag, uniforms);
+
+    std::set<std::string> names;
+    for (auto& p : m_vert_uniforms) {
+        names.insert(p.name);
+    }
+
+    GetCodeUniforms(m_frag, uniforms, names);
     if (uniforms != m_frag_uniforms) {
         m_frag_uniforms = uniforms;
         InitInputsFromUniforms();
@@ -476,10 +488,11 @@ void Shader::InitInputsFromUniforms()
     SetSizeChanged(true);
 }
 
-void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>& uniforms)
+void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>& uniforms,
+                             std::set<std::string>& names)
 {
     std::vector<rg::Variable> rg_unifs;
-    rg::node::Shader::GetCodeUniforms(code, rg_unifs);
+    rg::node::Shader::GetCodeUniforms(code, rg_unifs, names);
     for (auto& u : rg_unifs)
     {
         Node::PinDesc desc;

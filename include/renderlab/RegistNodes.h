@@ -45,7 +45,7 @@ public:
 }; // Preview
 
 // resource
-GRP_DEFINE_NODE(Shader, false,                            \
+GRP_DEFINE_NODE(Shader, false, \
     auto& GetVert() const { return m_vert; }              \
     void  SetVert(const std::string& vert);               \
     auto& GetFrag() const { return m_frag; }              \
@@ -53,7 +53,8 @@ GRP_DEFINE_NODE(Shader, false,                            \
 private:                                                  \
     void InitInputsFromUniforms();                        \
     static void GetCodeUniforms(const std::string& code,  \
-        std::vector<Node::PinDesc>& uniforms);            \
+        std::vector<Node::PinDesc>& uniforms,             \
+        std::set<std::string>& names);                    \
 private:                                                  \
     std::string m_vert;                                   \
     std::string m_frag;                                   \

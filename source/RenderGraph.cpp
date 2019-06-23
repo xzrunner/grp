@@ -17,6 +17,7 @@
 // op
 #include <rendergraph/node/Clear.h>
 #include <rendergraph/node/Bind.h>
+#include <rendergraph/node/SetUniform.h>
 // state
 #include <rendergraph/node/Viewport.h>
 #include <rendergraph/node/AlphaTest.h>
@@ -30,6 +31,7 @@
 #include <rendergraph/node/input_nodes.h>
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
+#include <rendergraph/node/UserScript.h>
 // features
 #include <renderpipeline/SeparableSSS.h>
 
@@ -382,6 +384,11 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::Bind*>(node);
         std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src->channel);
     }
+    else if (type == rttr::type::get<node::SetUniform>())
+    {
+        auto src = static_cast<const node::SetUniform*>(node);
+        std::static_pointer_cast<rg::node::SetUniform>(dst)->SetVarName(src->var_name);
+    }
     // state
     else if (type == rttr::type::get<node::Viewport>())
     {
@@ -567,7 +574,26 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     else if (type == rttr::type::get<node::UserScript>())
     {
         auto src = static_cast<const node::UserScript*>(node);
-        std::static_pointer_cast<rg::node::UserScript>(dst)->SetValue(src->code);
+        auto dst_script = std::static_pointer_cast<rg::node::UserScript>(dst);
+
+        dst_script->SetValue(src->code);
+
+        rg::node::UserScript::ReturnType type;
+        switch (src->ret_type)
+        {
+        case UserScriptRetType::Void:
+            type = rg::node::UserScript::ReturnType::Void;
+            break;
+        case UserScriptRetType::Vec3Array:
+            type = rg::node::UserScript::ReturnType::Vec3Array;
+            break;
+        case UserScriptRetType::Vec4Array:
+            type = rg::node::UserScript::ReturnType::Vec4Array;
+            break;
+        default:
+            assert(0);
+        }
+        dst_script->SetRetType(type);
     }
     // value
     else if (type == rttr::type::get<node::Bool>())
@@ -649,6 +675,21 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::Scale*>(node);
         std::static_pointer_cast<rg::node::Scale>(dst)->SetScale(src->scale);
     }
+    // input
+    //else if (type == rttr::type::get<node::For>())
+    //{
+    //    auto src = static_cast<const node::For*>(node);
+    //    std::static_pointer_cast<rg::node::For>(dst)->SetProps(
+    //        src->index_begin, src->index_end, src->index_step
+    //    );
+    //}
+    else if (type == rttr::type::get<node::ForEachLoop>())
+    {
+        auto src = static_cast<const node::ForEachLoop*>(node);
+        //std::static_pointer_cast<rg::node::ForEachLoop>(dst)->SetProps(
+        //    src->index_begin, src->index_end, src->index_step
+        //);
+    }
     // features
     else if (type == rttr::type::get<node::SeparableSSS>())
     {
@@ -696,8 +737,14 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     case rg::VariableType::RenderTarget:
         ret = PIN_RENDERTARGET;
         break;
+    case rg::VariableType::Shader:
+        ret = PIN_SHADER;
+        break;
     case rg::VariableType::Model:
         ret = PIN_MODEL;
+        break;
+    case rg::VariableType::Int:
+        ret = PIN_INT;
         break;
     case rg::VariableType::Bool:
         ret = PIN_BOOL;
@@ -776,6 +823,9 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
         break;
     case PIN_MODEL:
         ret = rg::VariableType::Model;
+        break;
+    case PIN_INT:
+        ret = rg::VariableType::Int;
         break;
     case PIN_BOOL:
         ret = rg::VariableType::Bool;

@@ -149,6 +149,12 @@ REGIST_NODE_RTTI(Bind,                                               \
 )
 REGIST_NODE_RTTI_DEFAULT(Unbind)
 REGIST_NODE_RTTI_DEFAULT(Draw)
+REGIST_NODE_RTTI(SetUniform,                                               \
+.property("var_name", &rlab::node::SetUniform::var_name)                     \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Var Name")) \
+)                                                                     \
+)
 
 // state
 REGIST_NODE_RTTI(Viewport,                                          \
@@ -356,13 +362,34 @@ REGIST_NODE_RTTI_DEFAULT(ViewMat)
 REGIST_NODE_RTTI_DEFAULT(ModelMat)
 REGIST_NODE_RTTI_DEFAULT(CameraPosition)
 REGIST_NODE_RTTI_DEFAULT(LightPosition)
-REGIST_NODE_RTTI(UserScript,                                        \
-.property("code", &rlab::node::UserScript::code)                    \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),  \
-    rttr::metadata(ee0::PropLongStringTag(), true)                  \
+REGIST_NODE_RTTI(UserScript,                                              \
+.property("code", &rlab::node::UserScript::code)                          \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),        \
+    rttr::metadata(ee0::PropLongStringTag(), true)                        \
+)                                                                         \
+.property("ret_type", &rlab::node::UserScript::ret_type)                  \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Return Type"))  \
 )
 )
+
+// tool
+//REGIST_NODE_RTTI(For,                                                     \
+//.property("index_begin", &rlab::node::For::index_begin)                   \
+//(                                                                         \
+//	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Index Begin"))  \
+//)                                                                         \
+//.property("index_end", &rlab::node::For::index_end)                       \
+//(                                                                         \
+//	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Index End"))    \
+//)                                                                         \
+//.property("index_step", &rlab::node::For::index_step)                     \
+//(                                                                         \
+//	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Index Step"))   \
+//)
+//)
+REGIST_NODE_RTTI_DEFAULT(ForEachLoop)
 
 // control
 REGIST_NODE_RTTI_DEFAULT(OutputToScreen)
@@ -477,7 +504,7 @@ void Shader::InitInputsFromUniforms()
             bp::disconnect(c);
         }
     }
-    m_all_input.erase(m_all_input.begin() + 1, m_all_input.end());
+    m_all_input.clear();
 
     for (auto& desc : uniforms) {
         auto pin = std::make_shared<bp::Pin>(true, m_all_input.size(), desc.type, desc.name, *this);

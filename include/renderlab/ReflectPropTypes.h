@@ -140,6 +140,15 @@ enum class ZTestFunc
     Always
 };
 
+// others
+
+enum class UserScriptRetType
+{
+    Void = 0,
+    Vec3Array,
+    Vec4Array,
+};
+
 void prop_types_regist_rttr();
 
 }

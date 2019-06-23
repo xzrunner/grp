@@ -124,6 +124,13 @@ rttr::registration::enumeration<rlab::ZTestFunc>("rlab_ztest_func")
     rttr::value("always",    rlab::ZTestFunc::Always)
 );
 
+rttr::registration::enumeration<rlab::UserScriptRetType>("user_script_ret_type")
+(
+	rttr::value("void",       rlab::UserScriptRetType::Void),
+    rttr::value("vec3_array", rlab::UserScriptRetType::Vec3Array),
+	rttr::value("vec4_array", rlab::UserScriptRetType::Vec4Array)
+);
+
 }
 
 namespace rlab

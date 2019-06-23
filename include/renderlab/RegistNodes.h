@@ -101,6 +101,9 @@ GRP_DEFINE_NODE(Bind, false, \
 )
 GRP_DEFINE_NODE(Unbind, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Draw, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(SetUniform, false, \
+    std::string var_name;          \
+)
 
 // state
 GRP_DEFINE_NODE(Viewport, false, \
@@ -197,9 +200,18 @@ GRP_DEFINE_NODE(ViewMat,        false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(ModelMat,       false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(CameraPosition, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(LightPosition,  false, GRP_NODE_PROP)
-GRP_DEFINE_NODE(UserScript,     false, \
-    std::string code;                  \
+GRP_DEFINE_NODE(UserScript,     false,                    \
+    std::string code;                                     \
+    UserScriptRetType ret_type = UserScriptRetType::Void; \
 )
+
+// tool
+GRP_DEFINE_NODE(For, false, \
+    int index_begin = 0;    \
+    int index_end   = 0;    \
+    int index_step  = 0;    \
+)
+GRP_DEFINE_NODE(ForEachLoop, false, GRP_NODE_PROP)
 
 // control
 class OutputToScreen : public Node

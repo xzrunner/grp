@@ -90,7 +90,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
         rg::ShaderVariant var;
         uint32_t flags;
         rg_node->Eval(rg_rc, port_idx, var, flags);
-        if (var.id == 0) {
+        if (var.res_id == 0) {
             return false;
         }
         if (var.type != rg::VariableType::Sampler2D &&
@@ -104,7 +104,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
             static_cast<float>(rt_mgr.HEIGHT)
         );
 
-        pt2::RenderSystem::DrawTexture(0, 0, var.id, sm::rect(1, 1), mat);
+        pt2::RenderSystem::DrawTexture(0, 0, var.res_id, sm::rect(1, 1), mat);
 
         return true;
     }

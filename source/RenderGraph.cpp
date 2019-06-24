@@ -387,7 +387,23 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     else if (type == rttr::type::get<node::SetUniform>())
     {
         auto src = static_cast<const node::SetUniform*>(node);
-        std::static_pointer_cast<rg::node::SetUniform>(dst)->SetVarName(src->var_name);
+        auto dst_set = std::static_pointer_cast<rg::node::SetUniform>(dst);
+
+        dst_set->SetVarName(src->var_name);
+
+        rg::VariableType type;
+        switch (src->var_type)
+        {
+        case ShaderUniformType::Unknown:
+            type = rg::VariableType::Any;
+            break;
+        case ShaderUniformType::Matrix4:
+            type = rg::VariableType::Matrix4;
+            break;
+        default:
+            assert(0);
+        }
+        dst_set->SetVarType(type);
     }
     // state
     else if (type == rttr::type::get<node::Viewport>())

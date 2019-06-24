@@ -131,6 +131,12 @@ rttr::registration::enumeration<rlab::UserScriptRetType>("user_script_ret_type")
 	rttr::value("vec4_array", rlab::UserScriptRetType::Vec4Array)
 );
 
+rttr::registration::enumeration<rlab::ShaderUniformType>("shader_uniform_type")
+(
+	rttr::value("unknown",    rlab::ShaderUniformType::Unknown),
+    rttr::value("matrix4", rlab::ShaderUniformType::Matrix4)
+);
+
 }
 
 namespace rlab

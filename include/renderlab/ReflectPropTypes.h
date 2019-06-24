@@ -149,6 +149,12 @@ enum class UserScriptRetType
     Vec4Array,
 };
 
+enum class ShaderUniformType
+{
+    Unknown = 0,
+    Matrix4,
+};
+
 void prop_types_regist_rttr();
 
 }

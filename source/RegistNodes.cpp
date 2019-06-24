@@ -149,10 +149,14 @@ REGIST_NODE_RTTI(Bind,                                               \
 )
 REGIST_NODE_RTTI_DEFAULT(Unbind)
 REGIST_NODE_RTTI_DEFAULT(Draw)
-REGIST_NODE_RTTI(SetUniform,                                               \
-.property("var_name", &rlab::node::SetUniform::var_name)                     \
+REGIST_NODE_RTTI(SetUniform,                                          \
+.property("var_name", &rlab::node::SetUniform::var_name)              \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Var Name")) \
+)                                                                     \
+.property("var_type", &rlab::node::SetUniform::var_type)              \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Var Type")) \
 )                                                                     \
 )
 

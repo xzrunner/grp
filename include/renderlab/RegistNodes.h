@@ -101,8 +101,9 @@ GRP_DEFINE_NODE(Bind, false, \
 )
 GRP_DEFINE_NODE(Unbind, false, GRP_NODE_PROP)
 GRP_DEFINE_NODE(Draw, false, GRP_NODE_PROP)
-GRP_DEFINE_NODE(SetUniform, false, \
-    std::string var_name;          \
+GRP_DEFINE_NODE(SetUniform, false,                           \
+    std::string var_name;                                    \
+    ShaderUniformType var_type = ShaderUniformType::Unknown; \
 )
 
 // state

@@ -15,7 +15,8 @@ class Node;
 class Evaluator : boost::noncopyable
 {
 public:
-    Evaluator() {}
+    Evaluator();
+    virtual ~Evaluator();
 
     void Rebuild(const std::vector<std::shared_ptr<Node>>& nodes);
 
@@ -27,7 +28,7 @@ private:
     void Clear();
 
 private:
-    std::vector<std::shared_ptr<rg::DrawList>> m_passes;
+    std::vector<std::unique_ptr<rg::DrawList>> m_passes;
 
 }; // Evaluator
 

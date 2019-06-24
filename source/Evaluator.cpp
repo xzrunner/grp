@@ -25,6 +25,14 @@ public:
 namespace rlab
 {
 
+Evaluator::Evaluator()
+{
+}
+
+Evaluator::~Evaluator()
+{
+}
+
 void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
 {
     Clear();
@@ -42,6 +50,7 @@ void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
     }
     std::sort(passes.begin(), passes.end(), PassCmp());
 
+    // build drawlist for each pass
     for (auto& p : passes)
     {
         auto& conns = p->GetAllInput()[0]->GetConnecting();
@@ -50,8 +59,11 @@ void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
         }
         auto& bp_node = conns[0]->GetFrom()->GetParent();
         auto& rg_node = static_cast<const rlab::Node&>(bp_node).GetRGNode();
-        if (rg_node) {
-            m_passes.push_back(std::make_shared<rg::DrawList>(rg_node));
+        if (rg_node)
+        {
+            std::vector<rg::NodePtr> nodes;
+            rg::DrawList::GetAntecedentNodes(rg_node, nodes);
+            m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
         }
     }
 }

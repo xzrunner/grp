@@ -715,7 +715,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         );
     }
 
-    // connect
+    node->SetRGNode(dst);
+
+    // connect input
     for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
     {
         auto& imports = dst->GetImports();
@@ -729,8 +731,6 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         }
         rg::make_connecting(from_port, { dst, i });
     }
-
-    node->SetRGNode(dst);
 
     return dst;
 }
@@ -879,8 +879,7 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
 
 bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::PortAddr& from_port)
 {
-    auto& to_port = node->GetAllInput()[input_idx];
-    auto& conns = to_port->GetConnecting();
+    auto& conns = node->GetAllInput()[input_idx]->GetConnecting();
     if (conns.empty()) {
         return false;
     }

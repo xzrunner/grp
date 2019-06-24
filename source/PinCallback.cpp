@@ -25,6 +25,54 @@ std::string get_desc_func(const std::string& name, int type)
     case rlab::PIN_RENDERTARGET:
         ret += "(RT)";
         break;
+    case rlab::PIN_SHADER:
+        ret += "(S)";
+        break;
+    case rlab::PIN_MODEL:
+        ret += "(M)";
+        break;
+
+    case rlab::PIN_INT:
+        ret += "(I)";
+        break;
+    case rlab::PIN_BOOL:
+        ret += "(B)";
+        break;
+    case rlab::PIN_VECTOR1:
+        ret += "(1)";
+        break;
+    case rlab::PIN_VECTOR2:
+        ret += "(2)";
+        break;
+    case rlab::PIN_VECTOR3:
+        ret += "(3)";
+        break;
+    case rlab::PIN_VECTOR4:
+        ret += "(4)";
+        break;
+    case rlab::PIN_MATRIX2:
+        ret += "(M2)";
+        break;
+    case rlab::PIN_MATRIX3:
+        ret += "(M3)";
+        break;
+    case rlab::PIN_MATRIX4:
+        ret += "(M4)";
+        break;
+
+    case rlab::PIN_SAMPLER2D:
+        ret += "(S2)";
+        break;
+    case rlab::PIN_SAMPLE_CUBE:
+        ret += "(SC)";
+        break;
+
+    case rlab::PIN_VECTOR3_ARRAY:
+        ret += "(3S)";
+        break;
+    case rlab::PIN_VECTOR4_ARRAY:
+        ret += "(4S)";
+        break;
     }
     return ret;
 }

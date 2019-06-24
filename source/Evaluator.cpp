@@ -36,15 +36,19 @@ Evaluator::~Evaluator()
 void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
 {
     Clear();
+
+    // create rg nodes
     for (auto& n : nodes) {
         n->SetRGNode(nullptr);
     }
+    for (auto& n : nodes) {
+        RenderGraph::CreateGraphNode(n.get());
+    }
 
+    // prepare passes
     std::vector<std::shared_ptr<node::PassEnd>> passes;
-    for (auto& n : nodes)
-    {
+    for (auto& n : nodes) {
         if (n->get_type() == rttr::type::get<node::PassEnd>()) {
-            RenderGraph::CreateGraphNode(n.get());
             passes.push_back(std::static_pointer_cast<node::PassEnd>(n));
         }
     }

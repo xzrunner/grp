@@ -42,6 +42,7 @@
 #include <facade/ImageLoader.h>
 #include <facade/ResPool.h>
 #include <cpputil/StringHelper.h>
+#include <sm_const.h>
 
 namespace rlab
 {
@@ -683,8 +684,8 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
     {
         auto src = static_cast<const node::Rotate*>(node);
         auto dst_rot = std::static_pointer_cast<rg::node::Rotate>(dst);
-        dst_rot->SetAngle(src->angle);
-        dst_rot->SetAxis(src->axis);
+        dst_rot->SetAngle(src->angle * SM_DEG_TO_RAD);
+        dst_rot->SetAxis(src->axis.Normalized());
     }
     else if (type == rttr::type::get<node::Scale>())
     {

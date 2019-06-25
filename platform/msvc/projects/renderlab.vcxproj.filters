@@ -25,6 +25,9 @@
     <Filter Include="tools\trans">
       <UniqueIdentifier>{d5bfa290-17a3-4c1b-bc0f-ded0032d2cfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dataset\nodes">
+      <UniqueIdentifier>{620dacb2-bb0c-4ed5-b2b8-86f5cdbeec20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\renderlab\WxNodeProperty.h">
@@ -58,6 +61,12 @@
     <ClInclude Include="..\..\..\include\renderlab\Blackboard.h">
       <Filter>tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\Shader.h">
+      <Filter>dataset\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\CustomExpression.h">
+      <Filter>dataset\nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
@@ -90,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Blackboard.cpp">
       <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\Shader.cpp">
+      <Filter>dataset\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\CustomExpression.cpp">
+      <Filter>dataset\nodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

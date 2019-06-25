@@ -1,6 +1,7 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/PinType.h"
-#include "renderlab/RenderGraph.h"
+#include "renderlab/node/Shader.h"
+#include "renderlab/node/CustomExpression.h"
 
 #include <ee0/ReflectPropTypes.h>
 #include <blueprint/NodeHelper.h>
@@ -379,6 +380,15 @@ REGIST_NODE_RTTI(UserScript,                                              \
 
 // control flow
 REGIST_NODE_RTTI_DEFAULT(ForEachLoop)
+
+// script
+REGIST_NODE_RTTI(CustomExpression,                                                                \
+.property("code", &rlab::node::CustomExpression::GetCode, &rlab::node::CustomExpression::SetCode) \
+(                                                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),                                \
+    rttr::metadata(ee0::PropLongStringTag(), true)                                                \
+)
+)
 
 // control
 REGIST_NODE_RTTI_DEFAULT(OutputToScreen)

@@ -2,6 +2,8 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/Node.h"
 #include "renderlab/PinType.h"
+#include "renderlab/node/Shader.h"
+#include "renderlab/node/CustomExpression.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
@@ -32,6 +34,7 @@
 #include <rendergraph/node/value_nodes.h>
 #include <rendergraph/node/math_nodes.h>
 #include <rendergraph/node/UserScript.h>
+#include <rendergraph/node/CustomExpression.h>
 // features
 #include <renderpipeline/SeparableSSS.h>
 
@@ -611,6 +614,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
             assert(0);
         }
         dst_script->SetRetType(type);
+    }
+    // script
+    else if (type == rttr::type::get<node::CustomExpression>())
+    {
+        auto src = static_cast<const node::CustomExpression*>(node);
+        std::static_pointer_cast<rg::node::CustomExpression>(dst)->SetCode(src->GetCode());
     }
     // value
     else if (type == rttr::type::get<node::Bool>())

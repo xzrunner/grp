@@ -45,22 +45,6 @@ public:
 }; // Preview
 
 // resource
-GRP_DEFINE_NODE(Shader, false, \
-    auto& GetVert() const { return m_vert; }              \
-    void  SetVert(const std::string& vert);               \
-    auto& GetFrag() const { return m_frag; }              \
-    void  SetFrag(const std::string& frag);               \
-private:                                                  \
-    void InitInputsFromUniforms();                        \
-    static void GetCodeUniforms(const std::string& code,  \
-        std::vector<Node::PinDesc>& uniforms,             \
-        std::set<std::string>& names);                    \
-private:                                                  \
-    std::string m_vert;                                   \
-    std::string m_frag;                                   \
-    std::vector<Node::PinDesc> m_vert_uniforms;           \
-    std::vector<Node::PinDesc> m_frag_uniforms;           \
-)
 GRP_DEFINE_NODE(RenderTarget, false, \
     size_t width = 0;                \
     size_t height = 0;               \
@@ -206,7 +190,7 @@ GRP_DEFINE_NODE(UserScript,     false,                    \
     UserScriptRetType ret_type = UserScriptRetType::Void; \
 )
 
-// tool
+// control flow
 GRP_DEFINE_NODE(For, false, \
     int index_begin = 0;    \
     int index_end   = 0;    \

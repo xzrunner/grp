@@ -692,21 +692,6 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         auto src = static_cast<const node::Scale*>(node);
         std::static_pointer_cast<rg::node::Scale>(dst)->SetScale(src->scale);
     }
-    // input
-    //else if (type == rttr::type::get<node::For>())
-    //{
-    //    auto src = static_cast<const node::For*>(node);
-    //    std::static_pointer_cast<rg::node::For>(dst)->SetProps(
-    //        src->index_begin, src->index_end, src->index_step
-    //    );
-    //}
-    else if (type == rttr::type::get<node::ForEachLoop>())
-    {
-        auto src = static_cast<const node::ForEachLoop*>(node);
-        //std::static_pointer_cast<rg::node::ForEachLoop>(dst)->SetProps(
-        //    src->index_begin, src->index_end, src->index_step
-        //);
-    }
     // features
     else if (type == rttr::type::get<node::SeparableSSS>())
     {

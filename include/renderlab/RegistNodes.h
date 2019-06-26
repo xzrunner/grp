@@ -223,7 +223,7 @@ public:
         : Node("PassEnd", false)
     {
         InitPins({
-			{ bp::PIN_ANY_VAR, "prev" }
+			{ bp::PIN_PORT, "prev" }
 		},{
 		});
 

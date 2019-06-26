@@ -3,6 +3,7 @@
 #include "renderlab/RenderGraph.h"
 
 #include <blueprint/Connecting.h>
+#include <blueprint/node/Function.h>
 
 #include <unirender/Sandbox.h>
 #include <rendergraph/DrawList.h>
@@ -62,12 +63,21 @@ void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
             continue;
         }
         auto& bp_node = conns[0]->GetFrom()->GetParent();
-        auto& rg_node = static_cast<const rlab::Node&>(bp_node).GetRGNode();
-        if (rg_node)
+        auto type = bp_node.get_type();
+        if (type == rttr::type::get<bp::node::Function>())
         {
-            std::vector<rg::NodePtr> nodes;
-            rg::DrawList::GetAntecedentNodes(rg_node, nodes);
-            m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
+
+        }
+        else
+        {
+            assert(type.is_derived_from<rlab::Node>());
+            auto& rg_node = static_cast<const rlab::Node&>(bp_node).GetRGNode();
+            if (rg_node)
+            {
+                std::vector<rg::NodePtr> nodes;
+                rg::DrawList::GetAntecedentNodes(rg_node, nodes);
+                m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
+            }
         }
     }
 }

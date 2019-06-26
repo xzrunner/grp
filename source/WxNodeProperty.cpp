@@ -1,5 +1,6 @@
 #include "renderlab/WxNodeProperty.h"
 #include "renderlab/ReflectPropTypes.h"
+#include "renderlab/PinType.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -7,6 +8,8 @@
 #include <ee0/WxPropHelper.h>
 #include <blueprint/Node.h>
 #include <blueprint/MessageID.h>
+#include <blueprint/node/Input.h>
+#include <blueprint/node/Output.h>
 
 #include <cpputil/StringHelper.h>
 #include <node0/SceneNode.h>
@@ -17,6 +20,53 @@
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+
+namespace
+{
+
+const wxChar* PIN_IDX_TITLE[] = { wxT("Unknown"), wxT("Port"), wxT("Tex"), wxT("RT"), wxT("Shader"), wxT("Model"), wxT("Int"), wxT("Bool"),
+                                  wxT("Vec1"), wxT("Vec2"), wxT("Vec3"), wxT("Vec4"), wxT("Mat2"), wxT("Mat3"), wxT("Mat4"), 
+                                  wxT("Vec1Array"), wxT("Vec2Array"), wxT("Vec3Array"), wxT("Vec4Array"), NULL };
+
+const int PIN_IDX_TO_TYPE[] = {
+    bp::PIN_ANY_VAR,
+    bp::PIN_PORT,
+
+    rlab::PIN_TEXTURE,
+    rlab::PIN_RENDERTARGET,
+    rlab::PIN_SHADER,
+    rlab::PIN_MODEL,
+
+    rlab::PIN_INT,
+    rlab::PIN_BOOL,
+    rlab::PIN_VECTOR1,
+    rlab::PIN_VECTOR2,
+    rlab::PIN_VECTOR3,
+    rlab::PIN_VECTOR4,
+    rlab::PIN_MATRIX2,
+    rlab::PIN_MATRIX3,
+    rlab::PIN_MATRIX4,
+
+    rlab::PIN_VECTOR1_ARRAY,
+    rlab::PIN_VECTOR2_ARRAY,
+    rlab::PIN_VECTOR3_ARRAY,
+    rlab::PIN_VECTOR4_ARRAY,
+};
+
+int PinTypeToIdx(int type)
+{
+    const int num = sizeof(PIN_IDX_TO_TYPE) / sizeof(PIN_IDX_TO_TYPE[0]);
+    for (int i = 0; i < num; ++i)
+    {
+        if (PIN_IDX_TO_TYPE[i] == type) {
+            return i;
+        }
+    }
+    assert(0);
+    return -1;
+}
+
+}
 
 namespace rlab
 {
@@ -36,8 +86,21 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
 
     auto ui_info = ui_info_obj.get_value<ee0::UIMetaInfo>();
-    auto prop_type = prop.get_type();
+    auto node_type = node->get_type();
+    if ((node_type == rttr::type::get<bp::node::Input>() && ui_info.desc == bp::node::Input::STR_TYPE) ||
+        (node_type == rttr::type::get<bp::node::Output>() && ui_info.desc == bp::node::Output::STR_TYPE))
+    {
+		auto mode_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, PIN_IDX_TITLE);
+		auto mode = prop.get_value(node).get_value<int>();
+        if (mode < 0) {
+            mode = bp::PIN_ANY_VAR;
+        }
+		mode_prop->SetValue(PinTypeToIdx(mode));
+		m_pg->Append(mode_prop);
+        return true;
+    }
 
+    auto prop_type = prop.get_type();
     if (prop_type == rttr::type::get<ClearType>())
     {
         const wxChar* CLEAR_TYPES[] = { wxT("Color"), wxT("Depth"), wxT("Stencil"), NULL };
@@ -198,8 +261,16 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     wxAny val = wx_prop.GetValue();
 
     auto ui_info = ui_info_obj.get_value<ee0::UIMetaInfo>();
-    auto prop_type = prop.get_type();
+    auto node_type = m_node->get_type();
+    if (key == ui_info.desc &&
+        ((node_type == rttr::type::get<bp::node::Input>() && ui_info.desc == bp::node::Input::STR_TYPE) ||
+            (node_type == rttr::type::get<bp::node::Output>() && ui_info.desc == bp::node::Output::STR_TYPE)))
+    {
+        prop.set_value(m_node, PIN_IDX_TO_TYPE[wxANY_AS(val, int)]);
+        return true;
+    }
 
+    auto prop_type = prop.get_type();
     if (prop_type == rttr::type::get<ClearType>() && key == ui_info.desc)
     {
         prop.set_value(m_node, static_cast<ClearType>(wxANY_AS(val, int)));

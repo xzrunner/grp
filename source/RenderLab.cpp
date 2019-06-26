@@ -4,6 +4,9 @@
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
+#include <blueprint/node/Function.h>
+#include <blueprint/node/Input.h>
+#include <blueprint/node/Output.h>
 
 #include <rendergraph/RenderGraph.h>
 #include <renderpipeline/RenderPipeline.h>
@@ -55,6 +58,9 @@ void RenderLab::InitNodes()
 	m_nodes.reserve(bp_count + list.size());
 
     m_nodes.push_back(std::make_shared<bp::node::Commentary>());
+    m_nodes.push_back(std::make_shared<bp::node::Function>());
+    m_nodes.push_back(std::make_shared<bp::node::Input>());
+    m_nodes.push_back(std::make_shared<bp::node::Output>());
 
 	for (auto& t : list)
 	{

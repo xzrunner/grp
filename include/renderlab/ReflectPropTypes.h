@@ -145,6 +145,8 @@ enum class ZTestFunc
 enum class UserScriptRetType
 {
     Void = 0,
+    Vec1Array,
+    Vec2Array,
     Vec3Array,
     Vec4Array,
 };

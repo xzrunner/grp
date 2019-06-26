@@ -67,6 +67,12 @@ std::string get_desc_func(const std::string& name, int type)
         ret += "(SC)";
         break;
 
+    case rlab::PIN_VECTOR1_ARRAY:
+        ret += "(1S)";
+        break;
+    case rlab::PIN_VECTOR2_ARRAY:
+        ret += "(2S)";
+        break;
     case rlab::PIN_VECTOR3_ARRAY:
         ret += "(3S)";
         break;

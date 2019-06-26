@@ -604,6 +604,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         case UserScriptRetType::Void:
             type = rg::node::UserScript::ReturnType::Void;
             break;
+        case UserScriptRetType::Vec1Array:
+            type = rg::node::UserScript::ReturnType::Vec1Array;
+            break;
+        case UserScriptRetType::Vec2Array:
+            type = rg::node::UserScript::ReturnType::Vec2Array;
+            break;
         case UserScriptRetType::Vec3Array:
             type = rg::node::UserScript::ReturnType::Vec3Array;
             break;
@@ -787,6 +793,12 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     case rg::VariableType::SamplerCube:
         ret = PIN_SAMPLE_CUBE;
         break;
+    case rg::VariableType::Vec1Array:
+        ret = PIN_VECTOR1_ARRAY;
+        break;
+    case rg::VariableType::Vec2Array:
+        ret = PIN_VECTOR2_ARRAY;
+        break;
     case rg::VariableType::Vec3Array:
         ret = PIN_VECTOR3_ARRAY;
         break;
@@ -804,8 +816,17 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     {
         switch (type)
         {
+        case rg::VariableType::Vector1:
+            ret = PIN_VECTOR1_ARRAY;
+            break;
+        case rg::VariableType::Vector2:
+            ret = PIN_VECTOR2_ARRAY;
+            break;
         case rg::VariableType::Vector3:
             ret = PIN_VECTOR3_ARRAY;
+            break;
+        case rg::VariableType::Vector4:
+            ret = PIN_VECTOR4_ARRAY;
             break;
         default:
             assert(0);

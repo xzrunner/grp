@@ -127,6 +127,8 @@ rttr::registration::enumeration<rlab::ZTestFunc>("rlab_ztest_func")
 rttr::registration::enumeration<rlab::UserScriptRetType>("user_script_ret_type")
 (
 	rttr::value("void",       rlab::UserScriptRetType::Void),
+    rttr::value("vec1_array", rlab::UserScriptRetType::Vec1Array),
+    rttr::value("vec2_array", rlab::UserScriptRetType::Vec2Array),
     rttr::value("vec3_array", rlab::UserScriptRetType::Vec3Array),
 	rttr::value("vec4_array", rlab::UserScriptRetType::Vec4Array)
 );

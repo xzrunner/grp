@@ -163,7 +163,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<UserScriptRetType>())
     {
-		const wxChar* TYPES[] = { wxT("Void"), wxT("Vec3Array"), wxT("Vec4Array"),  NULL };
+		const wxChar* TYPES[] = { wxT("Void"), wxT("Vec1Array"), wxT("Vec2Array"), wxT("Vec3Array"), wxT("Vec4Array"),  NULL };
 		auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
 		auto type = prop.get_value(node).get_value<UserScriptRetType>();
         type_prop->SetValue(static_cast<int>(type));

@@ -2,8 +2,6 @@
 
 #include <blueprint/Node.h>
 
-#include <rendergraph/typedef.h>
-
 namespace rlab
 {
 
@@ -20,9 +18,6 @@ public:
 
     bool GetPreview() const { return m_preview; }
     void SetPreview(bool preview) { m_preview = preview; }
-
-    auto& GetRGNode() const { return m_rg_node; }
-    void SetRGNode(const rg::NodePtr& node) const { m_rg_node = node; }
 
     struct PinDesc
     {
@@ -46,8 +41,6 @@ private:
 private:
     bool m_enable = true;
     bool m_preview = false;
-
-    mutable rg::NodePtr m_rg_node = nullptr;
 
     RTTR_ENABLE(bp::Node)
 

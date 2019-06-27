@@ -2,6 +2,7 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/Node.h"
 #include "renderlab/PinType.h"
+#include "renderlab/Evaluator.h"
 #include "renderlab/node/Shader.h"
 #include "renderlab/node/CustomExpression.h"
 
@@ -50,10 +51,11 @@
 namespace rlab
 {
 
-rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
+rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
 {
-    if (auto& rg_node = node->GetRGNode()) {
-        return rg_node;
+    auto cached = eval.QueryRGNode(node);
+    if (cached) {
+        return cached;
     }
 
     auto type = node->get_type();
@@ -69,7 +71,6 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("rlab::"));
     }
     if (dst_type.empty()) {
-        node->SetRGNode(nullptr);
         return nullptr;
     }
 
@@ -113,7 +114,11 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         assert(dst);
     }
 
-    dst->SetEnable(node->GetEnable());
+    bool enable = true;
+    if (type.is_derived_from<Node>()) {
+        enable = static_cast<const Node*>(node)->GetEnable();
+    }
+    dst->SetEnable(enable);
 
     // resource
     if (type == rttr::type::get<node::Shader>())
@@ -716,7 +721,8 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
         );
     }
 
-    node->SetRGNode(dst);
+    // insert to cache
+    eval.AddNodeMap(node, dst);
 
     // connect input
     for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
@@ -726,11 +732,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(const Node* node)
             continue;
         }
         rg::Node::PortAddr from_port;
-        if (!CreateFromNode(node, i, from_port) ||
-            from_port.node.expired()) {
-            continue;
+        if (CreateFromNode(eval, node, i, from_port)) {
+            rg::make_connecting(from_port, { dst, i });
         }
-        rg::make_connecting(from_port, { dst, i });
     }
 
     return dst;
@@ -893,7 +897,8 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
     return ret;
 }
 
-bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::PortAddr& from_port)
+bool RenderGraph::CreateFromNode(Evaluator& eval, const bp::Node* node,
+                                 int input_idx, rg::Node::PortAddr& from_port)
 {
     auto& conns = node->GetAllInput()[input_idx]->GetConnecting();
     if (conns.empty()) {
@@ -905,9 +910,7 @@ bool RenderGraph::CreateFromNode(const Node* node, int input_idx, rg::Node::Port
 
     auto& parent = bp_from_port->GetParent();
     auto p_type = parent.get_type();
-    if (p_type.is_derived_from<Node>()) {
-        from_port.node = CreateGraphNode(&static_cast<const Node&>(bp_from_port->GetParent()));
-    }
+    from_port.node = CreateGraphNode(eval, &bp_from_port->GetParent());
     from_port.idx = bp_from_port->GetPosIdx();
 
     return true;

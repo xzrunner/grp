@@ -29,7 +29,7 @@
 namespace rlab
 {
 
-void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::RenderParams& rp)
+void NodePreview::Draw(const Evaluator& eval, const bp::Node& node, const n2::RenderParams& rp)
 {
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
     auto rt = rt_mgr.Fetch();
@@ -45,7 +45,7 @@ void NodePreview::Draw(const Evaluator& eval, const Node& node, const n2::Render
     rt_mgr.Return(rt);
 }
 
-bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
+bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
 {
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
 
@@ -57,7 +57,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
     auto type = node.get_type();
     if (type == rttr::type::get<node::Texture>())
     {
-        auto rg_node = node.GetRGNode();
+        auto rg_node = eval.QueryRGNode(&node);
         if (!rg_node) {
             return false;
         }
@@ -83,7 +83,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
         if (f_pin->GetOldType() != PIN_SAMPLER2D && f_pin->GetOldType() != PIN_SAMPLE_CUBE) {
             return false;
         }
-        auto rg_node = static_cast<const Node&>(f_pin->GetParent()).GetRGNode();
+        auto rg_node = eval.QueryRGNode(&f_pin->GetParent());
 
         rg::RenderContext rg_rc(rc);
         const int port_idx = f_pin->GetPosIdx();
@@ -116,7 +116,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const Node& node)
     return false;
 }
 
-void NodePreview::DrawFromRT(const Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt)
+void NodePreview::DrawFromRT(const bp::Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt)
 {
     auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(node, rp.GetMatrix()));
     const auto scale = mt4.GetScale();

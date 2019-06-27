@@ -2,21 +2,21 @@
 
 namespace n2 { class RenderParams; }
 namespace pt2 { class RenderTarget; }
+namespace bp { class Node; }
 
 namespace rlab
 {
 
 class Evaluator;
-class Node;
 
 class NodePreview
 {
 public:
-    static void Draw(const Evaluator& eval, const Node& node, const n2::RenderParams& rp);
+    static void Draw(const Evaluator& eval, const bp::Node& node, const n2::RenderParams& rp);
 
 private:
-    static bool DrawToRT(const Evaluator& eval, const Node& node);
-    static void DrawFromRT(const Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt);
+    static bool DrawToRT(const Evaluator& eval, const bp::Node& node);
+    static void DrawFromRT(const bp::Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt);
 
 }; // NodePreview
 

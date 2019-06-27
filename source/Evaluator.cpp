@@ -34,22 +34,15 @@ Evaluator::~Evaluator()
 {
 }
 
-void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
+void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes)
 {
     Clear();
-
-    // create rg nodes
-    for (auto& n : nodes) {
-        n->SetRGNode(nullptr);
-    }
-    for (auto& n : nodes) {
-        RenderGraph::CreateGraphNode(n.get());
-    }
 
     // prepare passes
     std::vector<std::shared_ptr<node::PassEnd>> passes;
     for (auto& n : nodes) {
         if (n->get_type() == rttr::type::get<node::PassEnd>()) {
+            RenderGraph::CreateGraphNode(*this, n.get());
             passes.push_back(std::static_pointer_cast<node::PassEnd>(n));
         }
     }
@@ -63,32 +56,22 @@ void Evaluator::Rebuild(const std::vector<std::shared_ptr<Node>>& nodes)
             continue;
         }
         auto& bp_node = conns[0]->GetFrom()->GetParent();
-        auto type = bp_node.get_type();
-        if (type == rttr::type::get<bp::node::Function>())
-        {
-
-        }
-        else
-        {
-            assert(type.is_derived_from<rlab::Node>());
-            auto& rg_node = static_cast<const rlab::Node&>(bp_node).GetRGNode();
-            if (rg_node)
-            {
-                std::vector<rg::NodePtr> nodes;
-                rg::DrawList::GetAntecedentNodes(rg_node, nodes);
-                m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
-            }
-        }
+        auto rg_node = QueryRGNode(&bp_node);
+        assert(rg_node);
+        std::vector<rg::NodePtr> nodes;
+        rg::DrawList::GetAntecedentNodes(rg_node, nodes);
+        m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
     }
 }
 
-void Evaluator::Draw(const rg::RenderContext& rc, const Node* end) const
+void Evaluator::Draw(const rg::RenderContext& rc, const bp::NodePtr& end) const
 {
     ur::Sandbox sb(rc.rc);
 
     rg::NodePtr rg_end = nullptr;
     if (end) {
-        rg_end = end->GetRGNode();
+        rg_end = QueryRGNode(end.get());
+        assert(rg_end);
     }
     for (auto& p : m_passes) {
         bool finished = p->Draw(rc, rg_end);
@@ -98,9 +81,21 @@ void Evaluator::Draw(const rg::RenderContext& rc, const Node* end) const
     }
 }
 
+rg::NodePtr Evaluator::QueryRGNode(const bp::Node* bp_node) const
+{
+    auto itr = m_nodes_map.find(bp_node);
+    return itr == m_nodes_map.end() ? nullptr : itr->second;
+}
+
+void Evaluator::AddNodeMap(const bp::Node* bp_node, const rg::NodePtr& rg_node)
+{
+    m_nodes_map.insert({ bp_node, rg_node });
+}
+
 void Evaluator::Clear()
 {
     m_passes.clear();
+    m_nodes_map.clear();
 }
 
 }

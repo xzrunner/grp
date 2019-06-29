@@ -9,6 +9,10 @@
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
+#include <blueprint/CompNode.h>
+#include <blueprint/node/Function.h>
+#include <blueprint/node/Input.h>
+#include <blueprint/node/Output.h>
 
 // resource
 #include <rendergraph/node/Shader.h>
@@ -36,6 +40,7 @@
 #include <rendergraph/node/math_nodes.h>
 #include <rendergraph/node/UserScript.h>
 #include <rendergraph/node/CustomExpression.h>
+#include <rendergraph/node/Group.h>
 // features
 #include <renderpipeline/SeparableSSS.h>
 
@@ -47,6 +52,7 @@
 #include <facade/ResPool.h>
 #include <cpputil/StringHelper.h>
 #include <sm_const.h>
+#include <node0/SceneNode.h>
 
 namespace rlab
 {
@@ -70,58 +76,67 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     if (find_lib != std::string::npos) {
         dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("rlab::"));
     }
-    if (dst_type.empty()) {
-        return nullptr;
-    }
 
     rg::NodePtr dst = nullptr;
-
-	rttr::type t = rttr::type::get_by_name(dst_type);
-    // fixme: specify node type
-	if (!t.is_valid())
-    {
-        dst = std::make_shared<rg::Node>();
-
-        auto& inputs  = node->GetAllInput();
-        auto& outputs = node->GetAllOutput();
-
-        std::vector<rg::Node::Port> imports, exports;
-        imports.reserve(inputs.size());
-        for (size_t i = 0, n = inputs.size(); i < n; ++i)
-        {
-            rg::Variable var;
-            var.type = TypeFrontToBack(inputs[i]->GetOldType());
-            var.name = std::string("in") + std::to_string(i);
-            imports.push_back(var);
-        }
-        exports.reserve(outputs.size());
-        for (size_t i = 0, n = outputs.size(); i < n; ++i)
-        {
-            rg::Variable var;
-            var.type = TypeFrontToBack(outputs[i]->GetOldType());
-            var.name = std::string("in") + std::to_string(i);
-            exports.push_back(var);
-        }
-        dst->SetImports(imports);
-        dst->SetExports(exports);
-	}
-    else
-    {
-        rttr::variant var = t.create();
-        assert(var.is_valid());
-
-        dst = var.get_value<std::shared_ptr<rg::Node>>();
-        assert(dst);
-    }
-
     bool enable = true;
-    if (type.is_derived_from<Node>()) {
-        enable = static_cast<const Node*>(node)->GetEnable();
-    }
-    dst->SetEnable(enable);
 
+    // create rg node
+    if (!dst_type.empty())
+    {
+	    rttr::type t = rttr::type::get_by_name(dst_type);
+        // fixme: specify node type
+	    if (!t.is_valid())
+        {
+            dst = std::make_shared<rg::Node>();
+            InitPortsBackFromFront(*dst, *node);
+	    }
+        else
+        {
+            rttr::variant var = t.create();
+            assert(var.is_valid());
+
+            dst = var.get_value<std::shared_ptr<rg::Node>>();
+            assert(dst);
+        }
+
+
+        if (type.is_derived_from<Node>()) {
+            enable = static_cast<const Node*>(node)->GetEnable();
+        }
+    }
+
+    // bp
+    if (type == rttr::type::get<bp::node::Function>())
+    {
+        auto src = static_cast<const bp::node::Function*>(node);
+        auto dst_group = std::make_shared<rg::node::Group>();
+        dst = dst_group;
+
+        InitPortsBackFromFront(*dst, *node);
+
+        auto& src_children = src->GetChildren();
+        std::vector<rg::NodePtr> dst_children;
+        for (auto& src_c : src_children)
+        {
+            if (!src_c->HasUniqueComp<bp::CompNode>()) {
+                continue;
+            }
+
+            auto& cnode = src_c->GetUniqueComp<bp::CompNode>();
+            auto bp_node = cnode.GetNode();
+            auto node_type = bp_node->get_type();
+            if (node_type == rttr::type::get<bp::node::Input>() ||
+                node_type == rttr::type::get<bp::node::Output>()) {
+                continue;
+            }
+
+            auto dst_c = CreateGraphNode(eval, bp_node.get());
+            dst_children.push_back(dst_c);
+        }
+        dst_group->SetChildren(dst_children);
+    }
     // resource
-    if (type == rttr::type::get<node::Shader>())
+    else if (type == rttr::type::get<node::Shader>())
     {
         auto src = static_cast<const node::Shader*>(node);
         std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src->GetVert(), src->GetFrag());
@@ -760,18 +775,31 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     }
 
     // insert to cache
-    eval.AddNodeMap(node, dst);
+    if (dst) {
+        dst->SetEnable(enable);
+        eval.AddNodeMap(node, dst);
+    }
 
     // connect input
-    for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
+    if (dst)
     {
-        auto& imports = dst->GetImports();
-        if (node->IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
-            continue;
-        }
-        rg::Node::PortAddr from_port;
-        if (CreateFromNode(eval, node, i, from_port)) {
-            rg::make_connecting(from_port, { dst, i });
+        for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
+        {
+            auto& imports = dst->GetImports();
+            if (node->IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
+                continue;
+            }
+            rg::Node::PortAddr from_port;
+            auto& conns = node->GetAllInput()[i]->GetConnecting();
+            if (conns.empty()) {
+                continue;
+            }
+            assert(conns.size() == 1);
+            auto& bp_from_port = conns[0]->GetFrom();
+            assert(bp_from_port);
+            if (CreateFromNode(eval, bp_from_port, from_port)) {
+                rg::make_connecting(from_port, { dst, i });
+            }
         }
     }
 
@@ -895,6 +923,9 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
     case PIN_RENDERTARGET:
         ret = rg::VariableType::RenderTarget;
         break;
+    case PIN_SHADER:
+        ret = rg::VariableType::Shader;
+        break;
     case PIN_MODEL:
         ret = rg::VariableType::Model;
         break;
@@ -931,27 +962,84 @@ rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
     case PIN_SAMPLE_CUBE:
         ret = rg::VariableType::SamplerCube;
         break;
+    case PIN_VECTOR1_ARRAY:
+        ret = rg::VariableType::Vec1Array;
+        break;
+    case PIN_VECTOR2_ARRAY:
+        ret = rg::VariableType::Vec2Array;
+        break;
+    case PIN_VECTOR3_ARRAY:
+        ret = rg::VariableType::Vec3Array;
+        break;
+    case PIN_VECTOR4_ARRAY:
+        ret = rg::VariableType::Vec4Array;
+        break;
     }
     return ret;
 }
 
-bool RenderGraph::CreateFromNode(Evaluator& eval, const bp::Node* node,
-                                 int input_idx, rg::Node::PortAddr& from_port)
+bool RenderGraph::CreateFromNode(Evaluator& eval, const std::shared_ptr<bp::Pin>& bp_from_port,
+                                 rg::Node::PortAddr& from_port)
 {
-    auto& conns = node->GetAllInput()[input_idx]->GetConnecting();
-    if (conns.empty()) {
-        return false;
-    }
-    assert(conns.size() == 1);
-    auto& bp_from_port = conns[0]->GetFrom();
-    assert(bp_from_port);
-
     auto& parent = bp_from_port->GetParent();
     auto p_type = parent.get_type();
+    if (p_type == rttr::type::get<bp::node::Input>())
+    {
+        auto& input = static_cast<const bp::node::Input&>(parent);
+        auto func_node = input.GetParent();
+        if (!func_node) {
+            return false;
+        }
+        auto& func_inputs = func_node->GetAllInput();
+        for (int i = 0, n = func_inputs.size(); i < n; ++i)
+        {
+            if (func_inputs[i]->GetName() != input.GetName()) {
+                continue;
+            }
+            auto& conns = func_node->GetAllInput()[i]->GetConnecting();
+            if (conns.empty()) {
+                return false;
+            }
+            assert(conns.size() == 1);
+            auto bp_from_port = conns[0]->GetFrom();
+            assert(bp_from_port);
+
+            return CreateFromNode(eval, bp_from_port, from_port);
+        }
+        return false;
+    }
     from_port.node = CreateGraphNode(eval, &bp_from_port->GetParent());
-    from_port.idx = bp_from_port->GetPosIdx();
+    from_port.idx  = bp_from_port->GetPosIdx();
 
     return true;
+}
+
+void RenderGraph::InitPortsBackFromFront(rg::Node& back, const bp::Node& front)
+{
+    auto& inputs  = front.GetAllInput();
+    auto& outputs = front.GetAllOutput();
+
+    std::vector<rg::Node::Port> imports, exports;
+    imports.reserve(inputs.size());
+    for (auto i : inputs)
+    {
+        rg::Variable var;
+        var.type = TypeFrontToBack(i->GetType());
+//        var.name = std::string("in") + std::to_string(i);
+        var.name = i->GetName();
+        imports.push_back(var);
+    }
+    exports.reserve(outputs.size());
+    for (auto o : outputs)
+    {
+        rg::Variable var;
+        var.type = TypeFrontToBack(o->GetType());
+//        var.name = std::string("in") + std::to_string(i);
+        var.name = o->GetName();
+        exports.push_back(var);
+    }
+    back.SetImports(imports);
+    back.SetExports(exports);
 }
 
 }

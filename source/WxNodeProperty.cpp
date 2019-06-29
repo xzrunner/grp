@@ -25,7 +25,7 @@ namespace
 {
 
 const wxChar* PIN_IDX_TITLE[] = { wxT("Unknown"), wxT("Port"), wxT("Tex"), wxT("RT"), wxT("Shader"), wxT("Model"), wxT("Int"), wxT("Bool"),
-                                  wxT("Vec1"), wxT("Vec2"), wxT("Vec3"), wxT("Vec4"), wxT("Mat2"), wxT("Mat3"), wxT("Mat4"), 
+                                  wxT("Vec1"), wxT("Vec2"), wxT("Vec3"), wxT("Vec4"), wxT("Mat2"), wxT("Mat3"), wxT("Mat4"),
                                   wxT("Vec1Array"), wxT("Vec2Array"), wxT("Vec3Array"), wxT("Vec4Array"), NULL };
 
 const int PIN_IDX_TO_TYPE[] = {
@@ -234,7 +234,8 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<ShaderUniformType>())
     {
-		const wxChar* TYPES[] = { wxT("Unknown"), wxT("Matrix4"), NULL };
+		const wxChar* TYPES[] = { wxT("Unknown"), wxT("Int"), wxT("Bool"), wxT("Vector1"), wxT("Vector2"), wxT("Vector3"), wxT("Vector4"),
+            wxT("Matrix2"), wxT("Matrix3"), wxT("Matrix4"), wxT("Sampler2D"), wxT("SamplerCube"), NULL };
 		auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
 		auto type = prop.get_value(node).get_value<ShaderUniformType>();
         type_prop->SetValue(static_cast<int>(type));

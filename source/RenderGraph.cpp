@@ -404,10 +404,48 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         switch (src->var_type)
         {
         case ShaderUniformType::Unknown:
-            type = rg::VariableType::Any;
+        {
+            auto& conns = node->GetAllInput()[rg::node::SetUniform::I_VALUE]->GetConnecting();
+            if (!conns.empty()) {
+                assert(conns.size() == 1);
+                type = TypeFrontToBack(conns[0]->GetFrom()->GetType());
+            } else {
+                type = rg::VariableType::Any;
+            }
+        }
+            break;
+        case ShaderUniformType::Int:
+            type = rg::VariableType::Int;
+            break;
+        case ShaderUniformType::Bool:
+            type = rg::VariableType::Bool;
+            break;
+        case ShaderUniformType::Vector1:
+            type = rg::VariableType::Vector1;
+            break;
+        case ShaderUniformType::Vector2:
+            type = rg::VariableType::Vector2;
+            break;
+        case ShaderUniformType::Vector3:
+            type = rg::VariableType::Vector3;
+            break;
+        case ShaderUniformType::Vector4:
+            type = rg::VariableType::Vector4;
+            break;
+        case ShaderUniformType::Matrix2:
+            type = rg::VariableType::Matrix2;
+            break;
+        case ShaderUniformType::Matrix3:
+            type = rg::VariableType::Matrix3;
             break;
         case ShaderUniformType::Matrix4:
             type = rg::VariableType::Matrix4;
+            break;
+        case ShaderUniformType::Sampler2D:
+            type = rg::VariableType::Sampler2D;
+            break;
+        case ShaderUniformType::SamplerCube:
+            type = rg::VariableType::SamplerCube;
             break;
         default:
             assert(0);

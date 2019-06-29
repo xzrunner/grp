@@ -135,8 +135,18 @@ rttr::registration::enumeration<rlab::UserScriptRetType>("user_script_ret_type")
 
 rttr::registration::enumeration<rlab::ShaderUniformType>("shader_uniform_type")
 (
-	rttr::value("unknown",    rlab::ShaderUniformType::Unknown),
-    rttr::value("matrix4", rlab::ShaderUniformType::Matrix4)
+	rttr::value("unknown",  rlab::ShaderUniformType::Unknown),
+    rttr::value("int",      rlab::ShaderUniformType::Int),
+    rttr::value("bool",     rlab::ShaderUniformType::Bool),
+    rttr::value("vec1",     rlab::ShaderUniformType::Vector1),
+    rttr::value("vec2",     rlab::ShaderUniformType::Vector2),
+    rttr::value("vec3",     rlab::ShaderUniformType::Vector3),
+    rttr::value("vec4",     rlab::ShaderUniformType::Vector4),
+    rttr::value("mat2",     rlab::ShaderUniformType::Matrix2),
+    rttr::value("mat3",     rlab::ShaderUniformType::Matrix3),
+    rttr::value("mat4",     rlab::ShaderUniformType::Matrix4),
+    rttr::value("tex_2d",   rlab::ShaderUniformType::Sampler2D),
+    rttr::value("tex_cubd", rlab::ShaderUniformType::SamplerCube)
 );
 
 }

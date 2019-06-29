@@ -134,6 +134,43 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             dst_children.push_back(dst_c);
         }
         dst_group->SetChildren(dst_children);
+
+        std::vector<std::pair<rg::NodePtr, int>> dst_outputs;
+        dst_outputs.resize(dst->GetExports().size());
+        for (auto& src_c : src_children)
+        {
+            if (!src_c->HasUniqueComp<bp::CompNode>()) {
+                continue;
+            }
+
+            auto& cnode = src_c->GetUniqueComp<bp::CompNode>();
+            auto bp_node = cnode.GetNode();
+            auto node_type = bp_node->get_type();
+            if (node_type == rttr::type::get<bp::node::Output>())
+            {
+                auto output_node = std::static_pointer_cast<bp::node::Output>(bp_node);
+
+                auto& inputs = bp_node->GetAllInput();
+                assert(inputs.size() == 1);
+                auto& conns = inputs[0]->GetConnecting();
+                assert(conns.size() == 1);
+                auto p_idx = conns[0]->GetFrom()->GetPosIdx();
+                auto& bp_node = conns[0]->GetFrom()->GetParent();
+                auto rg_node = eval.QueryRGNode(&bp_node);
+
+                int idx = -1;
+                for (int i = 0, n = dst->GetExports().size(); i < n; ++i)
+                {
+                    if (dst->GetExports()[i].var.name == output_node->GetName()) {
+                        idx = i;
+                        break;
+                    }
+                }
+                assert(idx != -1);
+                dst_outputs[idx] = { rg_node, p_idx };
+            }
+        }
+        dst_group->SetOutputs(dst_outputs);
     }
     // resource
     else if (type == rttr::type::get<node::Shader>())

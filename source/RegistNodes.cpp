@@ -129,6 +129,16 @@ REGIST_NODE_RTTI(Model,                                                \
     rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
 )                                                                      \
 )
+REGIST_NODE_RTTI(Heightfield,                                       \
+.property("width", &rlab::node::Heightfield::width)                 \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))  \
+)                                                                   \
+.property("height", &rlab::node::Heightfield::height)               \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height")) \
+)                                                                   \
+)
 
 // op
 REGIST_NODE_RTTI(Clear,                                            \

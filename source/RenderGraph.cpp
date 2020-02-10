@@ -21,6 +21,7 @@
 #include <rendergraph/node/VertexArray.h>
 #include <rendergraph/node/PrimitiveShape.h>
 #include <rendergraph/node/Model.h>
+#include <rendergraph/node/Heightfield.h>
 // op
 #include <rendergraph/node/Clear.h>
 #include <rendergraph/node/Bind.h>
@@ -419,6 +420,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         auto model = facade::ResPool::Instance().Fetch<model::Model>(src->filepath);
         auto model_inst = std::make_shared<model::ModelInstance>(model);
         std::static_pointer_cast<rg::node::Model>(dst)->SetModel(model_inst);
+    }
+    else if (type == rttr::type::get<node::Heightfield>())
+    {
+        auto src = static_cast<const node::Heightfield*>(node);
+        auto dst_hf = std::static_pointer_cast<rg::node::Heightfield>(dst);
+        dst_hf->SetSize(src->width, src->height);
     }
     // op
     else if (type == rttr::type::get<node::Clear>())

@@ -74,7 +74,10 @@ GRP_DEFINE_NODE(PrimitiveShape, false,                     \
 GRP_DEFINE_NODE(Model, false, \
     std::string filepath;     \
 )
-
+GRP_DEFINE_NODE(Heightfield, false, \
+    size_t width  = 128;            \
+    size_t height = 128;            \
+)
 // op
 GRP_DEFINE_NODE(Clear, true, \
     ClearType  type;         \

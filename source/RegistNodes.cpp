@@ -31,12 +31,12 @@ REGIST_NODE_RTTI(Shader,                                                      \
 .property("vert", &rlab::node::Shader::GetVert, &rlab::node::Shader::SetVert) \
 (                                                                             \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),            \
-    rttr::metadata(ee0::PropLongStringTag(), true)                            \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                            \
 )                                                                             \
 .property("frag", &rlab::node::Shader::GetFrag, &rlab::node::Shader::SetFrag) \
 (                                                                             \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),            \
-    rttr::metadata(ee0::PropLongStringTag(), true)                            \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                            \
 )                                                                             \
 )
 REGIST_NODE_RTTI(RenderTarget,                                        \

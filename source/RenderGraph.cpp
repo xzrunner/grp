@@ -279,6 +279,9 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             case ur::TEXTURE_A8:
                 src_tex->format = TextureFormat::A8;
                 break;
+            case ur::TEXTURE_RED:
+                src_tex->format = TextureFormat::RED;
+                break;
             case ur::TEXTURE_DEPTH:
                 src_tex->format = TextureFormat::Depth;
                 break;

@@ -61,8 +61,8 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
         if (!rg_node) {
             return false;
         }
-        assert(rg_node && rg_node->get_type() == rttr::type::get<rg::node::Texture>());
-        auto tex = std::static_pointer_cast<rg::node::Texture>(rg_node);
+        assert(rg_node && rg_node->get_type() == rttr::type::get<rendergraph::node::Texture>());
+        auto tex = std::static_pointer_cast<rendergraph::node::Texture>(rg_node);
 
         sm::Matrix2D mat;
         mat.Scale(
@@ -85,16 +85,16 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
         }
         auto rg_node = eval.QueryRGNode(&f_pin->GetParent());
 
-        rg::RenderContext rg_rc(rc);
+        rendergraph::RenderContext rg_rc(rc);
         const int port_idx = f_pin->GetPosIdx();
-        rg::ShaderVariant var;
+        rendergraph::ShaderVariant var;
         uint32_t flags;
         rg_node->Eval(rg_rc, port_idx, var, flags);
         if (var.res_id == 0) {
             return false;
         }
-        if (var.type != rg::VariableType::Sampler2D &&
-            var.type != rg::VariableType::SamplerCube) {
+        if (var.type != rendergraph::VariableType::Sampler2D &&
+            var.type != rendergraph::VariableType::SamplerCube) {
             return false;
         }
 
@@ -110,7 +110,7 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
     }
     else
     {
-//        eval.Draw(rg::RenderContext(rc), &node);
+//        eval.Draw(rendergraph::RenderContext(rc), &node);
     }
 
     return false;

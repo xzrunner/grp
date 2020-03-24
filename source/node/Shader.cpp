@@ -96,8 +96,8 @@ void Shader::InitInputsFromUniforms()
 void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>& uniforms,
                              std::set<std::string>& names)
 {
-    std::vector<rg::Variable> rg_unifs;
-    rg::node::Shader::GetCodeUniforms(code, rg_unifs, names);
+    std::vector<rendergraph::Variable> rg_unifs;
+    rendergraph::node::Shader::GetCodeUniforms(code, rg_unifs, names);
     for (auto& u : rg_unifs)
     {
         Node::PinDesc desc;

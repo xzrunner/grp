@@ -13,17 +13,17 @@ class Evaluator;
 class RenderGraph
 {
 public:
-    static rg::NodePtr CreateGraphNode(Evaluator& eval,
+    static rendergraph::NodePtr CreateGraphNode(Evaluator& eval,
         const bp::Node* node);
 
-    static int TypeBackToFront(rg::VariableType type, int count);
-    static rg::VariableType TypeFrontToBack(int pin_type);
+    static int TypeBackToFront(rendergraph::VariableType type, int count);
+    static rendergraph::VariableType TypeFrontToBack(int pin_type);
 
 private:
     static bool CreateFromNode(Evaluator& eval,
-        const std::shared_ptr<bp::Pin>& bp_from_port, rg::Node::PortAddr& from_port);
+        const std::shared_ptr<bp::Pin>& bp_from_port, rendergraph::Node::PortAddr& from_port);
 
-    static void InitPortsBackFromFront(rg::Node& back, const bp::Node& front);;
+    static void InitPortsBackFromFront(rendergraph::Node& back, const bp::Node& front);;
 
 }; // RenderGraph
 

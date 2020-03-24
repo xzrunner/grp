@@ -10,7 +10,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace rg { class DrawList; class RenderContext; }
+namespace rendergraph { class DrawList; class RenderContext; }
 
 namespace rlab
 {
@@ -23,20 +23,20 @@ public:
 
     void Rebuild(const std::vector<bp::NodePtr>& nodes);
 
-    void Draw(const rg::RenderContext& rc, const bp::NodePtr& end = nullptr) const;
+    void Draw(const rendergraph::RenderContext& rc, const bp::NodePtr& end = nullptr) const;
 
     bool IsEmpty() const { return m_passes.empty(); }
 
-    rg::NodePtr QueryRGNode(const bp::Node* bp_node) const;
-    void AddNodeMap(const bp::Node* bp_node, const rg::NodePtr& rg_node);
+    rendergraph::NodePtr QueryRGNode(const bp::Node* bp_node) const;
+    void AddNodeMap(const bp::Node* bp_node, const rendergraph::NodePtr& rg_node);
 
 private:
     void Clear();
 
 private:
-    std::vector<std::unique_ptr<rg::DrawList>> m_passes;
+    std::vector<std::unique_ptr<rendergraph::DrawList>> m_passes;
 
-    std::unordered_map<const bp::Node*, rg::NodePtr> m_nodes_map;
+    std::unordered_map<const bp::Node*, rendergraph::NodePtr> m_nodes_map;
 
 }; // Evaluator
 

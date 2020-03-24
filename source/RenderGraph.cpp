@@ -58,7 +58,7 @@
 namespace rlab
 {
 
-rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
+rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
 {
     auto cached = eval.QueryRGNode(node);
     if (cached) {
@@ -68,7 +68,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     auto type = node->get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
-    std::string lib_str = "rg";
+    std::string lib_str = "rendergraph";
     if (type == rttr::type::get<rlab::node::GlobalIllumination>() ||
         type == rttr::type::get<rlab::node::SeparableSSS>()) {
         lib_str = "rp";
@@ -78,17 +78,17 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("rlab::"));
     }
 
-    rg::NodePtr dst = nullptr;
+    rendergraph::NodePtr dst = nullptr;
     bool enable = true;
 
-    // create rg node
+    // create rendergraph node
     if (!dst_type.empty())
     {
 	    rttr::type t = rttr::type::get_by_name(dst_type);
         // fixme: specify node type
 	    if (!t.is_valid())
         {
-            dst = std::make_shared<rg::Node>();
+            dst = std::make_shared<rendergraph::Node>();
             InitPortsBackFromFront(*dst, *node);
 	    }
         else
@@ -96,7 +96,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             rttr::variant var = t.create();
             assert(var.is_valid());
 
-            dst = var.get_value<std::shared_ptr<rg::Node>>();
+            dst = var.get_value<std::shared_ptr<rendergraph::Node>>();
             assert(dst);
         }
 
@@ -110,13 +110,13 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     if (type == rttr::type::get<bp::node::Function>())
     {
         auto src = static_cast<const bp::node::Function*>(node);
-        auto dst_group = std::make_shared<rg::node::Group>();
+        auto dst_group = std::make_shared<rendergraph::node::Group>();
         dst = dst_group;
 
         InitPortsBackFromFront(*dst, *node);
 
         auto& src_children = src->GetChildren();
-        std::vector<rg::NodePtr> dst_children;
+        std::vector<rendergraph::NodePtr> dst_children;
         for (auto& src_c : src_children)
         {
             if (!src_c->HasUniqueComp<bp::CompNode>()) {
@@ -135,7 +135,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             dst_children.push_back(dst_c);
         }
 
-        std::vector<std::pair<rg::NodePtr, int>> dst_outputs;
+        std::vector<std::pair<rendergraph::NodePtr, int>> dst_outputs;
         dst_outputs.resize(dst->GetExports().size());
         for (auto& src_c : src_children)
         {
@@ -177,12 +177,12 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::Shader>())
     {
         auto src = static_cast<const node::Shader*>(node);
-        std::static_pointer_cast<rg::node::Shader>(dst)->SetCodes(src->GetVert(), src->GetFrag());
+        std::static_pointer_cast<rendergraph::node::Shader>(dst)->SetCodes(src->GetVert(), src->GetFrag());
     }
     else if (type == rttr::type::get<node::RenderTarget>())
     {
         auto src = static_cast<const node::RenderTarget*>(node);
-        auto rt = std::static_pointer_cast<rg::node::RenderTarget>(dst);
+        auto rt = std::static_pointer_cast<rendergraph::node::RenderTarget>(dst);
 
         auto& conns = src->GetAllInput()[1]->GetConnecting();
         if (!conns.empty()) {
@@ -205,34 +205,34 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::Texture>())
     {
         auto src = static_cast<const node::Texture*>(node);
-        auto tex = std::static_pointer_cast<rg::node::Texture>(dst);
+        auto tex = std::static_pointer_cast<rendergraph::node::Texture>(dst);
 
-        rg::node::Texture::Wrapping wrap;
+        rendergraph::node::Texture::Wrapping wrap;
         switch (src->wrap)
         {
         case TextureWrapping::Repeat:
-            wrap = rg::node::Texture::Wrapping::Repeat;
+            wrap = rendergraph::node::Texture::Wrapping::Repeat;
             break;
         case TextureWrapping::MirroredRepeat:
-            wrap = rg::node::Texture::Wrapping::MirroredRepeat;
+            wrap = rendergraph::node::Texture::Wrapping::MirroredRepeat;
             break;
         case TextureWrapping::ClampToEdge:
-            wrap = rg::node::Texture::Wrapping::ClampToEdge;
+            wrap = rendergraph::node::Texture::Wrapping::ClampToEdge;
             break;
         case TextureWrapping::ClampToBorder:
-            wrap = rg::node::Texture::Wrapping::ClampToBorder;
+            wrap = rendergraph::node::Texture::Wrapping::ClampToBorder;
             break;
         }
         tex->SetWrapping(wrap);
 
-        rg::node::Texture::Filtering filter;
+        rendergraph::node::Texture::Filtering filter;
         switch (src->filter)
         {
         case TextureFiltering::Nearest:
-            filter = rg::node::Texture::Filtering::Nearest;
+            filter = rendergraph::node::Texture::Filtering::Nearest;
             break;
         case TextureFiltering::Linear:
-            filter = rg::node::Texture::Filtering::Linear;
+            filter = rendergraph::node::Texture::Filtering::Linear;
             break;
         }
         tex->SetFiltering(filter);
@@ -290,41 +290,41 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
 
         tex->SetSize(src->width, src->height);
 
-        rg::node::Texture::Type type;
+        rendergraph::node::Texture::Type type;
         switch (src->type)
         {
         case TextureType::Tex2D:
-            type = rg::node::Texture::Type::Tex2D;
+            type = rendergraph::node::Texture::Type::Tex2D;
             break;
         case TextureType::TexCube:
-            type = rg::node::Texture::Type::TexCube;
+            type = rendergraph::node::Texture::Type::TexCube;
             break;
         }
         tex->SetType(type);
 
-        rg::node::Texture::Format format;
+        rendergraph::node::Texture::Format format;
         switch (src->format)
         {
         case TextureFormat::RGBA16:
-            format = rg::node::Texture::Format::RGBA16;
+            format = rendergraph::node::Texture::Format::RGBA16;
             break;
         case TextureFormat::RGBA8:
-            format = rg::node::Texture::Format::RGBA8;
+            format = rendergraph::node::Texture::Format::RGBA8;
             break;
         case TextureFormat::RGBA4:
-            format = rg::node::Texture::Format::RGBA4;
+            format = rendergraph::node::Texture::Format::RGBA4;
             break;
         case TextureFormat::RGB:
-            format = rg::node::Texture::Format::RGB;
+            format = rendergraph::node::Texture::Format::RGB;
             break;
         case TextureFormat::RGB565:
-            format = rg::node::Texture::Format::RGB565;
+            format = rendergraph::node::Texture::Format::RGB565;
             break;
         case TextureFormat::A8:
-            format = rg::node::Texture::Format::A8;
+            format = rendergraph::node::Texture::Format::A8;
             break;
         case TextureFormat::Depth:
-            format = rg::node::Texture::Format::Depth;
+            format = rendergraph::node::Texture::Format::Depth;
             break;
         }
         tex->SetFormat(format);
@@ -332,7 +332,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::VertexArray>())
     {
         auto src = static_cast<const node::VertexArray*>(node);
-        auto va = std::static_pointer_cast<rg::node::VertexArray>(dst);
+        auto va = std::static_pointer_cast<rendergraph::node::VertexArray>(dst);
 
         std::vector<std::string> vert_tokens;
         cpputil::StringHelper::Split(src->vertices_data, ",", vert_tokens);
@@ -352,7 +352,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         }
         va->SetIndexBuf(index_buf);
 
-        std::vector<rg::node::VertexArray::VertexAttrib> va_list;
+        std::vector<rendergraph::node::VertexArray::VertexAttrib> va_list;
         auto get_type_size = [](VertexDataType type)->size_t
         {
             size_t ret = 0;
@@ -381,36 +381,36 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::PrimitiveShape>())
     {
         auto src = static_cast<const node::PrimitiveShape*>(node);
-        auto dst_shape = std::static_pointer_cast<rg::node::PrimitiveShape>(dst);
+        auto dst_shape = std::static_pointer_cast<rendergraph::node::PrimitiveShape>(dst);
 
-        rg::node::PrimitiveShape::Type type;
+        rendergraph::node::PrimitiveShape::Type type;
         switch (src->type)
         {
         case PrimitiveShapeType::Quad:
-            type = rg::node::PrimitiveShape::Type::Quad;
+            type = rendergraph::node::PrimitiveShape::Type::Quad;
             break;
         case PrimitiveShapeType::Cube:
-            type = rg::node::PrimitiveShape::Type::Cube;
+            type = rendergraph::node::PrimitiveShape::Type::Cube;
             break;
         default:
             assert(0);
         }
         dst_shape->SetType(type);
 
-        rg::node::PrimitiveShape::VertLayout layout;
+        rendergraph::node::PrimitiveShape::VertLayout layout;
         switch (src->layout)
         {
         case PrimitiveVertLayout::Pos:
-            layout = rg::node::PrimitiveShape::VertLayout::Pos;
+            layout = rendergraph::node::PrimitiveShape::VertLayout::Pos;
             break;
         case PrimitiveVertLayout::PosTex:
-            layout = rg::node::PrimitiveShape::VertLayout::PosTex;
+            layout = rendergraph::node::PrimitiveShape::VertLayout::PosTex;
             break;
         case PrimitiveVertLayout::PosNormTex:
-            layout = rg::node::PrimitiveShape::VertLayout::PosNormTex;
+            layout = rendergraph::node::PrimitiveShape::VertLayout::PosNormTex;
             break;
         case PrimitiveVertLayout::PosNormTexTB:
-            layout = rg::node::PrimitiveShape::VertLayout::PosNormTexTB;
+            layout = rendergraph::node::PrimitiveShape::VertLayout::PosNormTexTB;
             break;
         default:
             assert(0);
@@ -422,29 +422,29 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         auto src = static_cast<const node::Model*>(node);
         auto model = facade::ResPool::Instance().Fetch<model::Model>(src->filepath);
         auto model_inst = std::make_shared<model::ModelInstance>(model);
-        std::static_pointer_cast<rg::node::Model>(dst)->SetModel(model_inst);
+        std::static_pointer_cast<rendergraph::node::Model>(dst)->SetModel(model_inst);
     }
     else if (type == rttr::type::get<node::Heightfield>())
     {
         auto src = static_cast<const node::Heightfield*>(node);
-        auto dst_hf = std::static_pointer_cast<rg::node::Heightfield>(dst);
+        auto dst_hf = std::static_pointer_cast<rendergraph::node::Heightfield>(dst);
         dst_hf->SetSize(src->width, src->height);
     }
     // op
     else if (type == rttr::type::get<node::Clear>())
     {
         auto src = static_cast<const node::Clear*>(node);
-        auto clear = std::static_pointer_cast<rg::node::Clear>(dst);
+        auto clear = std::static_pointer_cast<rendergraph::node::Clear>(dst);
 
         uint32_t type = 0;
         if (src->type.type & ClearType::CLEAR_COLOR) {
-            type |= rg::node::Clear::CLEAR_COLOR;
+            type |= rendergraph::node::Clear::CLEAR_COLOR;
         }
         if (src->type.type & ClearType::CLEAR_DEPTH) {
-            type |= rg::node::Clear::CLEAR_DEPTH;
+            type |= rendergraph::node::Clear::CLEAR_DEPTH;
         }
         if (src->type.type & ClearType::CLEAR_STENCIL) {
-            type |= rg::node::Clear::CLEAR_STENCIL;
+            type |= rendergraph::node::Clear::CLEAR_STENCIL;
         }
         clear->SetClearType(type);
 
@@ -453,61 +453,61 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::Bind>())
     {
         auto src = static_cast<const node::Bind*>(node);
-        std::static_pointer_cast<rg::node::Bind>(dst)->SetChannel(src->channel);
+        std::static_pointer_cast<rendergraph::node::Bind>(dst)->SetChannel(src->channel);
     }
     else if (type == rttr::type::get<node::SetUniform>())
     {
         auto src = static_cast<const node::SetUniform*>(node);
-        auto dst_set = std::static_pointer_cast<rg::node::SetUniform>(dst);
+        auto dst_set = std::static_pointer_cast<rendergraph::node::SetUniform>(dst);
 
         dst_set->SetVarName(src->var_name);
 
-        rg::VariableType type;
+        rendergraph::VariableType type;
         switch (src->var_type)
         {
         case ShaderUniformType::Unknown:
         {
-            auto& conns = node->GetAllInput()[rg::node::SetUniform::I_VALUE]->GetConnecting();
+            auto& conns = node->GetAllInput()[rendergraph::node::SetUniform::I_VALUE]->GetConnecting();
             if (!conns.empty()) {
                 assert(conns.size() == 1);
                 type = TypeFrontToBack(conns[0]->GetFrom()->GetType());
             } else {
-                type = rg::VariableType::Any;
+                type = rendergraph::VariableType::Any;
             }
         }
             break;
         case ShaderUniformType::Int:
-            type = rg::VariableType::Int;
+            type = rendergraph::VariableType::Int;
             break;
         case ShaderUniformType::Bool:
-            type = rg::VariableType::Bool;
+            type = rendergraph::VariableType::Bool;
             break;
         case ShaderUniformType::Vector1:
-            type = rg::VariableType::Vector1;
+            type = rendergraph::VariableType::Vector1;
             break;
         case ShaderUniformType::Vector2:
-            type = rg::VariableType::Vector2;
+            type = rendergraph::VariableType::Vector2;
             break;
         case ShaderUniformType::Vector3:
-            type = rg::VariableType::Vector3;
+            type = rendergraph::VariableType::Vector3;
             break;
         case ShaderUniformType::Vector4:
-            type = rg::VariableType::Vector4;
+            type = rendergraph::VariableType::Vector4;
             break;
         case ShaderUniformType::Matrix2:
-            type = rg::VariableType::Matrix2;
+            type = rendergraph::VariableType::Matrix2;
             break;
         case ShaderUniformType::Matrix3:
-            type = rg::VariableType::Matrix3;
+            type = rendergraph::VariableType::Matrix3;
             break;
         case ShaderUniformType::Matrix4:
-            type = rg::VariableType::Matrix4;
+            type = rendergraph::VariableType::Matrix4;
             break;
         case ShaderUniformType::Sampler2D:
-            type = rg::VariableType::Sampler2D;
+            type = rendergraph::VariableType::Sampler2D;
             break;
         case ShaderUniformType::SamplerCube:
-            type = rg::VariableType::SamplerCube;
+            type = rendergraph::VariableType::SamplerCube;
             break;
         default:
             assert(0);
@@ -518,208 +518,208 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::Viewport>())
     {
         auto src = static_cast<const node::Viewport*>(node);
-        auto vp = std::static_pointer_cast<rg::node::Viewport>(dst);
+        auto vp = std::static_pointer_cast<rendergraph::node::Viewport>(dst);
         vp->SetParams(src->x, src->y, src->w, src->h);
     }
     else if (type == rttr::type::get<node::AlphaTest>())
     {
         auto src = static_cast<const node::AlphaTest*>(node);
-        rg::node::AlphaTest::Func func;
+        rendergraph::node::AlphaTest::Func func;
         switch (src->func)
         {
         case AlphaTestFunc::Off:
-            func = rg::node::AlphaTest::Func::Off;
+            func = rendergraph::node::AlphaTest::Func::Off;
             break;
         case AlphaTestFunc::Never:
-            func = rg::node::AlphaTest::Func::Never;
+            func = rendergraph::node::AlphaTest::Func::Never;
             break;
         case AlphaTestFunc::Less:
-            func = rg::node::AlphaTest::Func::Less;
+            func = rendergraph::node::AlphaTest::Func::Less;
             break;
         case AlphaTestFunc::Equal:
-            func = rg::node::AlphaTest::Func::Equal;
+            func = rendergraph::node::AlphaTest::Func::Equal;
             break;
         case AlphaTestFunc::LEqual:
-            func = rg::node::AlphaTest::Func::LEqual;
+            func = rendergraph::node::AlphaTest::Func::LEqual;
             break;
         case AlphaTestFunc::Greater:
-            func = rg::node::AlphaTest::Func::Greater;
+            func = rendergraph::node::AlphaTest::Func::Greater;
             break;
         case AlphaTestFunc::NotEqual:
-            func = rg::node::AlphaTest::Func::NotEqual;
+            func = rendergraph::node::AlphaTest::Func::NotEqual;
             break;
         case AlphaTestFunc::GEqual:
-            func = rg::node::AlphaTest::Func::GEqual;
+            func = rendergraph::node::AlphaTest::Func::GEqual;
             break;
         case AlphaTestFunc::Always:
-            func = rg::node::AlphaTest::Func::Always;
+            func = rendergraph::node::AlphaTest::Func::Always;
             break;
         }
-        std::static_pointer_cast<rg::node::AlphaTest>(dst)->SetFunc(func);
+        std::static_pointer_cast<rendergraph::node::AlphaTest>(dst)->SetFunc(func);
     }
     else if (type == rttr::type::get<node::BlendEq>())
     {
         auto src = static_cast<const node::BlendEq*>(node);
-        rg::node::BlendEq::Mode mode;
+        rendergraph::node::BlendEq::Mode mode;
         switch (src->mode)
         {
         case BlendEqMode::FuncAdd:
-            mode = rg::node::BlendEq::Mode::FuncAdd;
+            mode = rendergraph::node::BlendEq::Mode::FuncAdd;
             break;
         case BlendEqMode::FuncSubtract:
-            mode = rg::node::BlendEq::Mode::FuncSubtract;
+            mode = rendergraph::node::BlendEq::Mode::FuncSubtract;
             break;
         case BlendEqMode::FuncReverseSubtract:
-            mode = rg::node::BlendEq::Mode::FuncReverseSubtract;
+            mode = rendergraph::node::BlendEq::Mode::FuncReverseSubtract;
             break;
         case BlendEqMode::Min:
-            mode = rg::node::BlendEq::Mode::Min;
+            mode = rendergraph::node::BlendEq::Mode::Min;
             break;
         case BlendEqMode::Max:
-            mode = rg::node::BlendEq::Mode::Max;
+            mode = rendergraph::node::BlendEq::Mode::Max;
             break;
         }
     }
     else if (type == rttr::type::get<node::BlendFunc>())
     {
         auto src = static_cast<const node::BlendFunc*>(node);
-        auto trans = [](const BlendFuncFactor& factor)->rg::node::BlendFunc::Factor
+        auto trans = [](const BlendFuncFactor& factor)->rendergraph::node::BlendFunc::Factor
         {
-            rg::node::BlendFunc::Factor ret;
+            rendergraph::node::BlendFunc::Factor ret;
             switch (factor)
             {
             case BlendFuncFactor::Off:
-                ret = rg::node::BlendFunc::Factor::Off;
+                ret = rendergraph::node::BlendFunc::Factor::Off;
                 break;
             case BlendFuncFactor::Zero:
-                ret = rg::node::BlendFunc::Factor::Zero;
+                ret = rendergraph::node::BlendFunc::Factor::Zero;
                 break;
             case BlendFuncFactor::One:
-                ret = rg::node::BlendFunc::Factor::One;
+                ret = rendergraph::node::BlendFunc::Factor::One;
                 break;
             case BlendFuncFactor::SrcColor:
-                ret = rg::node::BlendFunc::Factor::SrcColor;
+                ret = rendergraph::node::BlendFunc::Factor::SrcColor;
                 break;
             case BlendFuncFactor::OneMinusSrcColor:
-                ret = rg::node::BlendFunc::Factor::OneMinusSrcColor;
+                ret = rendergraph::node::BlendFunc::Factor::OneMinusSrcColor;
                 break;
             case BlendFuncFactor::DstColor:
-                ret = rg::node::BlendFunc::Factor::DstColor;
+                ret = rendergraph::node::BlendFunc::Factor::DstColor;
                 break;
             case BlendFuncFactor::OneMinusDstColor:
-                ret = rg::node::BlendFunc::Factor::OneMinusDstColor;
+                ret = rendergraph::node::BlendFunc::Factor::OneMinusDstColor;
                 break;
             case BlendFuncFactor::SrcAlpha:
-                ret = rg::node::BlendFunc::Factor::SrcAlpha;
+                ret = rendergraph::node::BlendFunc::Factor::SrcAlpha;
                 break;
             case BlendFuncFactor::OneMinusSrcAlpha:
-                ret = rg::node::BlendFunc::Factor::OneMinusSrcAlpha;
+                ret = rendergraph::node::BlendFunc::Factor::OneMinusSrcAlpha;
                 break;
             case BlendFuncFactor::DstAlpha:
-                ret = rg::node::BlendFunc::Factor::DstAlpha;
+                ret = rendergraph::node::BlendFunc::Factor::DstAlpha;
                 break;
             case BlendFuncFactor::OneMinusDstAlpha:
-                ret = rg::node::BlendFunc::Factor::OneMinusDstAlpha;
+                ret = rendergraph::node::BlendFunc::Factor::OneMinusDstAlpha;
                 break;
             }
             return ret;
         };
-        auto func = std::static_pointer_cast<rg::node::BlendFunc>(dst);
+        auto func = std::static_pointer_cast<rendergraph::node::BlendFunc>(dst);
         func->SetSrcFactor(trans(src->sfactor));
         func->SetDstFactor(trans(src->dfactor));
     }
     else if (type == rttr::type::get<node::Cull>())
     {
         auto src = static_cast<const node::Cull*>(node);
-        rg::node::Cull::Mode mode;
+        rendergraph::node::Cull::Mode mode;
         switch (src->type)
         {
         case CullMode::Off:
-            mode = rg::node::Cull::Mode::Off;
+            mode = rendergraph::node::Cull::Mode::Off;
             break;
         case CullMode::Front:
-            mode = rg::node::Cull::Mode::Front;
+            mode = rendergraph::node::Cull::Mode::Front;
             break;
         case CullMode::Back:
-            mode = rg::node::Cull::Mode::Back;
+            mode = rendergraph::node::Cull::Mode::Back;
             break;
         case CullMode::FrontAndBack:
-            mode = rg::node::Cull::Mode::FrontAndBack;
+            mode = rendergraph::node::Cull::Mode::FrontAndBack;
             break;
         }
-        std::static_pointer_cast<rg::node::Cull>(dst)->SetMode(mode);
+        std::static_pointer_cast<rendergraph::node::Cull>(dst)->SetMode(mode);
     }
     else if (type == rttr::type::get<node::ZTest>())
     {
         auto src = static_cast<const node::ZTest*>(node);
-        rg::node::ZTest::Func func;
+        rendergraph::node::ZTest::Func func;
         switch (src->func)
         {
         case ZTestFunc::Off:
-            func = rg::node::ZTest::Func::Off;
+            func = rendergraph::node::ZTest::Func::Off;
             break;
         case ZTestFunc::Never:
-            func = rg::node::ZTest::Func::Never;
+            func = rendergraph::node::ZTest::Func::Never;
             break;
         case ZTestFunc::Less:
-            func = rg::node::ZTest::Func::Less;
+            func = rendergraph::node::ZTest::Func::Less;
             break;
         case ZTestFunc::Equal:
-            func = rg::node::ZTest::Func::Equal;
+            func = rendergraph::node::ZTest::Func::Equal;
             break;
         case ZTestFunc::LEqual:
-            func = rg::node::ZTest::Func::LEqual;
+            func = rendergraph::node::ZTest::Func::LEqual;
             break;
         case ZTestFunc::Greater:
-            func = rg::node::ZTest::Func::Greater;
+            func = rendergraph::node::ZTest::Func::Greater;
             break;
         case ZTestFunc::NotEqual:
-            func = rg::node::ZTest::Func::NotEqual;
+            func = rendergraph::node::ZTest::Func::NotEqual;
             break;
         case ZTestFunc::GEqual:
-            func = rg::node::ZTest::Func::GEqual;
+            func = rendergraph::node::ZTest::Func::GEqual;
             break;
         case ZTestFunc::Always:
-            func = rg::node::ZTest::Func::Always;
+            func = rendergraph::node::ZTest::Func::Always;
             break;
         }
-        std::static_pointer_cast<rg::node::ZTest>(dst)->SetFunc(func);
+        std::static_pointer_cast<rendergraph::node::ZTest>(dst)->SetFunc(func);
     }
     else if (type == rttr::type::get<node::ZWrite>())
     {
         auto src = static_cast<const node::ZWrite*>(node);
-        std::static_pointer_cast<rg::node::ZWrite>(dst)->SetDepthWrite(src->enable);
+        std::static_pointer_cast<rendergraph::node::ZWrite>(dst)->SetDepthWrite(src->enable);
     }
     else if (type == rttr::type::get<node::FrontFace>())
     {
         auto src = static_cast<const node::FrontFace*>(node);
-        std::static_pointer_cast<rg::node::FrontFace>(dst)->SetClockwise(src->clockwise);
+        std::static_pointer_cast<rendergraph::node::FrontFace>(dst)->SetClockwise(src->clockwise);
     }
     // input
     else if (type == rttr::type::get<node::UserScript>())
     {
         auto src = static_cast<const node::UserScript*>(node);
-        auto dst_script = std::static_pointer_cast<rg::node::UserScript>(dst);
+        auto dst_script = std::static_pointer_cast<rendergraph::node::UserScript>(dst);
 
         dst_script->SetValue(src->code);
 
-        rg::node::UserScript::ReturnType type;
+        rendergraph::node::UserScript::ReturnType type;
         switch (src->ret_type)
         {
         case UserScriptRetType::Void:
-            type = rg::node::UserScript::ReturnType::Void;
+            type = rendergraph::node::UserScript::ReturnType::Void;
             break;
         case UserScriptRetType::Vec1Array:
-            type = rg::node::UserScript::ReturnType::Vec1Array;
+            type = rendergraph::node::UserScript::ReturnType::Vec1Array;
             break;
         case UserScriptRetType::Vec2Array:
-            type = rg::node::UserScript::ReturnType::Vec2Array;
+            type = rendergraph::node::UserScript::ReturnType::Vec2Array;
             break;
         case UserScriptRetType::Vec3Array:
-            type = rg::node::UserScript::ReturnType::Vec3Array;
+            type = rendergraph::node::UserScript::ReturnType::Vec3Array;
             break;
         case UserScriptRetType::Vec4Array:
-            type = rg::node::UserScript::ReturnType::Vec4Array;
+            type = rendergraph::node::UserScript::ReturnType::Vec4Array;
             break;
         default:
             assert(0);
@@ -730,87 +730,87 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     else if (type == rttr::type::get<node::CustomExpression>())
     {
         auto src = static_cast<const node::CustomExpression*>(node);
-        std::static_pointer_cast<rg::node::CustomExpression>(dst)->SetCode(src->GetCode());
+        std::static_pointer_cast<rendergraph::node::CustomExpression>(dst)->SetCode(src->GetCode());
     }
     // value
     else if (type == rttr::type::get<node::Bool>())
     {
         auto src = static_cast<const node::Bool*>(node);
-        std::static_pointer_cast<rg::node::Bool>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Bool>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector1>())
     {
         auto src = static_cast<const node::Vector1*>(node);
-        std::static_pointer_cast<rg::node::Vector1>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Vector1>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector2>())
     {
         auto src = static_cast<const node::Vector2*>(node);
-        std::static_pointer_cast<rg::node::Vector2>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Vector2>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector3>())
     {
         auto src = static_cast<const node::Vector3*>(node);
-        std::static_pointer_cast<rg::node::Vector3>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Vector3>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Vector4>())
     {
         auto src = static_cast<const node::Vector4*>(node);
-        std::static_pointer_cast<rg::node::Vector4>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Vector4>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix2>())
     {
         auto src = static_cast<const node::Matrix2*>(node);
-        std::static_pointer_cast<rg::node::Matrix2>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Matrix2>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix3>())
     {
         auto src = static_cast<const node::Matrix3*>(node);
-        std::static_pointer_cast<rg::node::Matrix3>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Matrix3>(dst)->SetValue(src->val);
     }
     else if (type == rttr::type::get<node::Matrix4>())
     {
         auto src = static_cast<const node::Matrix4*>(node);
-        std::static_pointer_cast<rg::node::Matrix4>(dst)->SetValue(src->val);
+        std::static_pointer_cast<rendergraph::node::Matrix4>(dst)->SetValue(src->val);
     }
     // math
     else if (type == rttr::type::get<node::PerspectiveMat>())
     {
         auto src = static_cast<const node::PerspectiveMat*>(node);
-        std::static_pointer_cast<rg::node::PerspectiveMat>(dst)->SetProps(
+        std::static_pointer_cast<rendergraph::node::PerspectiveMat>(dst)->SetProps(
             src->fovy, src->aspect, src->znear, src->zfar
         );
     }
     else if (type == rttr::type::get<node::OrthoMat>())
     {
         auto src = static_cast<const node::OrthoMat*>(node);
-        std::static_pointer_cast<rg::node::OrthoMat>(dst)->SetProps(
+        std::static_pointer_cast<rendergraph::node::OrthoMat>(dst)->SetProps(
             src->left, src->right, src->bottom, src->top, src->znear, src->zfar
         );
     }
     else if (type == rttr::type::get<node::LookAtMat>())
     {
         auto src = static_cast<const node::LookAtMat*>(node);
-        std::static_pointer_cast<rg::node::LookAtMat>(dst)->SetProps(
+        std::static_pointer_cast<rendergraph::node::LookAtMat>(dst)->SetProps(
             src->eye, src->center, src->up
         );
     }
     else if (type == rttr::type::get<node::Translate>())
     {
         auto src = static_cast<const node::Translate*>(node);
-        std::static_pointer_cast<rg::node::Translate>(dst)->SetOffset(src->offset);
+        std::static_pointer_cast<rendergraph::node::Translate>(dst)->SetOffset(src->offset);
     }
     else if (type == rttr::type::get<node::Rotate>())
     {
         auto src = static_cast<const node::Rotate*>(node);
-        auto dst_rot = std::static_pointer_cast<rg::node::Rotate>(dst);
+        auto dst_rot = std::static_pointer_cast<rendergraph::node::Rotate>(dst);
         dst_rot->SetAngle(src->angle * SM_DEG_TO_RAD);
         dst_rot->SetAxis(src->axis.Normalized());
     }
     else if (type == rttr::type::get<node::Scale>())
     {
         auto src = static_cast<const node::Scale*>(node);
-        std::static_pointer_cast<rg::node::Scale>(dst)->SetScale(src->scale);
+        std::static_pointer_cast<rendergraph::node::Scale>(dst)->SetScale(src->scale);
     }
     // features
     else if (type == rttr::type::get<node::SeparableSSS>())
@@ -836,7 +836,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             if (node->IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
                 continue;
             }
-            rg::Node::PortAddr from_port;
+            rendergraph::Node::PortAddr from_port;
             auto& conns = node->GetAllInput()[i]->GetConnecting();
             if (conns.empty()) {
                 continue;
@@ -845,7 +845,7 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             auto& bp_from_port = conns[0]->GetFrom();
             assert(bp_from_port);
             if (CreateFromNode(eval, bp_from_port, from_port)) {
-                rg::make_connecting(from_port, { dst, i });
+                rendergraph::make_connecting(from_port, { dst, i });
             }
         }
     }
@@ -853,76 +853,76 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     return dst;
 }
 
-int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
+int RenderGraph::TypeBackToFront(rendergraph::VariableType type, int count)
 {
     int ret = -1;
 
     switch (type)
     {
-    case rg::VariableType::Any:
+    case rendergraph::VariableType::Any:
         ret = bp::PIN_ANY_VAR;
         break;
-    case rg::VariableType::Port:
+    case rendergraph::VariableType::Port:
         ret = bp::PIN_PORT;
         break;
-    case rg::VariableType::Texture:
+    case rendergraph::VariableType::Texture:
         ret = PIN_TEXTURE;
         break;
-    case rg::VariableType::RenderTarget:
+    case rendergraph::VariableType::RenderTarget:
         ret = PIN_RENDERTARGET;
         break;
-    case rg::VariableType::Shader:
+    case rendergraph::VariableType::Shader:
         ret = PIN_SHADER;
         break;
-    case rg::VariableType::Model:
+    case rendergraph::VariableType::Model:
         ret = PIN_MODEL;
         break;
-    case rg::VariableType::Int:
+    case rendergraph::VariableType::Int:
         ret = PIN_INT;
         break;
-    case rg::VariableType::Bool:
+    case rendergraph::VariableType::Bool:
         ret = PIN_BOOL;
         break;
-    case rg::VariableType::Vector1:
+    case rendergraph::VariableType::Vector1:
         ret = PIN_VECTOR1;
         break;
-    case rg::VariableType::Vector2:
+    case rendergraph::VariableType::Vector2:
         ret = PIN_VECTOR2;
         break;
-    case rg::VariableType::Vector3:
+    case rendergraph::VariableType::Vector3:
         ret = PIN_VECTOR3;
         break;
-    case rg::VariableType::Vector4:
+    case rendergraph::VariableType::Vector4:
         ret = PIN_VECTOR4;
         break;
-    case rg::VariableType::Matrix2:
+    case rendergraph::VariableType::Matrix2:
         ret = PIN_MATRIX2;
         break;
-    case rg::VariableType::Matrix3:
+    case rendergraph::VariableType::Matrix3:
         ret = PIN_MATRIX3;
         break;
-    case rg::VariableType::Matrix4:
+    case rendergraph::VariableType::Matrix4:
         ret = PIN_MATRIX4;
         break;
-    case rg::VariableType::Sampler2D:
+    case rendergraph::VariableType::Sampler2D:
         ret = PIN_SAMPLER2D;
         break;
-    case rg::VariableType::SamplerCube:
+    case rendergraph::VariableType::SamplerCube:
         ret = PIN_SAMPLE_CUBE;
         break;
-    case rg::VariableType::Vec1Array:
+    case rendergraph::VariableType::Vec1Array:
         ret = PIN_VECTOR1_ARRAY;
         break;
-    case rg::VariableType::Vec2Array:
+    case rendergraph::VariableType::Vec2Array:
         ret = PIN_VECTOR2_ARRAY;
         break;
-    case rg::VariableType::Vec3Array:
+    case rendergraph::VariableType::Vec3Array:
         ret = PIN_VECTOR3_ARRAY;
         break;
-    case rg::VariableType::Vec4Array:
+    case rendergraph::VariableType::Vec4Array:
         ret = PIN_VECTOR4_ARRAY;
         break;
-    case rg::VariableType::UserType:
+    case rendergraph::VariableType::UserType:
         ret = bp::PIN_ANY_VAR;
         break;
     default:
@@ -933,16 +933,16 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     {
         switch (type)
         {
-        case rg::VariableType::Vector1:
+        case rendergraph::VariableType::Vector1:
             ret = PIN_VECTOR1_ARRAY;
             break;
-        case rg::VariableType::Vector2:
+        case rendergraph::VariableType::Vector2:
             ret = PIN_VECTOR2_ARRAY;
             break;
-        case rg::VariableType::Vector3:
+        case rendergraph::VariableType::Vector3:
             ret = PIN_VECTOR3_ARRAY;
             break;
-        case rg::VariableType::Vector4:
+        case rendergraph::VariableType::Vector4:
             ret = PIN_VECTOR4_ARRAY;
             break;
         default:
@@ -953,80 +953,80 @@ int RenderGraph::TypeBackToFront(rg::VariableType type, int count)
     return ret;
 }
 
-rg::VariableType RenderGraph::TypeFrontToBack(int pin_type)
+rendergraph::VariableType RenderGraph::TypeFrontToBack(int pin_type)
 {
-    rg::VariableType ret = rg::VariableType::Any;
+    rendergraph::VariableType ret = rendergraph::VariableType::Any;
     switch (pin_type)
     {
     case bp::PIN_ANY_VAR:
-        ret = rg::VariableType::Any;
+        ret = rendergraph::VariableType::Any;
         break;
     case bp::PIN_PORT:
-        ret = rg::VariableType::Port;
+        ret = rendergraph::VariableType::Port;
         break;
     case PIN_TEXTURE:
-        ret = rg::VariableType::Texture;
+        ret = rendergraph::VariableType::Texture;
         break;
     case PIN_RENDERTARGET:
-        ret = rg::VariableType::RenderTarget;
+        ret = rendergraph::VariableType::RenderTarget;
         break;
     case PIN_SHADER:
-        ret = rg::VariableType::Shader;
+        ret = rendergraph::VariableType::Shader;
         break;
     case PIN_MODEL:
-        ret = rg::VariableType::Model;
+        ret = rendergraph::VariableType::Model;
         break;
     case PIN_INT:
-        ret = rg::VariableType::Int;
+        ret = rendergraph::VariableType::Int;
         break;
     case PIN_BOOL:
-        ret = rg::VariableType::Bool;
+        ret = rendergraph::VariableType::Bool;
         break;
     case PIN_VECTOR1:
-        ret = rg::VariableType::Vector1;
+        ret = rendergraph::VariableType::Vector1;
         break;
     case PIN_VECTOR2:
-        ret = rg::VariableType::Vector2;
+        ret = rendergraph::VariableType::Vector2;
         break;
     case PIN_VECTOR3:
-        ret = rg::VariableType::Vector3;
+        ret = rendergraph::VariableType::Vector3;
         break;
     case PIN_VECTOR4:
-        ret = rg::VariableType::Vector4;
+        ret = rendergraph::VariableType::Vector4;
         break;
     case PIN_MATRIX2:
-        ret = rg::VariableType::Matrix2;
+        ret = rendergraph::VariableType::Matrix2;
         break;
     case PIN_MATRIX3:
-        ret = rg::VariableType::Matrix3;
+        ret = rendergraph::VariableType::Matrix3;
         break;
     case PIN_MATRIX4:
-        ret = rg::VariableType::Matrix4;
+        ret = rendergraph::VariableType::Matrix4;
         break;
     case PIN_SAMPLER2D:
-        ret = rg::VariableType::Sampler2D;
+        ret = rendergraph::VariableType::Sampler2D;
         break;
     case PIN_SAMPLE_CUBE:
-        ret = rg::VariableType::SamplerCube;
+        ret = rendergraph::VariableType::SamplerCube;
         break;
     case PIN_VECTOR1_ARRAY:
-        ret = rg::VariableType::Vec1Array;
+        ret = rendergraph::VariableType::Vec1Array;
         break;
     case PIN_VECTOR2_ARRAY:
-        ret = rg::VariableType::Vec2Array;
+        ret = rendergraph::VariableType::Vec2Array;
         break;
     case PIN_VECTOR3_ARRAY:
-        ret = rg::VariableType::Vec3Array;
+        ret = rendergraph::VariableType::Vec3Array;
         break;
     case PIN_VECTOR4_ARRAY:
-        ret = rg::VariableType::Vec4Array;
+        ret = rendergraph::VariableType::Vec4Array;
         break;
     }
     return ret;
 }
 
 bool RenderGraph::CreateFromNode(Evaluator& eval, const std::shared_ptr<bp::Pin>& bp_from_port,
-                                 rg::Node::PortAddr& from_port)
+                                 rendergraph::Node::PortAddr& from_port)
 {
     auto& parent = bp_from_port->GetParent();
     auto p_type = parent.get_type();
@@ -1061,16 +1061,16 @@ bool RenderGraph::CreateFromNode(Evaluator& eval, const std::shared_ptr<bp::Pin>
     return true;
 }
 
-void RenderGraph::InitPortsBackFromFront(rg::Node& back, const bp::Node& front)
+void RenderGraph::InitPortsBackFromFront(rendergraph::Node& back, const bp::Node& front)
 {
     auto& inputs  = front.GetAllInput();
     auto& outputs = front.GetAllOutput();
 
-    std::vector<rg::Node::Port> imports, exports;
+    std::vector<rendergraph::Node::Port> imports, exports;
     imports.reserve(inputs.size());
     for (auto i : inputs)
     {
-        rg::Variable var;
+        rendergraph::Variable var;
         var.type = TypeFrontToBack(i->GetType());
 //        var.name = std::string("in") + std::to_string(i);
         var.name = i->GetName();
@@ -1079,7 +1079,7 @@ void RenderGraph::InitPortsBackFromFront(rg::Node& back, const bp::Node& front)
     exports.reserve(outputs.size());
     for (auto o : outputs)
     {
-        rg::Variable var;
+        rendergraph::Variable var;
         var.type = TypeFrontToBack(o->GetType());
 //        var.name = std::string("in") + std::to_string(i);
         var.name = o->GetName();

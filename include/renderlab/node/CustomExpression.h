@@ -22,7 +22,7 @@ public:
     void  SetCode(const std::string& code);
 
 private:
-    bool IsPinsChanged(bool is_in, const std::vector<rg::Variable>& new_vars) const;
+    bool IsPinsChanged(bool is_in, const std::vector<rendergraph::Variable>& new_vars) const;
 
 private:
     std::string m_code;

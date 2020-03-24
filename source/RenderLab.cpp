@@ -20,7 +20,7 @@ extern void regist_rttr();
 
 RenderLab::RenderLab()
 {
-	rg::RenderGraph::Instance();
+	rendergraph::RenderGraph::Instance();
     rp::RenderPipeline::Instance();
 
 	regist_rttr();

@@ -58,17 +58,17 @@ void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes)
         auto& bp_node = conns[0]->GetFrom()->GetParent();
         auto rg_node = QueryRGNode(&bp_node);
         assert(rg_node);
-        std::vector<rg::NodePtr> nodes;
-        rg::DrawList::GetAntecedentNodes(rg_node, nodes);
-        m_passes.push_back(std::make_unique<rg::DrawList>(nodes));
+        std::vector<rendergraph::NodePtr> nodes;
+        rendergraph::DrawList::GetAntecedentNodes(rg_node, nodes);
+        m_passes.push_back(std::make_unique<rendergraph::DrawList>(nodes));
     }
 }
 
-void Evaluator::Draw(const rg::RenderContext& rc, const bp::NodePtr& end) const
+void Evaluator::Draw(const rendergraph::RenderContext& rc, const bp::NodePtr& end) const
 {
     ur::Sandbox sb(rc.rc);
 
-    rg::NodePtr rg_end = nullptr;
+    rendergraph::NodePtr rg_end = nullptr;
     if (end) {
         rg_end = QueryRGNode(end.get());
         assert(rg_end);
@@ -81,13 +81,13 @@ void Evaluator::Draw(const rg::RenderContext& rc, const bp::NodePtr& end) const
     }
 }
 
-rg::NodePtr Evaluator::QueryRGNode(const bp::Node* bp_node) const
+rendergraph::NodePtr Evaluator::QueryRGNode(const bp::Node* bp_node) const
 {
     auto itr = m_nodes_map.find(bp_node);
     return itr == m_nodes_map.end() ? nullptr : itr->second;
 }
 
-void Evaluator::AddNodeMap(const bp::Node* bp_node, const rg::NodePtr& rg_node)
+void Evaluator::AddNodeMap(const bp::Node* bp_node, const rendergraph::NodePtr& rg_node)
 {
     m_nodes_map.insert({ bp_node, rg_node });
 }

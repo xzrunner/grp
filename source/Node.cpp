@@ -43,7 +43,7 @@ void Node::InitPins(const std::vector<PinDesc>& input,
 
 void Node::InitPins(const std::string& name)
 {
-	rttr::type t = rttr::type::get_by_name("rg::" + name);
+	rttr::type t = rttr::type::get_by_name("rendergraph::" + name);
     if (!t.is_valid()) {
         t = rttr::type::get_by_name("rp::" + name);
     }
@@ -58,17 +58,17 @@ void Node::InitPins(const std::string& name)
 	assert(method_imports.is_valid());
 	auto var_imports = method_imports.invoke(var);
 	assert(var_imports.is_valid()
-		&& var_imports.is_type<std::vector<rg::Node::Port>>());
-	auto& imports = var_imports.get_value<std::vector<rg::Node::Port>>();
+		&& var_imports.is_type<std::vector<rendergraph::Node::Port>>());
+	auto& imports = var_imports.get_value<std::vector<rendergraph::Node::Port>>();
 
 	auto method_exports = t.get_method("GetExports");
 	assert(method_exports.is_valid());
 	auto var_exports = method_exports.invoke(var);
 	assert(var_exports.is_valid()
-		&& var_exports.is_type<std::vector<rg::Node::Port>>());
-	auto& exports = var_exports.get_value<std::vector<rg::Node::Port>>();
+		&& var_exports.is_type<std::vector<rendergraph::Node::Port>>());
+	auto& exports = var_exports.get_value<std::vector<rendergraph::Node::Port>>();
 
-	auto port_back2front = [](std::vector<PinDesc>& dst, const std::vector<rg::Node::Port>& src)
+	auto port_back2front = [](std::vector<PinDesc>& dst, const std::vector<rendergraph::Node::Port>& src)
 	{
 		dst.reserve(dst.size() + src.size());
 		for (int i = 0, n = src.size(); i < n; ++i)

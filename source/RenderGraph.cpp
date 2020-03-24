@@ -134,7 +134,6 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
             auto dst_c = CreateGraphNode(eval, bp_node.get());
             dst_children.push_back(dst_c);
         }
-        dst_group->SetChildren(dst_children);
 
         std::vector<std::pair<rg::NodePtr, int>> dst_outputs;
         dst_outputs.resize(dst->GetExports().size());
@@ -171,7 +170,8 @@ rg::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
                 dst_outputs[idx] = { rg_node, p_idx };
             }
         }
-        dst_group->SetOutputs(dst_outputs);
+
+        dst_group->SetChildren(dst_children, dst_outputs);
     }
     // resource
     else if (type == rttr::type::get<node::Shader>())

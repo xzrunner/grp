@@ -10,7 +10,7 @@
 #include <rendergraph/Node.h>
 #include <node2/RenderSystem.h>
 
-namespace rlab
+namespace renderlab
 {
 
 Node::Node(const std::string& title, bool preview)

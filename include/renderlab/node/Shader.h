@@ -2,7 +2,7 @@
 
 #include "renderlab/Node.h"
 
-namespace rlab
+namespace renderlab
 {
 namespace node
 {

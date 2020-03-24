@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rlab
+namespace renderlab
 {
 
 void InitPinCallback();

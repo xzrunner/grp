@@ -12,7 +12,7 @@
 
 namespace rendergraph { class DrawList; class RenderContext; }
 
-namespace rlab
+namespace renderlab
 {
 
 class Evaluator : boost::noncopyable

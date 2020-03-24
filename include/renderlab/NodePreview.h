@@ -4,7 +4,7 @@ namespace n2 { class RenderParams; }
 namespace pt2 { class RenderTarget; }
 namespace bp { class Node; }
 
-namespace rlab
+namespace renderlab
 {
 
 class Evaluator;

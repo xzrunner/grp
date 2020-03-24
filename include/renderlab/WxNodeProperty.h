@@ -2,7 +2,7 @@
 
 #include <blueprint/WxNodeProperty.h>
 
-namespace rlab
+namespace renderlab
 {
 
 class WxNodeProperty : public bp::WxNodeProperty

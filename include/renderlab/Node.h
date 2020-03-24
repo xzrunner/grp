@@ -2,7 +2,7 @@
 
 #include <blueprint/Node.h>
 
-namespace rlab
+namespace renderlab
 {
 
 class Node : public bp::Node

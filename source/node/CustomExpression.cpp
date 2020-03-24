@@ -6,7 +6,7 @@
 #include <cpputil/StringHelper.h>
 #include <rendergraph/node/ExpressionParser.h>
 
-namespace rlab
+namespace renderlab
 {
 namespace node
 {

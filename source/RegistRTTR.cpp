@@ -5,12 +5,12 @@
 RTTR_REGISTRATION
 {
 
-rttr::registration::class_<rlab::Node>("rlab::node")
-.property("enable", &rlab::Node::GetEnable, &rlab::Node::SetEnable)
+rttr::registration::class_<renderlab::Node>("renderlab::node")
+.property("enable", &renderlab::Node::GetEnable, &renderlab::Node::SetEnable)
 (
     rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Node Enable"))
 )
-.property("preview", &rlab::Node::GetPreview, &rlab::Node::SetPreview)
+.property("preview", &renderlab::Node::GetPreview, &renderlab::Node::SetPreview)
 (
     rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Node Preview"))
 );
@@ -23,7 +23,7 @@ extern void regist_sm_rttr();
 extern void regist_pt0_rttr();
 }
 
-namespace rlab
+namespace renderlab
 {
 
 void regist_rttr()

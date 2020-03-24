@@ -7,7 +7,7 @@
 
 #include <painting0/Color.h>
 
-namespace rlab
+namespace renderlab
 {
 
 void nodes_regist_rttr();
@@ -53,12 +53,12 @@ GRP_DEFINE_NODE(RenderTarget, false, \
 )
 GRP_DEFINE_NODE(Texture, true,                                      \
     std::string filepath;                                           \
-    rlab::TextureType type = rlab::TextureType::Tex2D;              \
+    renderlab::TextureType type = renderlab::TextureType::Tex2D;              \
     size_t width = 0;                                               \
     size_t height = 0;                                              \
-    rlab::TextureFormat    format = rlab::TextureFormat::RGBA8;     \
-    rlab::TextureWrapping  wrap   = rlab::TextureWrapping::Repeat;  \
-    rlab::TextureFiltering filter = rlab::TextureFiltering::Linear; \
+    renderlab::TextureFormat    format = renderlab::TextureFormat::RGBA8;     \
+    renderlab::TextureWrapping  wrap   = renderlab::TextureWrapping::Repeat;  \
+    renderlab::TextureFiltering filter = renderlab::TextureFiltering::Linear; \
 )
 GRP_DEFINE_NODE(VertexArray, false, \
     std::string vertices_data;      \

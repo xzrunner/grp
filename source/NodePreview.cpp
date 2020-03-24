@@ -26,7 +26,7 @@
 #include <renderpipeline/RenderMgr.h>
 #include <renderpipeline/IRenderer.h>
 
-namespace rlab
+namespace renderlab
 {
 
 void NodePreview::Draw(const Evaluator& eval, const bp::Node& node, const n2::RenderParams& rp)

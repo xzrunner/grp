@@ -11,7 +11,7 @@
 #include <rendergraph/RenderGraph.h>
 #include <renderpipeline/RenderPipeline.h>
 
-namespace rlab
+namespace renderlab
 {
 
 CU_SINGLETON_DEFINITION(RenderLab);

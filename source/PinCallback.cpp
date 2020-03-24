@@ -19,64 +19,64 @@ std::string get_desc_func(const std::string& name, int type)
     std::string ret = name;
     switch (type)
     {
-    case rlab::PIN_TEXTURE:
+    case renderlab::PIN_TEXTURE:
         ret += "(T)";
         break;
-    case rlab::PIN_RENDERTARGET:
+    case renderlab::PIN_RENDERTARGET:
         ret += "(RT)";
         break;
-    case rlab::PIN_SHADER:
+    case renderlab::PIN_SHADER:
         ret += "(S)";
         break;
-    case rlab::PIN_MODEL:
+    case renderlab::PIN_MODEL:
         ret += "(M)";
         break;
 
-    case rlab::PIN_INT:
+    case renderlab::PIN_INT:
         ret += "(I)";
         break;
-    case rlab::PIN_BOOL:
+    case renderlab::PIN_BOOL:
         ret += "(B)";
         break;
-    case rlab::PIN_VECTOR1:
+    case renderlab::PIN_VECTOR1:
         ret += "(1)";
         break;
-    case rlab::PIN_VECTOR2:
+    case renderlab::PIN_VECTOR2:
         ret += "(2)";
         break;
-    case rlab::PIN_VECTOR3:
+    case renderlab::PIN_VECTOR3:
         ret += "(3)";
         break;
-    case rlab::PIN_VECTOR4:
+    case renderlab::PIN_VECTOR4:
         ret += "(4)";
         break;
-    case rlab::PIN_MATRIX2:
+    case renderlab::PIN_MATRIX2:
         ret += "(M2)";
         break;
-    case rlab::PIN_MATRIX3:
+    case renderlab::PIN_MATRIX3:
         ret += "(M3)";
         break;
-    case rlab::PIN_MATRIX4:
+    case renderlab::PIN_MATRIX4:
         ret += "(M4)";
         break;
 
-    case rlab::PIN_SAMPLER2D:
+    case renderlab::PIN_SAMPLER2D:
         ret += "(S2)";
         break;
-    case rlab::PIN_SAMPLE_CUBE:
+    case renderlab::PIN_SAMPLE_CUBE:
         ret += "(SC)";
         break;
 
-    case rlab::PIN_VECTOR1_ARRAY:
+    case renderlab::PIN_VECTOR1_ARRAY:
         ret += "(1S)";
         break;
-    case rlab::PIN_VECTOR2_ARRAY:
+    case renderlab::PIN_VECTOR2_ARRAY:
         ret += "(2S)";
         break;
-    case rlab::PIN_VECTOR3_ARRAY:
+    case renderlab::PIN_VECTOR3_ARRAY:
         ret += "(3S)";
         break;
-    case rlab::PIN_VECTOR4_ARRAY:
+    case renderlab::PIN_VECTOR4_ARRAY:
         ret += "(4S)";
         break;
     }
@@ -87,9 +87,9 @@ const pt0::Color& get_color_func(int type)
 {
     switch (type)
     {
-    case rlab::PIN_TEXTURE:
+    case renderlab::PIN_TEXTURE:
         return COL_TEXTURE;
-    case rlab::PIN_RENDERTARGET:
+    case renderlab::PIN_RENDERTARGET:
         return COL_RT;
     default:
         return COL_DEFAULT;
@@ -105,8 +105,8 @@ bool can_type_cast_func(int type_from, int type_to)
         type_to == bp::PIN_ANY_VAR) {
         return true;
     }
-    if (type_from == rlab::PIN_TEXTURE && type_to == rlab::PIN_SAMPLER2D ||
-        type_from == rlab::PIN_SAMPLER2D && type_to == rlab::PIN_TEXTURE) {
+    if (type_from == renderlab::PIN_TEXTURE && type_to == renderlab::PIN_SAMPLER2D ||
+        type_from == renderlab::PIN_SAMPLER2D && type_to == renderlab::PIN_TEXTURE) {
         return true;
     }
 
@@ -115,7 +115,7 @@ bool can_type_cast_func(int type_from, int type_to)
 
 }
 
-namespace rlab
+namespace renderlab
 {
 
 void InitPinCallback()

@@ -32,25 +32,25 @@ const int PIN_IDX_TO_TYPE[] = {
     bp::PIN_ANY_VAR,
     bp::PIN_PORT,
 
-    rlab::PIN_TEXTURE,
-    rlab::PIN_RENDERTARGET,
-    rlab::PIN_SHADER,
-    rlab::PIN_MODEL,
+    renderlab::PIN_TEXTURE,
+    renderlab::PIN_RENDERTARGET,
+    renderlab::PIN_SHADER,
+    renderlab::PIN_MODEL,
 
-    rlab::PIN_INT,
-    rlab::PIN_BOOL,
-    rlab::PIN_VECTOR1,
-    rlab::PIN_VECTOR2,
-    rlab::PIN_VECTOR3,
-    rlab::PIN_VECTOR4,
-    rlab::PIN_MATRIX2,
-    rlab::PIN_MATRIX3,
-    rlab::PIN_MATRIX4,
+    renderlab::PIN_INT,
+    renderlab::PIN_BOOL,
+    renderlab::PIN_VECTOR1,
+    renderlab::PIN_VECTOR2,
+    renderlab::PIN_VECTOR3,
+    renderlab::PIN_VECTOR4,
+    renderlab::PIN_MATRIX2,
+    renderlab::PIN_MATRIX3,
+    renderlab::PIN_MATRIX4,
 
-    rlab::PIN_VECTOR1_ARRAY,
-    rlab::PIN_VECTOR2_ARRAY,
-    rlab::PIN_VECTOR3_ARRAY,
-    rlab::PIN_VECTOR4_ARRAY,
+    renderlab::PIN_VECTOR1_ARRAY,
+    renderlab::PIN_VECTOR2_ARRAY,
+    renderlab::PIN_VECTOR3_ARRAY,
+    renderlab::PIN_VECTOR4_ARRAY,
 };
 
 int PinTypeToIdx(int type)
@@ -68,7 +68,7 @@ int PinTypeToIdx(int type)
 
 }
 
-namespace rlab
+namespace renderlab
 {
 
 WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr)

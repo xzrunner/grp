@@ -5,7 +5,7 @@
 
 namespace bp { class Node; class Pin; }
 
-namespace rlab
+namespace renderlab
 {
 
 class Evaluator;

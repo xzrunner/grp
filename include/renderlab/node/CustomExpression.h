@@ -4,7 +4,7 @@
 
 #include <rendergraph/Variable.h>
 
-namespace rlab
+namespace renderlab
 {
 namespace node
 {

@@ -6,7 +6,7 @@
 
 #include <rendergraph/node/Shader.h>
 
-namespace rlab
+namespace renderlab
 {
 namespace node
 {

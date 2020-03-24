@@ -5,153 +5,153 @@
 RTTR_REGISTRATION
 {
 
-rttr::registration::class_<rlab::ClearType>("rlab_clear_type")
-	.property("type", &rlab::ClearType::type)
+rttr::registration::class_<renderlab::ClearType>("rlab_clear_type")
+	.property("type", &renderlab::ClearType::type)
 ;
 
-rttr::registration::enumeration<rlab::TextureType>("rlab_tex_type")
+rttr::registration::enumeration<renderlab::TextureType>("rlab_tex_type")
 (
-	rttr::value("2d",   rlab::TextureType::Tex2D),
-	rttr::value("cube", rlab::TextureType::TexCube)
+	rttr::value("2d",   renderlab::TextureType::Tex2D),
+	rttr::value("cube", renderlab::TextureType::TexCube)
 );
 
-rttr::registration::enumeration<rlab::TextureFormat>("rlab_tex_fmt")
+rttr::registration::enumeration<renderlab::TextureFormat>("rlab_tex_fmt")
 (
-    rttr::value("rgba16", rlab::TextureFormat::RGBA16),
-	rttr::value("rgba8",  rlab::TextureFormat::RGBA8),
-    rttr::value("rgba4",  rlab::TextureFormat::RGBA4),
-    rttr::value("rgb",    rlab::TextureFormat::RGB),
-    rttr::value("rgb565", rlab::TextureFormat::RGB565),
-    rttr::value("a8",     rlab::TextureFormat::A8),
-    rttr::value("depth",  rlab::TextureFormat::Depth)
+    rttr::value("rgba16", renderlab::TextureFormat::RGBA16),
+	rttr::value("rgba8",  renderlab::TextureFormat::RGBA8),
+    rttr::value("rgba4",  renderlab::TextureFormat::RGBA4),
+    rttr::value("rgb",    renderlab::TextureFormat::RGB),
+    rttr::value("rgb565", renderlab::TextureFormat::RGB565),
+    rttr::value("a8",     renderlab::TextureFormat::A8),
+    rttr::value("depth",  renderlab::TextureFormat::Depth)
 );
 
-rttr::registration::enumeration<rlab::TextureWrapping>("rlab_tex_wrap")
+rttr::registration::enumeration<renderlab::TextureWrapping>("rlab_tex_wrap")
 (
-	rttr::value("repeat",          rlab::TextureWrapping::Repeat),
-    rttr::value("mirrored_repeat", rlab::TextureWrapping::MirroredRepeat),
-    rttr::value("clamp_to_edge",   rlab::TextureWrapping::ClampToEdge),
-    rttr::value("clamp_to_border", rlab::TextureWrapping::ClampToBorder)
+	rttr::value("repeat",          renderlab::TextureWrapping::Repeat),
+    rttr::value("mirrored_repeat", renderlab::TextureWrapping::MirroredRepeat),
+    rttr::value("clamp_to_edge",   renderlab::TextureWrapping::ClampToEdge),
+    rttr::value("clamp_to_border", renderlab::TextureWrapping::ClampToBorder)
 );
 
-rttr::registration::enumeration<rlab::TextureFiltering>("rlab_tex_filter")
+rttr::registration::enumeration<renderlab::TextureFiltering>("rlab_tex_filter")
 (
-	rttr::value("nearest", rlab::TextureFiltering::Nearest),
-    rttr::value("linear",  rlab::TextureFiltering::Linear)
+	rttr::value("nearest", renderlab::TextureFiltering::Nearest),
+    rttr::value("linear",  renderlab::TextureFiltering::Linear)
 );
 
-rttr::registration::enumeration<rlab::VertexDataType>("rlab_vert_data_type")
+rttr::registration::enumeration<renderlab::VertexDataType>("rlab_vert_data_type")
 (
-	rttr::value("char",  rlab::VertexDataType::Char),
-    rttr::value("float", rlab::VertexDataType::Float)
+	rttr::value("char",  renderlab::VertexDataType::Char),
+    rttr::value("float", renderlab::VertexDataType::Float)
 );
 
-rttr::registration::class_<rlab::VertexAttrib>("rlab_vert_attrib")
-	.property("name", &rlab::VertexAttrib::name)
-    .property("num",  &rlab::VertexAttrib::num)
-    .property("type", &rlab::VertexAttrib::type)
+rttr::registration::class_<renderlab::VertexAttrib>("rlab_vert_attrib")
+	.property("name", &renderlab::VertexAttrib::name)
+    .property("num",  &renderlab::VertexAttrib::num)
+    .property("type", &renderlab::VertexAttrib::type)
 ;
 
-rttr::registration::enumeration<rlab::PrimitiveShapeType>("rlab_prim_type")
+rttr::registration::enumeration<renderlab::PrimitiveShapeType>("rlab_prim_type")
 (
-    rttr::value("quad", rlab::PrimitiveShapeType::Quad),
-	rttr::value("cube", rlab::PrimitiveShapeType::Cube)
+    rttr::value("quad", renderlab::PrimitiveShapeType::Quad),
+	rttr::value("cube", renderlab::PrimitiveShapeType::Cube)
 );
 
-rttr::registration::enumeration<rlab::PrimitiveVertLayout>("rlab_prim_vert_layout")
+rttr::registration::enumeration<renderlab::PrimitiveVertLayout>("rlab_prim_vert_layout")
 (
-    rttr::value("pos",             rlab::PrimitiveVertLayout::Pos),
-	rttr::value("pos_tex",         rlab::PrimitiveVertLayout::PosTex),
-    rttr::value("pos_norm_tex",    rlab::PrimitiveVertLayout::PosNormTex),
-    rttr::value("pos_norm_tex_tb", rlab::PrimitiveVertLayout::PosNormTexTB)
+    rttr::value("pos",             renderlab::PrimitiveVertLayout::Pos),
+	rttr::value("pos_tex",         renderlab::PrimitiveVertLayout::PosTex),
+    rttr::value("pos_norm_tex",    renderlab::PrimitiveVertLayout::PosNormTex),
+    rttr::value("pos_norm_tex_tb", renderlab::PrimitiveVertLayout::PosNormTexTB)
 );
 
-rttr::registration::enumeration<rlab::AlphaTestFunc>("rlab_alpha_test_func")
+rttr::registration::enumeration<renderlab::AlphaTestFunc>("rlab_alpha_test_func")
 (
-	rttr::value("off",       rlab::AlphaTestFunc::Off),
-    rttr::value("never",     rlab::AlphaTestFunc::Never),
-    rttr::value("less",      rlab::AlphaTestFunc::Less),
-    rttr::value("equal",     rlab::AlphaTestFunc::Equal),
-    rttr::value("lequal",    rlab::AlphaTestFunc::LEqual),
-    rttr::value("greater",   rlab::AlphaTestFunc::Greater),
-    rttr::value("not_equal", rlab::AlphaTestFunc::NotEqual),
-    rttr::value("gequal",    rlab::AlphaTestFunc::GEqual),
-    rttr::value("always",    rlab::AlphaTestFunc::Always)
+	rttr::value("off",       renderlab::AlphaTestFunc::Off),
+    rttr::value("never",     renderlab::AlphaTestFunc::Never),
+    rttr::value("less",      renderlab::AlphaTestFunc::Less),
+    rttr::value("equal",     renderlab::AlphaTestFunc::Equal),
+    rttr::value("lequal",    renderlab::AlphaTestFunc::LEqual),
+    rttr::value("greater",   renderlab::AlphaTestFunc::Greater),
+    rttr::value("not_equal", renderlab::AlphaTestFunc::NotEqual),
+    rttr::value("gequal",    renderlab::AlphaTestFunc::GEqual),
+    rttr::value("always",    renderlab::AlphaTestFunc::Always)
 );
 
-rttr::registration::enumeration<rlab::BlendEqMode>("rlab_blend_eq_mode")
+rttr::registration::enumeration<renderlab::BlendEqMode>("rlab_blend_eq_mode")
 (
-	rttr::value("func_add",         rlab::BlendEqMode::FuncAdd),
-    rttr::value("func_sub",         rlab::BlendEqMode::FuncSubtract),
-    rttr::value("func_reverse_sub", rlab::BlendEqMode::FuncReverseSubtract),
-    rttr::value("min",              rlab::BlendEqMode::Min),
-    rttr::value("max",              rlab::BlendEqMode::Max)
+	rttr::value("func_add",         renderlab::BlendEqMode::FuncAdd),
+    rttr::value("func_sub",         renderlab::BlendEqMode::FuncSubtract),
+    rttr::value("func_reverse_sub", renderlab::BlendEqMode::FuncReverseSubtract),
+    rttr::value("min",              renderlab::BlendEqMode::Min),
+    rttr::value("max",              renderlab::BlendEqMode::Max)
 );
 
-rttr::registration::enumeration<rlab::BlendFuncFactor>("rlab_blend_func_factor")
+rttr::registration::enumeration<renderlab::BlendFuncFactor>("rlab_blend_func_factor")
 (
-	rttr::value("off",                 rlab::BlendFuncFactor::Off),
-    rttr::value("zero",                rlab::BlendFuncFactor::Zero),
-    rttr::value("one",                 rlab::BlendFuncFactor::One),
-    rttr::value("src_color",           rlab::BlendFuncFactor::SrcColor),
-    rttr::value("one_minus_src_color", rlab::BlendFuncFactor::OneMinusSrcColor),
-    rttr::value("dst_color",           rlab::BlendFuncFactor::DstColor),
-    rttr::value("one_minus_dst_color", rlab::BlendFuncFactor::OneMinusDstColor),
-    rttr::value("src_alpha",           rlab::BlendFuncFactor::SrcAlpha),
-    rttr::value("one_minus_src_alpha", rlab::BlendFuncFactor::OneMinusSrcAlpha),
-    rttr::value("dst_alpha",           rlab::BlendFuncFactor::DstAlpha),
-    rttr::value("one_minus_dst_alpha", rlab::BlendFuncFactor::OneMinusDstAlpha)
+	rttr::value("off",                 renderlab::BlendFuncFactor::Off),
+    rttr::value("zero",                renderlab::BlendFuncFactor::Zero),
+    rttr::value("one",                 renderlab::BlendFuncFactor::One),
+    rttr::value("src_color",           renderlab::BlendFuncFactor::SrcColor),
+    rttr::value("one_minus_src_color", renderlab::BlendFuncFactor::OneMinusSrcColor),
+    rttr::value("dst_color",           renderlab::BlendFuncFactor::DstColor),
+    rttr::value("one_minus_dst_color", renderlab::BlendFuncFactor::OneMinusDstColor),
+    rttr::value("src_alpha",           renderlab::BlendFuncFactor::SrcAlpha),
+    rttr::value("one_minus_src_alpha", renderlab::BlendFuncFactor::OneMinusSrcAlpha),
+    rttr::value("dst_alpha",           renderlab::BlendFuncFactor::DstAlpha),
+    rttr::value("one_minus_dst_alpha", renderlab::BlendFuncFactor::OneMinusDstAlpha)
 );
 
-rttr::registration::enumeration<rlab::CullMode>("rlab_cull_type")
+rttr::registration::enumeration<renderlab::CullMode>("rlab_cull_type")
 (
-	rttr::value("off",            rlab::CullMode::Off),
-    rttr::value("front",          rlab::CullMode::Front),
-	rttr::value("back",           rlab::CullMode::Back),
-    rttr::value("front_and_back", rlab::CullMode::FrontAndBack)
+	rttr::value("off",            renderlab::CullMode::Off),
+    rttr::value("front",          renderlab::CullMode::Front),
+	rttr::value("back",           renderlab::CullMode::Back),
+    rttr::value("front_and_back", renderlab::CullMode::FrontAndBack)
 );
 
-rttr::registration::enumeration<rlab::ZTestFunc>("rlab_ztest_func")
+rttr::registration::enumeration<renderlab::ZTestFunc>("rlab_ztest_func")
 (
-	rttr::value("off",       rlab::ZTestFunc::Off),
-    rttr::value("never",     rlab::ZTestFunc::Never),
-    rttr::value("less",      rlab::ZTestFunc::Less),
-    rttr::value("equal",     rlab::ZTestFunc::Equal),
-    rttr::value("lequal",    rlab::ZTestFunc::LEqual),
-    rttr::value("greater",   rlab::ZTestFunc::Greater),
-    rttr::value("not_equal", rlab::ZTestFunc::NotEqual),
-    rttr::value("gequal",    rlab::ZTestFunc::GEqual),
-    rttr::value("always",    rlab::ZTestFunc::Always)
+	rttr::value("off",       renderlab::ZTestFunc::Off),
+    rttr::value("never",     renderlab::ZTestFunc::Never),
+    rttr::value("less",      renderlab::ZTestFunc::Less),
+    rttr::value("equal",     renderlab::ZTestFunc::Equal),
+    rttr::value("lequal",    renderlab::ZTestFunc::LEqual),
+    rttr::value("greater",   renderlab::ZTestFunc::Greater),
+    rttr::value("not_equal", renderlab::ZTestFunc::NotEqual),
+    rttr::value("gequal",    renderlab::ZTestFunc::GEqual),
+    rttr::value("always",    renderlab::ZTestFunc::Always)
 );
 
-rttr::registration::enumeration<rlab::UserScriptRetType>("user_script_ret_type")
+rttr::registration::enumeration<renderlab::UserScriptRetType>("user_script_ret_type")
 (
-	rttr::value("void",       rlab::UserScriptRetType::Void),
-    rttr::value("vec1_array", rlab::UserScriptRetType::Vec1Array),
-    rttr::value("vec2_array", rlab::UserScriptRetType::Vec2Array),
-    rttr::value("vec3_array", rlab::UserScriptRetType::Vec3Array),
-	rttr::value("vec4_array", rlab::UserScriptRetType::Vec4Array)
+	rttr::value("void",       renderlab::UserScriptRetType::Void),
+    rttr::value("vec1_array", renderlab::UserScriptRetType::Vec1Array),
+    rttr::value("vec2_array", renderlab::UserScriptRetType::Vec2Array),
+    rttr::value("vec3_array", renderlab::UserScriptRetType::Vec3Array),
+	rttr::value("vec4_array", renderlab::UserScriptRetType::Vec4Array)
 );
 
-rttr::registration::enumeration<rlab::ShaderUniformType>("shader_uniform_type")
+rttr::registration::enumeration<renderlab::ShaderUniformType>("shader_uniform_type")
 (
-	rttr::value("unknown",  rlab::ShaderUniformType::Unknown),
-    rttr::value("int",      rlab::ShaderUniformType::Int),
-    rttr::value("bool",     rlab::ShaderUniformType::Bool),
-    rttr::value("vec1",     rlab::ShaderUniformType::Vector1),
-    rttr::value("vec2",     rlab::ShaderUniformType::Vector2),
-    rttr::value("vec3",     rlab::ShaderUniformType::Vector3),
-    rttr::value("vec4",     rlab::ShaderUniformType::Vector4),
-    rttr::value("mat2",     rlab::ShaderUniformType::Matrix2),
-    rttr::value("mat3",     rlab::ShaderUniformType::Matrix3),
-    rttr::value("mat4",     rlab::ShaderUniformType::Matrix4),
-    rttr::value("tex_2d",   rlab::ShaderUniformType::Sampler2D),
-    rttr::value("tex_cubd", rlab::ShaderUniformType::SamplerCube)
+	rttr::value("unknown",  renderlab::ShaderUniformType::Unknown),
+    rttr::value("int",      renderlab::ShaderUniformType::Int),
+    rttr::value("bool",     renderlab::ShaderUniformType::Bool),
+    rttr::value("vec1",     renderlab::ShaderUniformType::Vector1),
+    rttr::value("vec2",     renderlab::ShaderUniformType::Vector2),
+    rttr::value("vec3",     renderlab::ShaderUniformType::Vector3),
+    rttr::value("vec4",     renderlab::ShaderUniformType::Vector4),
+    rttr::value("mat2",     renderlab::ShaderUniformType::Matrix2),
+    rttr::value("mat3",     renderlab::ShaderUniformType::Matrix3),
+    rttr::value("mat4",     renderlab::ShaderUniformType::Matrix4),
+    rttr::value("tex_2d",   renderlab::ShaderUniformType::Sampler2D),
+    rttr::value("tex_cubd", renderlab::ShaderUniformType::SamplerCube)
 );
 
 }
 
-namespace rlab
+namespace renderlab
 {
 void prop_types_regist_rttr()
 {

@@ -55,7 +55,7 @@
 #include <sm_const.h>
 #include <node0/SceneNode.h>
 
-namespace rlab
+namespace renderlab
 {
 
 rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Node* node)
@@ -69,13 +69,13 @@ rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Nod
     auto src_type = type.get_name().to_string();
     std::string dst_type;
     std::string lib_str = "rendergraph";
-    if (type == rttr::type::get<rlab::node::GlobalIllumination>() ||
-        type == rttr::type::get<rlab::node::SeparableSSS>()) {
+    if (type == rttr::type::get<renderlab::node::GlobalIllumination>() ||
+        type == rttr::type::get<renderlab::node::SeparableSSS>()) {
         lib_str = "rp";
     }
-    auto find_lib = src_type.find("rlab::");
+    auto find_lib = src_type.find("renderlab::");
     if (find_lib != std::string::npos) {
-        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("rlab::"));
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("renderlab::"));
     }
 
     rendergraph::NodePtr dst = nullptr;

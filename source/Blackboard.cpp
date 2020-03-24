@@ -1,6 +1,6 @@
 #include "renderlab/Blackboard.h"
 
-namespace rlab
+namespace renderlab
 {
 
 CU_SINGLETON_DEFINITION(Blackboard);

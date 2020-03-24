@@ -15,15 +15,15 @@ namespace
 class PassCmp
 {
 public:
-	bool operator () (const std::shared_ptr<rlab::node::PassEnd>& p0,
-                      const std::shared_ptr<rlab::node::PassEnd>& p1) const {
+	bool operator () (const std::shared_ptr<renderlab::node::PassEnd>& p0,
+                      const std::shared_ptr<renderlab::node::PassEnd>& p1) const {
         return p0->GetOrder() < p1->GetOrder();
     }
 }; // PassCmp
 
 }
 
-namespace rlab
+namespace renderlab
 {
 
 Evaluator::Evaluator()

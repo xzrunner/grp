@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace rlab
+namespace renderlab
 {
 
 class Evaluator;

@@ -19,24 +19,8 @@ public:
     bool GetPreview() const { return m_preview; }
     void SetPreview(bool preview) { m_preview = preview; }
 
-    struct PinDesc
-    {
-        bool operator == (const PinDesc& desc) const {
-            return type == desc.type && name == desc.name;
-        }
-
-        int         type;
-        std::string name;
-    };
-
 protected:
-    void InitPins(const std::vector<PinDesc>& input,
-        const std::vector<PinDesc>& output);
     void InitPins(const std::string& name);
-
-private:
-    void InitPinsImpl(const std::vector<PinDesc>& pins,
-        bool is_input);
 
 private:
     bool m_enable = true;

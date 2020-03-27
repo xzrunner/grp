@@ -52,6 +52,7 @@
 #include <facade/ImageLoader.h>
 #include <facade/ResPool.h>
 #include <cpputil/StringHelper.h>
+#include <cpputil/Tools.h>
 #include <sm_const.h>
 #include <node0/SceneNode.h>
 
@@ -67,6 +68,7 @@ rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Nod
 
     auto type = node->get_type();
     auto src_type = type.get_name().to_string();
+    //src_type = cpputil::CamelCaseToUnderscore(src_type);
     std::string dst_type;
     std::string lib_str = "rendergraph";
     if (type == rttr::type::get<renderlab::node::GlobalIllumination>() ||
@@ -161,7 +163,7 @@ rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Nod
                 int idx = -1;
                 for (int i = 0, n = dst->GetExports().size(); i < n; ++i)
                 {
-                    if (dst->GetExports()[i].var.name == output_node->GetName()) {
+                    if (dst->GetExports()[i].var.full_name == output_node->GetName()) {
                         idx = i;
                         break;
                     }
@@ -845,7 +847,7 @@ rendergraph::NodePtr RenderGraph::CreateGraphNode(Evaluator& eval, const bp::Nod
             auto& bp_from_port = conns[0]->GetFrom();
             assert(bp_from_port);
             if (CreateFromNode(eval, bp_from_port, from_port)) {
-                rendergraph::make_connecting(from_port, { dst, i });
+                dag::make_connecting<rendergraph::Variable>(from_port, { dst, i });
             }
         }
     }
@@ -1074,7 +1076,11 @@ void RenderGraph::InitPortsBackFromFront(rendergraph::Node& back, const bp::Node
         var.type = TypeFrontToBack(i->GetType());
 //        var.name = std::string("in") + std::to_string(i);
         var.name = i->GetName();
-        imports.push_back(var);
+
+        dag::Node<rendergraph::Variable>::Port port;
+        port.var.type = var;
+        port.var.full_name = i->GetName();
+        imports.push_back(port);
     }
     exports.reserve(outputs.size());
     for (auto o : outputs)
@@ -1083,7 +1089,11 @@ void RenderGraph::InitPortsBackFromFront(rendergraph::Node& back, const bp::Node
         var.type = TypeFrontToBack(o->GetType());
 //        var.name = std::string("in") + std::to_string(i);
         var.name = o->GetName();
-        exports.push_back(var);
+
+        dag::Node<rendergraph::Variable>::Port port;
+        port.var.type = var;
+        port.var.full_name = o->GetName();
+        exports.push_back(port);
     }
     back.SetImports(imports);
     back.SetExports(exports);

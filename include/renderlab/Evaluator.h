@@ -23,7 +23,8 @@ public:
 
     void Rebuild(const std::vector<bp::NodePtr>& nodes);
 
-    void Draw(const rendergraph::RenderContext& rc, const bp::NodePtr& end = nullptr) const;
+    void Draw(const std::shared_ptr<rendergraph::RenderContext>& rc,
+        const bp::NodePtr& end = nullptr) const;
 
     bool IsEmpty() const { return m_passes.empty(); }
 

@@ -3,6 +3,7 @@
 
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
+#include <blueprint/BackendAdapter.h>
 
 #include <rendergraph/node/Shader.h>
 
@@ -19,7 +20,7 @@ void Shader::SetVert(const std::string& vert)
 
     m_vert = vert;
 
-    std::vector<Node::PinDesc> uniforms;
+    std::vector<bp::PinDesc> uniforms;
 
     std::set<std::string> names;
     for (auto& p : m_frag_uniforms) {
@@ -27,7 +28,7 @@ void Shader::SetVert(const std::string& vert)
     }
 
     GetCodeUniforms(m_vert, uniforms, names);
-    if (uniforms != m_vert_uniforms) {
+    if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
         m_vert_uniforms = uniforms;
         InitInputsFromUniforms();
     }
@@ -41,7 +42,7 @@ void Shader::SetFrag(const std::string& frag)
 
     m_frag = frag;
 
-    std::vector<Node::PinDesc> uniforms;
+    std::vector<bp::PinDesc> uniforms;
 
     std::set<std::string> names;
     for (auto& p : m_vert_uniforms) {
@@ -49,7 +50,7 @@ void Shader::SetFrag(const std::string& frag)
     }
 
     GetCodeUniforms(m_frag, uniforms, names);
-    if (uniforms != m_frag_uniforms) {
+    if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
         m_frag_uniforms = uniforms;
         InitInputsFromUniforms();
     }
@@ -57,7 +58,7 @@ void Shader::SetFrag(const std::string& frag)
 
 void Shader::InitInputsFromUniforms()
 {
-    std::vector<Node::PinDesc> uniforms = m_vert_uniforms;
+    std::vector<bp::PinDesc> uniforms = m_vert_uniforms;
     std::copy(m_frag_uniforms.begin(), m_frag_uniforms.end(), std::back_inserter(uniforms));
 
     bool same = true;
@@ -93,14 +94,32 @@ void Shader::InitInputsFromUniforms()
     SetSizeChanged(true);
 }
 
-void Shader::GetCodeUniforms(const std::string& code, std::vector<Node::PinDesc>& uniforms,
+bool Shader::IsSameUniforms(const std::vector<bp::PinDesc>& v0,
+                            const std::vector<bp::PinDesc>& v1)
+{
+    if (v0.size() != v1.size()) {
+        return false;
+    }
+
+    for (size_t i = 0, n = v0.size(); i < n; ++i)
+    {
+        if (v0[i].type != v1[i].type ||
+            v0[i].name != v1[i].name) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Shader::GetCodeUniforms(const std::string& code, std::vector<bp::PinDesc>& uniforms,
                              std::set<std::string>& names)
 {
     std::vector<rendergraph::Variable> rg_unifs;
     rendergraph::node::Shader::GetCodeUniforms(code, rg_unifs, names);
     for (auto& u : rg_unifs)
     {
-        Node::PinDesc desc;
+        bp::PinDesc desc;
 
         desc.name = u.GetDisplayName();
         desc.type = RenderGraph::TypeBackToFront(u.type, u.count);

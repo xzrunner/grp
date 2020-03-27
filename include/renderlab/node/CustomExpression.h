@@ -15,7 +15,7 @@ public:
     CustomExpression()
         : Node("CustomExpression", false)
     {
-        InitPins("CustomExpression");
+        InitPins("custom_expression");
     }
 
     auto& GetCode() const { return m_code; }

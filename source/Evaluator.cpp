@@ -64,9 +64,10 @@ void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes)
     }
 }
 
-void Evaluator::Draw(const rendergraph::RenderContext& rc, const bp::NodePtr& end) const
+void Evaluator::Draw(const std::shared_ptr<rendergraph::RenderContext>& rc,
+                     const bp::NodePtr& end) const
 {
-    ur::Sandbox sb(rc.rc);
+    ur::Sandbox sb(rc->rc);
 
     rendergraph::NodePtr rg_end = nullptr;
     if (end) {

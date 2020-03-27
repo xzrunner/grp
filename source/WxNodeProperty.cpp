@@ -138,9 +138,9 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<TextureFormat>())
     {
-        const wxChar* FORMATS[] = { wxT("rgba16"), wxT("rgba8"), wxT("rgba4"), wxT("rgb"), wxT("rgb565"), wxT("a8"), wxT("depth"), NULL };
+        const wxChar* FORMATS[] = { wxT("rgba16"), wxT("rgba8"), wxT("rgba4"), wxT("rgb"), wxT("rgb565"), wxT("a8"), wxT("red"), wxT("depth"), NULL };
         auto format_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, FORMATS);
-        auto format = prop.get_value(node).get_value<TextureType>();
+        auto format = prop.get_value(node).get_value<TextureFormat>();
         format_prop->SetValue(static_cast<int>(format));
         m_pg->Append(format_prop);
     }

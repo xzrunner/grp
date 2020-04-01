@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="view">
-      <UniqueIdentifier>{d556a1a9-e10e-4ee6-8b0f-3dceb4416573}</UniqueIdentifier>
-    </Filter>
     <Filter Include="dataset">
       <UniqueIdentifier>{65eb17e9-2d22-44e4-a71e-69c45babdd92}</UniqueIdentifier>
     </Filter>
@@ -25,14 +22,20 @@
     <Filter Include="tools\trans">
       <UniqueIdentifier>{d5bfa290-17a3-4c1b-bc0f-ded0032d2cfe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dataset\nodes">
+    <Filter Include="nodes">
       <UniqueIdentifier>{620dacb2-bb0c-4ed5-b2b8-86f5cdbeec20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{04a8f594-ede1-4896-bbb8-7b65a5d33804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\preview">
+      <UniqueIdentifier>{ea0e9785-f95e-4d9c-ac85-f8d668c61409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\graph">
+      <UniqueIdentifier>{b48ff869-a942-4c11-a6ee-b3a8902d76ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\renderlab\WxNodeProperty.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\PinType.h">
       <Filter>dataset\pin</Filter>
     </ClInclude>
@@ -51,27 +54,45 @@
     <ClInclude Include="..\..\..\include\renderlab\NodePreview.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\RenderGraph.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
     <ClInclude Include="..\..\..\include\renderlab\Evaluator.h">
       <Filter>tools\eval</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\Blackboard.h">
-      <Filter>tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\node\Shader.h">
-      <Filter>dataset\nodes</Filter>
+      <Filter>nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\node\CustomExpression.h">
-      <Filter>dataset\nodes</Filter>
+      <Filter>nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node_def_gen.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node_regist_cfg.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node_rttr_gen.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\RenderAdapter.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\MessageID.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\PreviewPage.h">
+      <Filter>view\preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxPreviewCanvas.h">
+      <Filter>view\preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxGraphCanvas.h">
+      <Filter>view\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h">
+      <Filter>view\graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
-      <Filter>view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
       <Filter>dataset\pin</Filter>
     </ClCompile>
@@ -81,30 +102,36 @@
     <ClCompile Include="..\..\..\source\Node.cpp">
       <Filter>dataset\node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\RegistRTTR.cpp">
-      <Filter>tools\rtti</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp">
       <Filter>tools\rtti</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\NodePreview.cpp">
       <Filter>dataset\node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\RenderGraph.cpp">
-      <Filter>tools\trans</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\RenderLab.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp">
       <Filter>tools\eval</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\Blackboard.cpp">
-      <Filter>tools</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\node\Shader.cpp">
-      <Filter>dataset\nodes</Filter>
+      <Filter>nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\node\CustomExpression.cpp">
-      <Filter>dataset\nodes</Filter>
+      <Filter>nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RenderAdapter.cpp">
+      <Filter>tools\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\PreviewPage.cpp">
+      <Filter>view\preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp">
+      <Filter>view\preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGraphCanvas.cpp">
+      <Filter>view\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
+      <Filter>view\graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

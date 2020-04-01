@@ -1,6 +1,7 @@
 #include "renderlab/RenderLab.h"
 #include "renderlab/PinCallback.h"
 #include "renderlab/Node.h"
+#include "renderlab/RegistNodes.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
@@ -8,27 +9,40 @@
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
-#include <rendergraph/RenderGraph.h>
 #include <renderpipeline/RenderPipeline.h>
+#include <rendergraph/RenderGraph.h>
+
+namespace bp
+{
+extern void regist_sm_rttr();
+extern void regist_pt0_rttr();
+}
 
 namespace renderlab
 {
 
 CU_SINGLETON_DEFINITION(RenderLab);
 
-extern void regist_rttr();
-
 RenderLab::RenderLab()
 {
-	rendergraph::RenderGraph::Instance();
     rp::RenderPipeline::Instance();
+    rendergraph::RenderGraph::Instance();
 
-	regist_rttr();
+    RegistRTTR();
 
 	Init();
 	InitNodes();
 
     InitPinCallback();
+}
+
+void RenderLab::RegistRTTR()
+{
+    bp::regist_sm_rttr();
+    bp::regist_pt0_rttr();
+
+    prop_types_regist_rttr();
+    nodes_regist_rttr();
 }
 
 void RenderLab::Init()

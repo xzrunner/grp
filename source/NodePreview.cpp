@@ -1,8 +1,8 @@
 #include "renderlab/NodePreview.h"
 #include "renderlab/Node.h"
-#include "renderlab/Evaluator.h"
 #include "renderlab/RegistNodes.h"
 #include "renderlab/PinType.h"
+#include "renderlab/Evaluator.h"
 
 #include <blueprint/NodeHelper.h>
 
@@ -29,23 +29,26 @@
 namespace renderlab
 {
 
-void NodePreview::Draw(const Evaluator& eval, const bp::Node& node, const n2::RenderParams& rp)
+void NodePreview::Draw(const bp::Node& front_node, const rendergraph::Node& back_node,
+                       const n2::RenderParams& rp, const Evaluator& eval)
 {
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
     auto rt = rt_mgr.Fetch();
 
     rt->Bind();
-    bool succ = DrawToRT(eval, node);
+    bool succ = DrawToRT(front_node, back_node, eval);
     rt->Unbind();
 
     if (succ) {
-        DrawFromRT(node, rp, *rt);
+        DrawFromRT(front_node, rp, *rt);
     }
 
     rt_mgr.Return(rt);
 }
 
-bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
+bool NodePreview::DrawToRT(const bp::Node& front_node,
+                           const rendergraph::Node& back_node,
+                           const Evaluator& eval)
 {
     auto& rt_mgr = pt2::Blackboard::Instance()->GetRenderContext().GetRTMgr();
 
@@ -54,28 +57,22 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
     auto shader = std::static_pointer_cast<pt2::Shader>(renderer->GetAllShaders()[0]);
     pt2::RenderTargetCtx ctx(rc, shader, rt_mgr.WIDTH, rt_mgr.HEIGHT);
 
-    auto type = node.get_type();
+    auto type = front_node.get_type();
     if (type == rttr::type::get<node::Texture>())
     {
-        auto rg_node = eval.QueryRGNode(&node);
-        if (!rg_node) {
-            return false;
-        }
-        assert(rg_node && rg_node->get_type() == rttr::type::get<rendergraph::node::Texture>());
-        auto tex = std::static_pointer_cast<rendergraph::node::Texture>(rg_node);
+        assert(back_node.get_type() == rttr::type::get<rendergraph::node::Texture>());
+        auto& tex = static_cast<const rendergraph::node::Texture&>(back_node);
 
         sm::Matrix2D mat;
         mat.Scale(
             static_cast<float>(rt_mgr.WIDTH),
             static_cast<float>(rt_mgr.HEIGHT)
         );
-        pt2::RenderSystem::DrawTexture(tex->GetWidth(), tex->GetHeight(), tex->GetTexID(), sm::rect(1, 1), mat);
-
-        return true;
+        pt2::RenderSystem::DrawTexture(tex.GetWidth(), tex.GetHeight(), tex.GetTexID(), sm::rect(1, 1), mat);
     }
     else if (type == rttr::type::get<node::Preview>())
     {
-        auto& conns = node.GetAllInput()[0]->GetConnecting();
+        auto& conns = front_node.GetAllInput()[0]->GetConnecting();
         if (conns.empty()) {
             return false;
         }
@@ -83,13 +80,12 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
         if (f_pin->GetOldType() != PIN_SAMPLER2D && f_pin->GetOldType() != PIN_SAMPLE_CUBE) {
             return false;
         }
-        auto rg_node = eval.QueryRGNode(&f_pin->GetParent());
 
         rendergraph::RenderContext rg_rc(rc);
         const int port_idx = f_pin->GetPosIdx();
         rendergraph::ShaderVariant var;
         uint32_t flags;
-        rg_node->Eval(rg_rc, port_idx, var, flags);
+        back_node.Eval(rg_rc, port_idx, var, flags);
         if (var.res_id == 0) {
             return false;
         }
@@ -105,20 +101,20 @@ bool NodePreview::DrawToRT(const Evaluator& eval, const bp::Node& node)
         );
 
         pt2::RenderSystem::DrawTexture(0, 0, var.res_id, sm::rect(1, 1), mat);
-
-        return true;
     }
     else
     {
-//        eval.Draw(rendergraph::RenderContext(rc), &node);
+        auto rg_rc = std::make_shared<rendergraph::RenderContext>(rc);
+        eval.Draw(rg_rc, &back_node);
     }
 
-    return false;
+    return true;
 }
 
-void NodePreview::DrawFromRT(const bp::Node& node, const n2::RenderParams& rp, const pt2::RenderTarget& rt)
+void NodePreview::DrawFromRT(const bp::Node& front_node, const n2::RenderParams& rp,
+                             const pt2::RenderTarget& rt)
 {
-    auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(node, rp.GetMatrix()));
+    auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(front_node, rp.GetMatrix()));
     const auto scale = mt4.GetScale();
     const float hw = scale.x * 0.5f;
     const float hh = scale.y * 0.5f;

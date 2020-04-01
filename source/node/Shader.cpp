@@ -1,5 +1,5 @@
 #include "renderlab/node/Shader.h"
-#include "renderlab/RenderGraph.h"
+#include "renderlab/RenderAdapter.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
@@ -122,7 +122,7 @@ void Shader::GetCodeUniforms(const std::string& code, std::vector<bp::PinDesc>& 
         bp::PinDesc desc;
 
         desc.name = u.GetDisplayName();
-        desc.type = RenderGraph::TypeBackToFront(u.type, u.count);
+        desc.type = RenderAdapter::TypeBackToFront(u.type, u.count);
 
         uniforms.push_back(desc);
     }

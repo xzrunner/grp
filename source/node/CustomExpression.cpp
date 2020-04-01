@@ -1,5 +1,5 @@
 #include "renderlab/node/CustomExpression.h"
-#include "renderlab/RenderGraph.h"
+#include "renderlab/RenderAdapter.h"
 
 #include <blueprint/Pin.h>
 
@@ -29,7 +29,7 @@ void CustomExpression::SetCode(const std::string& code)
     {
         m_all_input.erase(m_all_input.begin() + 1, m_all_input.end());
         for (auto& i : parser.GetInputs()) {
-            auto type = RenderGraph::TypeBackToFront(i.type, i.count);
+            auto type = RenderAdapter::TypeBackToFront(i.type, i.count);
             auto pin = std::make_shared<bp::Pin>(true, m_all_input.size(), type, i.name, *this);
             m_all_input.push_back(pin);
         }
@@ -39,7 +39,7 @@ void CustomExpression::SetCode(const std::string& code)
     {
         m_all_output.erase(m_all_output.begin() + 1, m_all_output.end());
         for (auto& o : parser.GetOutputs()) {
-            auto type = RenderGraph::TypeBackToFront(o.type, o.count);
+            auto type = RenderAdapter::TypeBackToFront(o.type, o.count);
             auto pin = std::make_shared<bp::Pin>(false, m_all_output.size(), type, o.name, *this);
             m_all_output.push_back(pin);
         }
@@ -64,9 +64,9 @@ bool CustomExpression::IsPinsChanged(bool is_in, const std::vector<rendergraph::
     }
 
     assert(old_pins.size() > 0);
-    for (int i = 0, n = old_pins.size() - 1; i < n; ++i) 
+    for (int i = 0, n = old_pins.size() - 1; i < n; ++i)
     {
-        auto type = RenderGraph::TypeBackToFront(new_vars[i].type, new_vars[i].count);
+        auto type = RenderAdapter::TypeBackToFront(new_vars[i].type, new_vars[i].count);
         if (type != old_pins[1 + i]->GetOldType() ||
             new_vars[i].name != old_pins[1 + i]->GetName()) {
             return true;

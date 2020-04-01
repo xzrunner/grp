@@ -11,8 +11,6 @@ public:
     Node(const std::string& title, bool preview);
     virtual ~Node();
 
-    virtual void Draw(const n2::RenderParams& rp) const override;
-
     bool GetEnable() const { return m_enable; }
     void SetEnable(bool enable) { m_enable = enable; }
 

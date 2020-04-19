@@ -14,8 +14,8 @@ class WxGraphPage;
 class WxPreviewCanvas : public ee3::WxStageCanvas
 {
 public:
-    WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
-        const ee0::RenderContext& rc);
+    WxPreviewCanvas(const ur2::Device& dev, ee0::WxStagePage* stage,
+        ECS_WORLD_PARAM const ee0::RenderContext& rc);
     virtual ~WxPreviewCanvas();
 
     virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;

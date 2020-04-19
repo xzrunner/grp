@@ -2,7 +2,6 @@
 #include "renderlab/MessageID.h"
 #include "renderlab/RenderAdapter.h"
 
-#include <unirender/Blackboard.h>
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
 
@@ -11,17 +10,16 @@
 namespace renderlab
 {
 
-WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::GameObj& root,
+WxGraphPage::WxGraphPage(const ur2::Device& dev, wxWindow* parent, const ee0::GameObj& root,
                          const ee0::SubjectMgrPtr& preview_sub_mgr)
     : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab")
 {
-    auto& ur_rc = ur::Blackboard::Instance()->GetRenderContext();
-    auto ctx = std::make_shared<rendergraph::RenderContext>(ur_rc);
+    auto ctx = std::make_shared<rendergraph::RenderContext>();
     m_eval->SetContext(ctx);
 
     m_eval->SetFront2BackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
         auto dir = boost::filesystem::path(m_filepath).parent_path().string();
-        RenderAdapter::Front2Back(front, back, dir);
+        RenderAdapter::Front2Back(dev, front, back, dir);
     });
 }
 

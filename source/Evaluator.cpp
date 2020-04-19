@@ -4,7 +4,6 @@
 #include <blueprint/Connecting.h>
 #include <blueprint/node/Function.h>
 
-#include <unirender/Sandbox.h>
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
 #include <rendergraph/Node.h>
@@ -65,8 +64,6 @@ void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes,
 void Evaluator::Draw(const std::shared_ptr<rendergraph::RenderContext>& rc,
                      const rendergraph::Node* end) const
 {
-    ur::Sandbox sb(rc->rc);
-
     for (auto& p : m_passes) {
         bool finished = p->Draw(rc, end);
         if (finished) {

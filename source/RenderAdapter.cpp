@@ -122,8 +122,8 @@ int RenderAdapter::TypeBackToFront(rendergraph::VariableType type, int count)
     return ret;
 }
 
-void RenderAdapter::Front2Back(const bp::Node& front, dag::Node<rendergraph::Variable>& back,
-                               const std::string& dir)
+void RenderAdapter::Front2Back(const ur2::Device& dev, const bp::Node& front,
+                               dag::Node<rendergraph::Variable>& back, const std::string& dir)
 {
     auto type = front.get_type();
     if (type == rttr::type::get<node::VertexArray>())
@@ -187,11 +187,43 @@ void RenderAdapter::Front2Back(const bp::Node& front, dag::Node<rendergraph::Var
 
         auto filepath = boost::filesystem::absolute(dst.GetFilepath(), dir).string();
         facade::ImageLoader loader(filepath);
-        auto ur_wrap = static_cast<ur::TEXTURE_WRAP>(src.m_wrap);
-        auto ur_filter = static_cast<ur::TEXTURE_FILTER>(src.m_filter);
-        if (loader.Load(ur_wrap, ur_filter)) {
+
+        ur2::TextureWrap ur_wrap;
+        switch (src.m_wrap)
+        {
+        case rendergraph::node::Texture::Wrapping::Repeat:
+            ur_wrap = ur2::TextureWrap::Repeat;
+            break;
+        case rendergraph::node::Texture::Wrapping::MirroredRepeat:
+            ur_wrap = ur2::TextureWrap::MirroredRepeat;
+            break;
+        case rendergraph::node::Texture::Wrapping::ClampToEdge:
+            ur_wrap = ur2::TextureWrap::ClampToEdge;
+            break;
+        case rendergraph::node::Texture::Wrapping::ClampToBorder:
+            ur_wrap = ur2::TextureWrap::ClampToBorder;
+            break;
+        default:
+            assert(0);
+        }
+
+        ur2::TextureMinificationFilter ur_min_filter;
+        ur2::TextureMagnificationFilter ur_mag_filter;
+        switch (src.m_filter)
+        {
+        case rendergraph::node::Texture::Filtering::Nearest:
+            ur_min_filter = ur2::TextureMinificationFilter::Nearest;
+            ur_mag_filter = ur2::TextureMagnificationFilter::Nearest;
+            break;
+        case rendergraph::node::Texture::Filtering::Linear:
+            ur_min_filter = ur2::TextureMinificationFilter::Linear;
+            ur_mag_filter = ur2::TextureMagnificationFilter::Linear;
+            break;
+        }
+
+        if (loader.Load(dev, ur_wrap, ur_min_filter, ur_mag_filter)) {
             dst.SetFilepath(filepath);
-            dst.SetTexID(loader.GetID());
+            dst.SetTexture(loader.GetTexture());
         } else {
             dst.SetFilepath("");
         }
@@ -199,7 +231,7 @@ void RenderAdapter::Front2Back(const bp::Node& front, dag::Node<rendergraph::Var
     else if (type == rttr::type::get<node::Model>())
     {
         auto& src = static_cast<const node::Model&>(front);
-        auto model = facade::ResPool::Instance().Fetch<model::Model>(src.filepath);
+        auto model = facade::ResPool::Instance().Fetch<model::Model>(src.filepath, &dev);
         auto model_inst = std::make_shared<model::ModelInstance>(model);
         static_cast<rendergraph::node::Model&>(back).SetModel(model_inst);
     }

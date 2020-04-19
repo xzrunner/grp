@@ -12,7 +12,7 @@ namespace renderlab
 class WxGraphPage : public bp::WxGraphPage<rendergraph::Variable>
 {
 public:
-    WxGraphPage(wxWindow* parent, const ee0::GameObj& root,
+    WxGraphPage(const ur2::Device& dev, wxWindow* parent, const ee0::GameObj& root,
         const ee0::SubjectMgrPtr& preview_sub_mgr);
 
     auto& GetFrontEval() const { return m_front_eval; }

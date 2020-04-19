@@ -12,8 +12,8 @@ class WxGraphPage;
 class WxGraphCanvas : public ee2::WxStageCanvas
 {
 public:
-    WxGraphCanvas(WxGraphPage* stage, ECS_WORLD_PARAM
-        const ee0::RenderContext& rc);
+    WxGraphCanvas(const ur2::Device& dev, WxGraphPage* stage,
+        ECS_WORLD_PARAM const ee0::RenderContext& rc);
 
 protected:
     virtual void DrawForeground() const;

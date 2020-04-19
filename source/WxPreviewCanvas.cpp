@@ -5,7 +5,6 @@
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
 
-#include <unirender/Blackboard.h>
 #include <renderpipeline/RenderMgr.h>
 #include <rendergraph/RenderContext.h>
 #include <painting3/PerspCam.h>
@@ -13,9 +12,9 @@
 namespace renderlab
 {
 
-WxPreviewCanvas::WxPreviewCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
-                                 const ee0::RenderContext& rc)
-    : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
+WxPreviewCanvas::WxPreviewCanvas(const ur2::Device& dev, ee0::WxStagePage* stage,
+                                 ECS_WORLD_PARAM const ee0::RenderContext& rc)
+    : ee3::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
     auto sub_mgr = stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(MSG_RENDERER_CHANGED, this);
@@ -62,11 +61,10 @@ void WxPreviewCanvas::DrawForeground3D() const
         return;
     }
 
-    rp::RenderMgr::Instance()->SetRenderer(rp::RenderType::EXTERN);
+    auto& ctx = *GetRenderContext().ur_ctx;
+    rp::RenderMgr::Instance()->SetRenderer(m_dev, ctx, rp::RenderType::EXTERN);
 
-    auto& ur_rc = ur::Blackboard::Instance()->GetRenderContext();
-
-    auto rc = std::make_shared<rendergraph::RenderContext>(ur_rc);
+    auto rc = std::make_shared<rendergraph::RenderContext>();
     rc->cam_proj_mat = m_camera->GetProjectionMat();
     rc->cam_view_mat = m_camera->GetViewMat();
     if (m_camera->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>()) {

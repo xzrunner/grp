@@ -65,7 +65,7 @@ void WxGraphCanvas::DrawForeground() const
         }
 
         auto rg_node = std::static_pointer_cast<rendergraph::Node>(back_node);
-        NodePreview::Draw(*front_node, *rg_node, rp, m_stage->GetFrontEval());
+        NodePreview::Draw(m_dev, *GetRenderContext().ur_ctx, *front_node, *rg_node, rp, m_stage->GetFrontEval());
 
 		return true;
 	});

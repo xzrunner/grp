@@ -1,7 +1,7 @@
 #pragma once
 
 namespace n2 { class RenderParams; }
-namespace pt2 { class RenderTarget; }
+namespace ur2 { class Device; class Context; class Texture; }
 namespace bp { class Node; }
 namespace rendergraph { class Node; }
 
@@ -13,13 +13,15 @@ class Evaluator;
 class NodePreview
 {
 public:
-    static void Draw(const bp::Node& front_node, const rendergraph::Node& back_node,
+    static void Draw(const ur2::Device& dev, ur2::Context& ctx,
+        const bp::Node& front_node, const rendergraph::Node& back_node,
         const n2::RenderParams& rp, const Evaluator& eval);
 
 private:
-    static bool DrawToRT(const bp::Node& front_node,
+    static bool DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::Node& front_node,
         const rendergraph::Node& back_node, const Evaluator& eval);
-    static void DrawFromRT(const bp::Node& front_node, const n2::RenderParams& rp, const pt2::RenderTarget& rt);
+    static void DrawFromRT(const ur2::Device& dev, ur2::Context& ctx,
+        const bp::Node& front_node, const n2::RenderParams& rp, const ur2::Texture& tex);
 
 }; // NodePreview
 

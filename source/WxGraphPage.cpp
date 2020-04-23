@@ -2,6 +2,8 @@
 #include "renderlab/MessageID.h"
 #include "renderlab/RenderAdapter.h"
 
+#include <ee0/WxStageCanvas.h>
+
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
 
@@ -14,13 +16,22 @@ WxGraphPage::WxGraphPage(const ur2::Device& dev, wxWindow* parent, const ee0::Ga
                          const ee0::SubjectMgrPtr& preview_sub_mgr)
     : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab")
 {
-    auto ctx = std::make_shared<rendergraph::RenderContext>();
-    m_eval->SetContext(ctx);
+
 
     m_eval->SetFront2BackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
         auto dir = boost::filesystem::path(m_filepath).parent_path().string();
         RenderAdapter::Front2Back(dev, front, back, dir);
     });
+}
+
+void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
+{
+    GetImpl().SetCanvas(canvas);
+
+    auto ctx = std::make_shared<rendergraph::RenderContext>();
+    ctx->ur_dev = &canvas->GetRenderDevice();
+    ctx->ur_ctx = canvas->GetRenderContext().ur_ctx;
+    m_eval->SetContext(ctx);
 }
 
 void WxGraphPage::OnEvalChangeed()

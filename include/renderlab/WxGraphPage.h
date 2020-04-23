@@ -21,6 +21,8 @@ public:
         m_filepath = filepath;
     }
 
+    void SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas);
+
 protected:
     virtual void OnEvalChangeed() override;
 

@@ -73,6 +73,9 @@ void WxPreviewCanvas::DrawForeground3D() const
     }
     rc->light_position.Set(0, 2, -4);
 
+    rc->ur_dev = &m_dev;
+    rc->ur_ctx = GetRenderContext().ur_ctx;
+
     eval.Draw(rc);
 }
 

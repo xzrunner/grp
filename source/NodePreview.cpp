@@ -76,7 +76,7 @@ void NodePreview::Draw(const ur2::Device& dev, ur2::Context& ctx,
     if (succ) {
         auto tex = pt2::RenderTargetMgr::Instance()->GetBindedTex(fbo);
         assert(tex);
-        DrawFromRT(dev, ctx, front_node, rp, *tex);
+        DrawFromRT(dev, ctx, front_node, rp, tex);
     }
 
     pt2::RenderTargetMgr::Instance()->Return(fbo);
@@ -126,7 +126,7 @@ bool NodePreview::DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::
             sm::Matrix2D mat;
             mat.Scale(static_cast<float>(TEX_SIZE), static_cast<float>(TEX_SIZE));
             auto rs = ee2::Utility::GetRenderState2D();
-            pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex->GetTexID(), sm::rect(1, 1), mat);
+            pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex, sm::rect(1, 1), mat);
         }
     }
     else if (type == rttr::type::get<node::Preview>())
@@ -180,7 +180,7 @@ bool NodePreview::DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::
 }
 
 void NodePreview::DrawFromRT(const ur2::Device& dev, ur2::Context& ctx, const bp::Node& front_node,
-                             const n2::RenderParams& rp, const ur2::Texture& tex)
+                             const n2::RenderParams& rp, const ur2::TexturePtr& tex)
 {
     auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(front_node, rp.GetMatrix()));
     const auto scale = mt4.GetScale();
@@ -201,7 +201,7 @@ void NodePreview::DrawFromRT(const ur2::Device& dev, ur2::Context& ctx, const bp
     };
 
     auto rs = ee2::Utility::GetRenderState2D();
-    pt2::RenderSystem::DrawTexQuad(dev, ctx, rs, vertices, texcoords, tex.GetTexID(), 0xffffffff);
+    pt2::RenderSystem::DrawTexQuad(dev, ctx, rs, vertices, texcoords, tex, 0xffffffff);
 }
 
 }

@@ -30,7 +30,7 @@ void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
 
     auto ctx = std::make_shared<rendergraph::RenderContext>();
     ctx->ur_dev = &canvas->GetRenderDevice();
-    ctx->ur_ctx = canvas->GetRenderContext().ur_ctx;
+    ctx->ur_ctx = canvas->GetRenderContext().ur_ctx.get();
     m_eval->SetContext(ctx);
 }
 

@@ -160,8 +160,10 @@ bool NodePreview::DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::
     }
     else
     {
-        //auto rg_rc = std::make_shared<rendergraph::RenderContext>(rc);
-        //eval.Draw(rg_rc, &back_node);
+        auto rc = std::make_shared<rendergraph::RenderContext>();
+        rc->ur_dev = &dev;
+        rc->ur_ctx = &ctx;
+        eval.Draw(rc, &back_node);
     }
 
     rp::RenderMgr::Instance()->Flush(dev, ctx);

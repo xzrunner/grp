@@ -88,8 +88,6 @@ bool NodePreview::DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::
     auto renderer = rp::RenderMgr::Instance()->GetRenderer(rp::RenderType::SPRITE);
     auto shader = renderer->GetAllShaders()[0];
 
-    shader->Bind();
-
     std::shared_ptr<pt0::ModelMatUpdater::Snapshot>   model_snap = nullptr;
     std::shared_ptr<pt2::ViewMatUpdater::Snapshot>    view_snap  = nullptr;
     std::shared_ptr<pt2::ProjectMatUpdater::Snapshot> proj_snap  = nullptr;

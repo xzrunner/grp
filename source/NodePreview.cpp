@@ -4,7 +4,6 @@
 #include "renderlab/PinType.h"
 #include "renderlab/Evaluator.h"
 
-#include <ee2/Utility.h>
 #include <blueprint/NodeHelper.h>
 
 #include <SM_Matrix2D.h>
@@ -14,6 +13,7 @@
 #include <unirender2/Texture.h>
 #include <unirender2/TextureDescription.h>
 #include <unirender2/ShaderProgram.h>
+#include <unirender2/Factory.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting2/Blackboard.h>
 #include <painting2/RenderContext.h>
@@ -123,7 +123,7 @@ bool NodePreview::DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::
         {
             sm::Matrix2D mat;
             mat.Scale(static_cast<float>(TEX_SIZE), static_cast<float>(TEX_SIZE));
-            auto rs = ee2::Utility::GetRenderState2D();
+            auto rs = ur2::DefaultRenderState2D();
             pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex, sm::rect(1, 1), mat);
         }
     }
@@ -200,7 +200,7 @@ void NodePreview::DrawFromRT(const ur2::Device& dev, ur2::Context& ctx, const bp
         0, 1
     };
 
-    auto rs = ee2::Utility::GetRenderState2D();
+    auto rs = ur2::DefaultRenderState2D();
     pt2::RenderSystem::DrawTexQuad(dev, ctx, rs, vertices, texcoords, tex, 0xffffffff);
 }
 

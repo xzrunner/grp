@@ -12,7 +12,7 @@
 namespace renderlab
 {
 
-WxGraphPage::WxGraphPage(const ur2::Device& dev, wxWindow* parent, const ee0::GameObj& root,
+WxGraphPage::WxGraphPage(const ur::Device& dev, wxWindow* parent, const ee0::GameObj& root,
                          const ee0::SubjectMgrPtr& preview_sub_mgr)
     : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab")
 {

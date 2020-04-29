@@ -122,7 +122,7 @@ int RenderAdapter::TypeBackToFront(rendergraph::VariableType type, int count)
     return ret;
 }
 
-void RenderAdapter::Front2Back(const ur2::Device& dev, const bp::Node& front,
+void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
                                dag::Node<rendergraph::Variable>& back, const std::string& dir)
 {
     auto type = front.get_type();
@@ -188,36 +188,36 @@ void RenderAdapter::Front2Back(const ur2::Device& dev, const bp::Node& front,
         auto filepath = boost::filesystem::absolute(dst.GetFilepath(), dir).string();
         facade::ImageLoader loader(filepath);
 
-        ur2::TextureWrap ur_wrap;
+        ur::TextureWrap ur_wrap;
         switch (src.m_wrap)
         {
         case rendergraph::node::Texture::Wrapping::Repeat:
-            ur_wrap = ur2::TextureWrap::Repeat;
+            ur_wrap = ur::TextureWrap::Repeat;
             break;
         case rendergraph::node::Texture::Wrapping::MirroredRepeat:
-            ur_wrap = ur2::TextureWrap::MirroredRepeat;
+            ur_wrap = ur::TextureWrap::MirroredRepeat;
             break;
         case rendergraph::node::Texture::Wrapping::ClampToEdge:
-            ur_wrap = ur2::TextureWrap::ClampToEdge;
+            ur_wrap = ur::TextureWrap::ClampToEdge;
             break;
         case rendergraph::node::Texture::Wrapping::ClampToBorder:
-            ur_wrap = ur2::TextureWrap::ClampToBorder;
+            ur_wrap = ur::TextureWrap::ClampToBorder;
             break;
         default:
             assert(0);
         }
 
-        ur2::TextureMinificationFilter ur_min_filter;
-        ur2::TextureMagnificationFilter ur_mag_filter;
+        ur::TextureMinificationFilter ur_min_filter;
+        ur::TextureMagnificationFilter ur_mag_filter;
         switch (src.m_filter)
         {
         case rendergraph::node::Texture::Filtering::Nearest:
-            ur_min_filter = ur2::TextureMinificationFilter::Nearest;
-            ur_mag_filter = ur2::TextureMagnificationFilter::Nearest;
+            ur_min_filter = ur::TextureMinificationFilter::Nearest;
+            ur_mag_filter = ur::TextureMagnificationFilter::Nearest;
             break;
         case rendergraph::node::Texture::Filtering::Linear:
-            ur_min_filter = ur2::TextureMinificationFilter::Linear;
-            ur_mag_filter = ur2::TextureMagnificationFilter::Linear;
+            ur_min_filter = ur::TextureMinificationFilter::Linear;
+            ur_mag_filter = ur::TextureMagnificationFilter::Linear;
             break;
         }
 

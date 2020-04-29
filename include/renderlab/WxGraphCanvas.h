@@ -12,7 +12,7 @@ class WxGraphPage;
 class WxGraphCanvas : public ee2::WxStageCanvas
 {
 public:
-    WxGraphCanvas(const ur2::Device& dev, WxGraphPage* stage,
+    WxGraphCanvas(const ur::Device& dev, WxGraphPage* stage,
         ECS_WORLD_PARAM const ee0::RenderContext& rc);
 
 protected:

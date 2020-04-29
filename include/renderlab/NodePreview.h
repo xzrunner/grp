@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unirender2/typedef.h>
+#include <unirender/typedef.h>
 
 namespace n2 { class RenderParams; }
-namespace ur2 { class Device; class Context; }
+namespace ur { class Device; class Context; }
 namespace bp { class Node; }
 namespace rendergraph { class Node; }
 
@@ -15,15 +15,15 @@ class Evaluator;
 class NodePreview
 {
 public:
-    static void Draw(const ur2::Device& dev, ur2::Context& ctx,
+    static void Draw(const ur::Device& dev, ur::Context& ctx,
         const bp::Node& front_node, const rendergraph::Node& back_node,
         const n2::RenderParams& rp, const Evaluator& eval);
 
 private:
-    static bool DrawToRT(const ur2::Device& dev, ur2::Context& ctx, const bp::Node& front_node,
+    static bool DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::Node& front_node,
         const rendergraph::Node& back_node, const Evaluator& eval);
-    static void DrawFromRT(const ur2::Device& dev, ur2::Context& ctx,
-        const bp::Node& front_node, const n2::RenderParams& rp, const ur2::TexturePtr& tex);
+    static void DrawFromRT(const ur::Device& dev, ur::Context& ctx,
+        const bp::Node& front_node, const n2::RenderParams& rp, const ur::TexturePtr& tex);
 
 }; // NodePreview
 

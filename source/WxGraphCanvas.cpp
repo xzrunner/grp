@@ -17,7 +17,7 @@
 namespace renderlab
 {
 
-WxGraphCanvas::WxGraphCanvas(const ur2::Device& dev, WxGraphPage* stage,
+WxGraphCanvas::WxGraphCanvas(const ur::Device& dev, WxGraphPage* stage,
                              ECS_WORLD_PARAM const ee0::RenderContext& rc)
     : ee2::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc)
     , m_stage(stage)

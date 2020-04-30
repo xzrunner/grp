@@ -39,7 +39,7 @@
 
 #define PARM_NODE_TYPE Clear
 #define PARM_NODE_NAME clear
-#define ENABLE_NODE_PREVIEW
+//#define ENABLE_NODE_PREVIEW
 #include EXE_FILEPATH
 
 #define PARM_NODE_TYPE Bind

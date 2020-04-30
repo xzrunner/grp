@@ -49,18 +49,6 @@ void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx,
                        const bp::Node& front_node, const rendergraph::Node& back_node,
                        const n2::RenderParams& rp, const Evaluator& eval)
 {
-    //ur::TextureDescription desc;
-    //desc.width  = TEX_SIZE;
-    //desc.height = TEX_SIZE;
-    //desc.target = ur::TextureTarget::Texture2D;
-    //desc.format = ur::TextureFormat::RGBA8;
-    //auto tex = dev.CreateTexture(desc);
-
-    //auto fbo = dev.CreateFramebuffer();
-
-    //const auto type = ur::AttachmentType::Color0;
-    //fbo->SetAttachment(type, ur::TextureTarget::Texture2D, tex, nullptr);
-
     auto fbo = pt2::RenderTargetMgr::Instance()->Fetch(dev);
 
     rp::RenderMgr::Instance()->Flush(dev, ctx);

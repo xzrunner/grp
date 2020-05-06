@@ -16,8 +16,6 @@ WxGraphPage::WxGraphPage(const ur::Device& dev, wxWindow* parent, const ee0::Gam
                          const ee0::SubjectMgrPtr& preview_sub_mgr)
     : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab")
 {
-
-
     m_eval->SetFront2BackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
         auto dir = boost::filesystem::path(m_filepath).parent_path().string();
         RenderAdapter::Front2Back(dev, front, back, dir);

@@ -24,6 +24,10 @@ public:
 #endif // ENABLE_NODE_PREVIEW
 	{
         InitPins(XSTR(PARM_NODE_NAME));
+
+#ifdef NODES_GROUP_NAME
+        SetGroup(XSTR(NODES_GROUP_NAME));
+#endif // NODES_GROUP_NAME
 	}
 
 #define PARAM_INFO(id, type, name, member, default_val) \

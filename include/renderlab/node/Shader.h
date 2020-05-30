@@ -16,6 +16,8 @@ public:
         : Node("Shader", false)
     {
         InitPins("shader");
+
+        SetGroup("Resource");
     }
 
     auto& GetVert() const { return m_vert; }

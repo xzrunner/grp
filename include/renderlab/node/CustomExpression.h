@@ -16,6 +16,8 @@ public:
         : Node("CustomExpression", false)
     {
         InitPins("custom_expression");
+
+        SetGroup("Utility");
     }
 
     auto& GetCode() const { return m_code; }

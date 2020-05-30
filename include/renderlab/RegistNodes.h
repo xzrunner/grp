@@ -42,6 +42,8 @@ public:
         ));
 
         Layout();
+
+        SetGroup("Utility");
     }
     RTTR_ENABLE(Node)
 }; // Preview
@@ -60,6 +62,8 @@ public:
         ));
 
         Layout();
+
+        SetGroup("Utility");
     }
 
     RTTR_ENABLE(Node)
@@ -79,6 +83,8 @@ public:
         Layout();
 
         UpdateTitle();
+
+        SetGroup("ControlFlow");
     }
 
     int  GetOrder() const { return m_order; }
@@ -99,40 +105,41 @@ private:
 
 }; // PassEnd
 
-#define GRP_DEFINE_NODE(type, name, preview, prop) \
-class type : public Node                           \
-{                                                  \
-public:                                            \
-	type()                                         \
-		: Node(#name, preview)                     \
-	{                                              \
-		InitPins(#name);                           \
-	}                                              \
-                                                   \
-	prop                                           \
-	RTTR_ENABLE(Node)                              \
+#define GRP_DEFINE_NODE(type, name, preview, group, prop) \
+class type : public Node                                  \
+{                                                         \
+public:                                                   \
+	type()                                                \
+		: Node(#name, preview)                            \
+	{                                                     \
+		InitPins(#name);                                  \
+        SetGroup(XSTR(group));                            \
+	}                                                     \
+                                                          \
+	prop                                                  \
+	RTTR_ENABLE(Node)                                     \
 };
 
 #define GRP_NODE_PROP
 
-GRP_DEFINE_NODE(VertexArray, vertex_array, false, \
-    std::string vertices_data;                    \
-    std::string indices_data;                     \
-    VertexAttrib position;                        \
-    VertexAttrib normal;                          \
-    VertexAttrib texture;                         \
+GRP_DEFINE_NODE(VertexArray, vertex_array, false, Resource, \
+    std::string vertices_data;                              \
+    std::string indices_data;                               \
+    VertexAttrib position;                                  \
+    VertexAttrib normal;                                    \
+    VertexAttrib texture;                                   \
 )
 
-GRP_DEFINE_NODE(Model, model, false, \
-    std::string filepath;            \
+GRP_DEFINE_NODE(Model, model, false, Resource, \
+    std::string filepath;                      \
 )
 
-GRP_DEFINE_NODE(SeparableSSS, separable_sss, false,    \
-    int      nsamples = 7;                             \
-    sm::vec3 strength = sm::vec3(0.48f, 0.41f, 0.28f); \
-    sm::vec3 falloff  = sm::vec3(1.0f, 0.37f, 0.3f);   \
+GRP_DEFINE_NODE(SeparableSSS, separable_sss, false, Pipeline, \
+    int      nsamples = 7;                                    \
+    sm::vec3 strength = sm::vec3(0.48f, 0.41f, 0.28f);        \
+    sm::vec3 falloff  = sm::vec3(1.0f, 0.37f, 0.3f);          \
 )
-GRP_DEFINE_NODE(GlobalIllumination, gi, false, GRP_NODE_PROP)
+GRP_DEFINE_NODE(GlobalIllumination, gi, false, Pipeline, GRP_NODE_PROP)
 
 }
 }

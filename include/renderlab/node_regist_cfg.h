@@ -2,11 +2,11 @@
 #error "You must define EXE_FILEPATH macro before include this file"
 #endif
 
+//////////////////////////////////////////////////////////////////////////
 // resource
+//////////////////////////////////////////////////////////////////////////
 
-//#define PARM_NODE_TYPE Shader
-//#define PARM_NODE_NAME shader
-//#include EXE_FILEPATH
+#define NODES_GROUP_NAME Resource
 
 #define PARM_NODE_TYPE RenderTarget
 #define PARM_NODE_NAME render_target
@@ -17,25 +17,21 @@
 #define ENABLE_NODE_PREVIEW
 #include EXE_FILEPATH
 
-//#define NO_PARM_FILEPATH
-//#define PARM_NODE_TYPE VertexArray
-//#define PARM_NODE_NAME vertex_array
-//#include EXE_FILEPATH
-
 #define PARM_NODE_TYPE PrimitiveShape
 #define PARM_NODE_NAME primitive_shape
 #include EXE_FILEPATH
-
-//#define NO_PARM_FILEPATH
-//#define PARM_NODE_TYPE Model
-//#define PARM_NODE_NAME model
-//#include EXE_FILEPATH
 
 #define PARM_NODE_TYPE Heightfield
 #define PARM_NODE_NAME heightfield
 #include EXE_FILEPATH
 
-// op
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
+// operator
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Operator
 
 #define PARM_NODE_TYPE Clear
 #define PARM_NODE_NAME clear
@@ -60,7 +56,13 @@
 #define PARM_NODE_NAME set_uniform
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // state
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME State
 
 #define PARM_NODE_TYPE Viewport
 #define PARM_NODE_NAME viewport
@@ -94,7 +96,13 @@
 #define PARM_NODE_NAME front_face
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // value
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Value
 
 #define PARM_NODE_TYPE Int
 #define PARM_NODE_NAME int
@@ -132,7 +140,13 @@
 #define PARM_NODE_NAME matrix4
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // math
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Math
 
 #define NO_PARM_FILEPATH
 #define PARM_NODE_TYPE Add
@@ -168,7 +182,13 @@
 #define PARM_NODE_NAME scale
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // input
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Input
 
 #define NO_PARM_FILEPATH
 #define PARM_NODE_TYPE ProjectMat
@@ -199,16 +219,17 @@
 #define PARM_NODE_NAME user_script
 #include EXE_FILEPATH
 
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
 // control flow
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME ControlFlow
 
 #define NO_PARM_FILEPATH
 #define PARM_NODE_TYPE ForEachLoop
 #define PARM_NODE_NAME for_each_loop
 #include EXE_FILEPATH
 
-// script
-
-//#define NO_PARM_FILEPATH
-//#define PARM_NODE_TYPE CustomExpression
-//#define PARM_NODE_NAME custom_expression
-//#include EXE_FILEPATH
+#undef NODES_GROUP_NAME

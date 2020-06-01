@@ -25,6 +25,8 @@ private:
     static void DrawFromRT(const ur::Device& dev, ur::Context& ctx,
         const bp::Node& front_node, const n2::RenderParams& rp, const ur::TexturePtr& tex);
 
+    static void Clear(ur::Context& ctx);
+
 }; // NodePreview
 
 }

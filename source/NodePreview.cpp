@@ -14,6 +14,7 @@
 #include <unirender/TextureDescription.h>
 #include <unirender/ShaderProgram.h>
 #include <unirender/Factory.h>
+#include <unirender/ClearState.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting2/Blackboard.h>
 #include <painting2/RenderContext.h>
@@ -54,6 +55,8 @@ void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx,
     rp::RenderMgr::Instance()->Flush(dev, ctx);
 
     ctx.SetFramebuffer(fbo);
+    Clear(ctx);
+
     int x, y, w, h;
     ctx.GetViewport(x, y, w, h);
     ctx.SetViewport(0, 0, TEX_SIZE, TEX_SIZE);
@@ -113,6 +116,10 @@ bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::No
             mat.Scale(static_cast<float>(TEX_SIZE), static_cast<float>(TEX_SIZE));
             auto rs = ur::DefaultRenderState2D();
             pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex, sm::rect(1, 1), mat);
+        }
+        else
+        {
+            Clear(ctx);
         }
     }
     else if (type == rttr::type::get<node::Preview>())
@@ -190,6 +197,14 @@ void NodePreview::DrawFromRT(const ur::Device& dev, ur::Context& ctx, const bp::
 
     auto rs = ur::DefaultRenderState2D();
     pt2::RenderSystem::DrawTexQuad(dev, ctx, rs, vertices, texcoords, tex, 0xffffffff);
+}
+
+void NodePreview::Clear(ur::Context& ctx)
+{
+    ur::ClearState clear;
+    clear.buffers = ur::ClearBuffers::ColorBuffer;
+    clear.color.FromRGBA(0);
+    ctx.Clear(clear);
 }
 
 }

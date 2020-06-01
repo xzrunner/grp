@@ -185,7 +185,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::Texture&>(front);
         auto& dst = static_cast<rendergraph::node::Texture&>(back);
 
-        auto filepath = boost::filesystem::absolute(dst.GetFilepath(), dir).string();
+        auto filepath = boost::filesystem::absolute(src.m_filepath, dir).string();
         facade::ImageLoader loader(filepath);
 
         ur::TextureWrap ur_wrap;
@@ -226,6 +226,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
             dst.SetTexture(loader.GetTexture());
         } else {
             dst.SetFilepath("");
+            dst.SetTexture(nullptr);
         }
     }
     else if (type == rttr::type::get<node::Model>())

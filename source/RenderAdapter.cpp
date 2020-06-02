@@ -7,6 +7,8 @@
 #include <blueprint/Node.h>
 
 #include <cpputil/StringHelper.h>
+#include <unirender/Texture.h>
+#include <unirender/Device.h>
 #include <rendergraph/node/VertexArray.h>
 #include <rendergraph/node/Shader.h>
 #include <rendergraph/node/Model.h>
@@ -185,48 +187,65 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::Texture&>(front);
         auto& dst = static_cast<rendergraph::node::Texture&>(back);
 
-        auto filepath = boost::filesystem::absolute(src.m_filepath, dir).string();
-        facade::ImageLoader loader(filepath);
-
-        ur::TextureWrap ur_wrap;
-        switch (src.m_wrap)
+        // update texture
+        if (src.m_filepath != dst.GetFilepath() ||
+            !dst.GetTexture())
         {
-        case rendergraph::node::Texture::Wrapping::Repeat:
-            ur_wrap = ur::TextureWrap::Repeat;
-            break;
-        case rendergraph::node::Texture::Wrapping::MirroredRepeat:
-            ur_wrap = ur::TextureWrap::MirroredRepeat;
-            break;
-        case rendergraph::node::Texture::Wrapping::ClampToEdge:
-            ur_wrap = ur::TextureWrap::ClampToEdge;
-            break;
-        case rendergraph::node::Texture::Wrapping::ClampToBorder:
-            ur_wrap = ur::TextureWrap::ClampToBorder;
-            break;
-        default:
-            assert(0);
+            auto filepath = boost::filesystem::absolute(src.m_filepath, dir).string();
+            facade::ImageLoader loader(filepath);
+
+            if (loader.Load(dev)) {
+                dst.SetFilepath(filepath);
+                dst.SetTexture(loader.GetTexture());
+            } else {
+                dst.SetFilepath("");
+                dst.SetTexture(nullptr);
+            }
         }
 
-        ur::TextureMinificationFilter ur_min_filter;
-        ur::TextureMagnificationFilter ur_mag_filter;
-        switch (src.m_filter)
+        // update sample
+        if (src.m_wrap != dst.GetWrapping() ||
+            src.m_filter != dst.GetFiltering() ||
+            !dst.GetSampler())
         {
-        case rendergraph::node::Texture::Filtering::Nearest:
-            ur_min_filter = ur::TextureMinificationFilter::Nearest;
-            ur_mag_filter = ur::TextureMagnificationFilter::Nearest;
-            break;
-        case rendergraph::node::Texture::Filtering::Linear:
-            ur_min_filter = ur::TextureMinificationFilter::Linear;
-            ur_mag_filter = ur::TextureMagnificationFilter::Linear;
-            break;
-        }
+            ur::TextureWrap ur_wrap;
+            switch (src.m_wrap)
+            {
+            case rendergraph::node::Texture::Wrapping::Repeat:
+                ur_wrap = ur::TextureWrap::Repeat;
+                break;
+            case rendergraph::node::Texture::Wrapping::MirroredRepeat:
+                ur_wrap = ur::TextureWrap::MirroredRepeat;
+                break;
+            case rendergraph::node::Texture::Wrapping::ClampToEdge:
+                ur_wrap = ur::TextureWrap::ClampToEdge;
+                break;
+            case rendergraph::node::Texture::Wrapping::ClampToBorder:
+                ur_wrap = ur::TextureWrap::ClampToBorder;
+                break;
+            default:
+                assert(0);
+            }
 
-        if (loader.Load(dev, ur_wrap, ur_min_filter, ur_mag_filter)) {
-            dst.SetFilepath(filepath);
-            dst.SetTexture(loader.GetTexture());
-        } else {
-            dst.SetFilepath("");
-            dst.SetTexture(nullptr);
+            ur::TextureMinificationFilter ur_min_filter;
+            ur::TextureMagnificationFilter ur_mag_filter;
+            switch (src.m_filter)
+            {
+            case rendergraph::node::Texture::Filtering::Nearest:
+                ur_min_filter = ur::TextureMinificationFilter::Nearest;
+                ur_mag_filter = ur::TextureMagnificationFilter::Nearest;
+                break;
+            case rendergraph::node::Texture::Filtering::Linear:
+                ur_min_filter = ur::TextureMinificationFilter::Linear;
+                ur_mag_filter = ur::TextureMagnificationFilter::Linear;
+                break;
+            }
+
+            dst.SetWrapping(src.m_wrap);
+            dst.SetFiltering(src.m_filter);
+
+            auto sampler = dev.CreateTextureSampler(ur_min_filter, ur_mag_filter, ur_wrap, ur_wrap);
+            dst.SetSampler(sampler);
         }
     }
     else if (type == rttr::type::get<node::Model>())

@@ -51,7 +51,7 @@
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>6.renderlab</ProjectName>
+    <ProjectName>renderlab</ProjectName>
     <ProjectGuid>{D16C1C98-16E8-4D60-8209-E6AD7C80E918}</ProjectGuid>
     <RootNamespace>renderlab</RootNamespace>
     <Keyword>Win32Proj</Keyword>

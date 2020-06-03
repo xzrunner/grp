@@ -1,5 +1,8 @@
 renderlab/
+renderlab-test/
 projects/*
 
 !projects/renderlab.vcxproj
 !projects/renderlab.vcxproj.filters
+!projects/renderlab-test.vcxproj
+!projects/renderlab-test.vcxproj.filters

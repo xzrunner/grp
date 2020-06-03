@@ -53,7 +53,9 @@ void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes,
         }
         auto& bp_node = conns[0]->GetFrom()->GetParent();
         auto back_node = eval.QueryBackNode(bp_node);
-        assert(back_node);
+        if (!back_node) {
+            continue;
+        }
         auto rg_node = std::static_pointer_cast<rendergraph::Node>(back_node);
         std::vector<rendergraph::NodePtr> nodes;
         rendergraph::DrawList::GetAntecedentNodes(rg_node, nodes);

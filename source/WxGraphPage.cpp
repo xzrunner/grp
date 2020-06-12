@@ -14,12 +14,12 @@ namespace renderlab
 
 WxGraphPage::WxGraphPage(const ur::Device& dev, wxWindow* parent, const ee0::GameObj& root,
                          const ee0::SubjectMgrPtr& preview_sub_mgr)
-    : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab")
+    : bp::WxGraphPage<rendergraph::Variable>(parent, root, preview_sub_mgr, MSG_RENDERER_CHANGED, "rendergraph", "renderlab",
+        [&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
+    auto dir = boost::filesystem::path(m_filepath).parent_path().string();
+    RenderAdapter::Front2Back(dev, front, back, dir);
+})
 {
-    SetFront2BackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
-        auto dir = boost::filesystem::path(m_filepath).parent_path().string();
-        RenderAdapter::Front2Back(dev, front, back, dir);
-    });
 }
 
 void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
@@ -29,7 +29,7 @@ void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
     auto ctx = std::make_shared<rendergraph::RenderContext>();
     ctx->ur_dev = &canvas->GetRenderDevice();
     ctx->ur_ctx = canvas->GetRenderContext().ur_ctx.get();
-    GetEval()->SetContext(ctx);
+    GetSceneTree()->GetCurrEval()->SetContext(ctx);
 }
 
 void WxGraphPage::OnEvalChangeed()
@@ -47,7 +47,7 @@ void WxGraphPage::OnEvalChangeed()
         return true;
     });
 
-    m_front_eval.Rebuild(nodes, *GetEval());
+    m_front_eval.Rebuild(nodes, *GetSceneTree()->GetCurrEval());
 }
 
 }

@@ -58,7 +58,7 @@ public:
             true, 0, bp::PIN_ANY_VAR, "prev", *this
         ));
         m_all_output.push_back(std::make_shared<bp::Pin>(
-            true, 0, bp::PIN_ANY_VAR, "next", *this
+            false, 0, bp::PIN_ANY_VAR, "next", *this
         ));
 
         Layout();

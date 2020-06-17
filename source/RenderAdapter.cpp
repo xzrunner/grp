@@ -1,6 +1,7 @@
 #include "renderlab/RenderAdapter.h"
 #include "renderlab/PinType.h"
 #include "renderlab/RegistNodes.h"
+#include "renderlab/node/CustomExpression.h"
 #include "renderlab/node/Shader.h"
 
 #include <blueprint/Pin.h>
@@ -10,6 +11,8 @@
 #include <unirender/Texture.h>
 #include <unirender/Device.h>
 #include <rendergraph/node/VertexArray.h>
+#include <rendergraph/node/CustomExpression.h>
+#include <rendergraph/node/UserScript.h>
 #include <rendergraph/node/Shader.h>
 #include <rendergraph/node/Model.h>
 #include <model/Model.h>
@@ -176,6 +179,18 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
             va_list.push_back({ src.texture.name, src.texture.num, get_type_size(src.texture.type) });
         }
         dst.SetVertList(va_list);
+    }
+    else if (type == rttr::type::get<node::CustomExpression>())
+    {
+        auto src = static_cast<const node::CustomExpression&>(front);
+        static_cast<rendergraph::node::CustomExpression&>(back).SetCode(src.GetCode());
+    }
+    else if (type == rttr::type::get<node::UserScript>())
+    {
+        auto src = static_cast<const node::UserScript&>(front);
+        auto dst_script = static_cast<rendergraph::node::UserScript&>(back);
+        dst_script.SetCode(src.m_code);
+        dst_script.SetRetType(src.m_ret_type);
     }
     else if (type == rttr::type::get<node::Shader>())
     {

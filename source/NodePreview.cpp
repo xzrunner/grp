@@ -46,7 +46,7 @@ const size_t TEX_SIZE = 1024;
 namespace renderlab
 {
 
-void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx,
+void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx, const std::shared_ptr<rendergraph::ScriptEnv>& script_env,
                        const bp::Node& front_node, const rendergraph::Node& back_node,
                        const n2::RenderParams& rp, const Evaluator& eval)
 {
@@ -60,7 +60,7 @@ void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx,
     int x, y, w, h;
     ctx.GetViewport(x, y, w, h);
     ctx.SetViewport(0, 0, TEX_SIZE, TEX_SIZE);
-    bool succ = DrawToRT(dev, ctx, front_node, back_node, eval);
+    bool succ = DrawToRT(dev, ctx, script_env, front_node, back_node, eval);
     ctx.SetViewport(x, y, w, h);
     ctx.SetFramebuffer(nullptr);
 
@@ -73,8 +73,8 @@ void NodePreview::Draw(const ur::Device& dev, ur::Context& ctx,
     pt2::RenderTargetMgr::Instance()->Return(fbo);
 }
 
-bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::Node& front_node,
-                           const rendergraph::Node& back_node, const Evaluator& eval)
+bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const std::shared_ptr<rendergraph::ScriptEnv>& script_env,
+                           const bp::Node& front_node, const rendergraph::Node& back_node, const Evaluator& eval)
 {
     auto renderer = rp::RenderMgr::Instance()->GetRenderer(rp::RenderType::SPRITE);
     auto shader = renderer->GetAllShaders()[0];
@@ -153,7 +153,7 @@ bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::No
     }
     else
     {
-        auto rc = std::make_shared<rendergraph::RenderContext>();
+        auto rc = std::make_shared<rendergraph::RenderContext>(script_env);
         rc->ur_dev = &dev;
         rc->ur_ctx = &ctx;
         eval.Draw(rc, &back_node);
@@ -174,7 +174,7 @@ bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::No
     return true;
 }
 
-void NodePreview::DrawFromRT(const ur::Device& dev, ur::Context& ctx, const bp::Node& front_node,
+void NodePreview::DrawFromRT(const ur::Device& dev, ur::Context& ctx, const bp::Node& front_node, 
                              const n2::RenderParams& rp, const ur::TexturePtr& tex)
 {
     auto mt4 = sm::mat4(bp::NodeHelper::CalcPreviewMat(front_node, rp.GetMatrix()));

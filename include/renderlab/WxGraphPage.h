@@ -6,6 +6,8 @@
 
 #include <rendergraph/Variable.h>
 
+namespace rendergraph { class ScriptEnv; }
+
 namespace renderlab
 {
 
@@ -23,6 +25,8 @@ public:
 
     void SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas);
 
+    auto& GetScriptEnv() const { return m_script; }
+
 protected:
     virtual void OnEvalChangeed() override;
 
@@ -30,6 +34,8 @@ private:
     Evaluator m_front_eval;
 
     std::string m_filepath;
+
+    std::shared_ptr<rendergraph::ScriptEnv> m_script = nullptr;
 
 }; // WxGraphPage
 

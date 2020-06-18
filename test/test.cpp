@@ -9,6 +9,7 @@
 #include <rendergraph/RenderGraph.h>
 #include <rendergraph/RenderContext.h>
 #include <rendergraph/DrawList.h>
+#include <rendergraph/ScriptEnv.h>
 #include <js/RapidJsonHelper.h>
 #include <dag/Node.h>
 #include <unirender/typedef.h>
@@ -143,12 +144,13 @@ void build_drawlist(const std::vector<bp::NodePtr>& f_nodes, const std::vector<s
     }
 }
 
-void draw(const ur::Device& dev, ur::Context& ctx,
-          const std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
+void draw(std::shared_ptr<rendergraph::ScriptEnv>& script, const ur::Device& dev, 
+          ur::Context& ctx, const std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
 {
     rp::RenderMgr::Instance()->SetRenderer(dev, ctx, rp::RenderType::EXTERN);
 
-    auto rc = std::make_shared<rendergraph::RenderContext>();
+    auto rc = std::make_shared<rendergraph::RenderContext>(script);
+    script->SetRenderContext(rc);
     //rc->cam_proj_mat = m_camera->GetProjectionMat();
     //rc->cam_view_mat = m_camera->GetViewMat();
     //if (m_camera->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>()) {
@@ -199,9 +201,11 @@ void test_file(const ur::Device& dev, ur::Context& ctx,
     clear.color.FromRGBA(0x88888888);
     ctx.Clear(clear);
 
+    auto script = std::make_shared<rendergraph::ScriptEnv>();
+
     std::vector<std::unique_ptr<rendergraph::DrawList>> drawlist;
     build_drawlist(front_nodes, back_nodes, drawlist);
-    draw(dev, ctx, drawlist);
+    draw(script, dev, ctx, drawlist);
 
     dev.ReadPixels(BUFFER, ur::TextureFormat::RGB, 0, 0, TEX_SIZE, TEX_SIZE);
 

@@ -6,6 +6,7 @@
 
 #include <rendergraph/DrawList.h>
 #include <rendergraph/RenderContext.h>
+#include <rendergraph/ScriptEnv.h>
 
 #include <boost/filesystem.hpp>
 
@@ -20,16 +21,20 @@ WxGraphPage::WxGraphPage(const ur::Device& dev, wxWindow* parent, const ee0::Gam
     RenderAdapter::Front2Back(dev, front, back, dir);
 })
 {
+    m_script = std::make_shared<rendergraph::ScriptEnv>();
 }
 
 void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
 {
     GetImpl().SetCanvas(canvas);
 
-    auto ctx = std::make_shared<rendergraph::RenderContext>();
+    auto ctx = std::make_shared<rendergraph::RenderContext>(m_script);
     ctx->ur_dev = &canvas->GetRenderDevice();
     ctx->ur_ctx = canvas->GetRenderContext().ur_ctx.get();
+
     GetSceneTree()->GetCurrEval()->SetContext(ctx);
+
+    m_script->SetRenderContext(ctx);
 }
 
 void WxGraphPage::OnEvalChangeed()

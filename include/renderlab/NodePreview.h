@@ -5,7 +5,7 @@
 namespace n2 { class RenderParams; }
 namespace ur { class Device; class Context; }
 namespace bp { class Node; }
-namespace rendergraph { class Node; }
+namespace rendergraph { class Node; class ScriptEnv; }
 
 namespace renderlab
 {
@@ -15,13 +15,12 @@ class Evaluator;
 class NodePreview
 {
 public:
-    static void Draw(const ur::Device& dev, ur::Context& ctx,
-        const bp::Node& front_node, const rendergraph::Node& back_node,
-        const n2::RenderParams& rp, const Evaluator& eval);
+    static void Draw(const ur::Device& dev, ur::Context& ctx, const std::shared_ptr<rendergraph::ScriptEnv>& script_env,
+        const bp::Node& front_node, const rendergraph::Node& back_node, const n2::RenderParams& rp, const Evaluator& eval);
 
 private:
-    static bool DrawToRT(const ur::Device& dev, ur::Context& ctx, const bp::Node& front_node,
-        const rendergraph::Node& back_node, const Evaluator& eval);
+    static bool DrawToRT(const ur::Device& dev, ur::Context& ctx, const std::shared_ptr<rendergraph::ScriptEnv>& script_env, 
+        const bp::Node& front_node, const rendergraph::Node& back_node, const Evaluator& eval);
     static void DrawFromRT(const ur::Device& dev, ur::Context& ctx,
         const bp::Node& front_node, const n2::RenderParams& rp, const ur::TexturePtr& tex);
 

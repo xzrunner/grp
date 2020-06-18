@@ -7,6 +7,7 @@
 
 #include <renderpipeline/RenderMgr.h>
 #include <rendergraph/RenderContext.h>
+#include <rendergraph/ScriptEnv.h>
 #include <painting3/PerspCam.h>
 
 namespace renderlab
@@ -64,7 +65,9 @@ void WxPreviewCanvas::DrawForeground3D() const
     auto& ctx = *GetRenderContext().ur_ctx;
     rp::RenderMgr::Instance()->SetRenderer(m_dev, ctx, rp::RenderType::EXTERN);
 
-    auto rc = std::make_shared<rendergraph::RenderContext>();
+    auto script = m_graph_page->GetScriptEnv();
+
+    auto rc = std::make_shared<rendergraph::RenderContext>(script);
     rc->cam_proj_mat = m_camera->GetProjectionMat();
     rc->cam_view_mat = m_camera->GetViewMat();
     if (m_camera->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>()) {
@@ -75,6 +78,8 @@ void WxPreviewCanvas::DrawForeground3D() const
 
     rc->ur_dev = &m_dev;
     rc->ur_ctx = GetRenderContext().ur_ctx.get();
+
+    script->SetRenderContext(rc);
 
     eval.Draw(rc);
 }

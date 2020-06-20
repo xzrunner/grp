@@ -5,6 +5,7 @@
 #include <blueprint/Pin.h>
 
 #include <string>
+#include <set>
 
 namespace
 {
@@ -105,11 +106,13 @@ bool can_type_cast_func(int type_from, int type_to)
         type_to == bp::PIN_ANY_VAR) {
         return true;
     }
-    if (type_from == renderlab::PIN_TEXTURE && type_to == renderlab::PIN_SAMPLER2D ||
-        type_from == renderlab::PIN_SAMPLER2D && type_to == renderlab::PIN_TEXTURE) {
+
+    std::set<int> types = { renderlab::PIN_TEXTURE, renderlab::PIN_SAMPLER2D, renderlab::PIN_SAMPLE_CUBE };
+    if (types.find(type_from) != types.end() &&
+        types.find(type_to) != types.end()) {
         return true;
     }
-
+    
     return false;
 }
 

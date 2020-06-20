@@ -17,6 +17,11 @@
 #define ENABLE_NODE_PREVIEW
 #include EXE_FILEPATH
 
+#define NO_PARM_FILEPATH
+#define PARM_NODE_TYPE TextureCube
+#define PARM_NODE_NAME texture_cube
+#include EXE_FILEPATH
+
 #define PARM_NODE_TYPE PrimitiveShape
 #define PARM_NODE_NAME primitive_shape
 #include EXE_FILEPATH

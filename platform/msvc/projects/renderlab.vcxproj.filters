@@ -61,9 +61,6 @@
     <ClInclude Include="..\..\..\include\renderlab\node\Shader.h">
       <Filter>nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\node\CustomExpression.h">
-      <Filter>nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\node_def_gen.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
@@ -91,6 +88,9 @@
     <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h">
       <Filter>view\graph</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h">
+      <Filter>nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -115,9 +115,6 @@
     <ClCompile Include="..\..\..\source\node\Shader.cpp">
       <Filter>nodes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\node\CustomExpression.cpp">
-      <Filter>nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\RenderAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
@@ -132,6 +129,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
       <Filter>view\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\CustomFunction.cpp">
+      <Filter>nodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

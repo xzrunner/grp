@@ -220,8 +220,8 @@
 #define PARM_NODE_NAME light_position
 #include EXE_FILEPATH
 
-#define PARM_NODE_TYPE UserScript
-#define PARM_NODE_NAME user_script
+#define PARM_NODE_TYPE CustomData
+#define PARM_NODE_NAME custom_data
 #include EXE_FILEPATH
 
 #undef NODES_GROUP_NAME

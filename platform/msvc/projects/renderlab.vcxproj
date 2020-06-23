@@ -15,7 +15,7 @@
     <ClInclude Include="..\..\..\include\renderlab\MessageID.h" />
     <ClInclude Include="..\..\..\include\renderlab\Node.h" />
     <ClInclude Include="..\..\..\include\renderlab\NodePreview.h" />
-    <ClInclude Include="..\..\..\include\renderlab\node\CustomExpression.h" />
+    <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h" />
     <ClInclude Include="..\..\..\include\renderlab\node\Shader.h" />
     <ClInclude Include="..\..\..\include\renderlab\node_def_gen.h" />
     <ClInclude Include="..\..\..\include\renderlab\node_regist_cfg.h" />
@@ -35,7 +35,7 @@
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodePreview.cpp" />
-    <ClCompile Include="..\..\..\source\node\CustomExpression.cpp" />
+    <ClCompile Include="..\..\..\source\node\CustomFunction.cpp" />
     <ClCompile Include="..\..\..\source\node\Shader.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />
     <ClCompile Include="..\..\..\source\PreviewPage.cpp" />

@@ -1,17 +1,17 @@
-#include "renderlab/node/CustomExpression.h"
+#include "renderlab/node/CustomFunction.h"
 #include "renderlab/RenderAdapter.h"
 
 #include <blueprint/Pin.h>
 
 #include <cpputil/StringHelper.h>
-#include <rendergraph/node/ExpressionParser.h>
+#include <rendergraph/node/FunctionParser.h>
 
 namespace renderlab
 {
 namespace node
 {
 
-void CustomExpression::SetCode(const std::string& code)
+void CustomFunction::SetCode(const std::string& code)
 {
     if (m_code == code) {
         return;
@@ -22,7 +22,7 @@ void CustomExpression::SetCode(const std::string& code)
     auto formated = code;
     cpputil::StringHelper::ReplaceAll(formated, "\\n", "\n");
 
-    rendergraph::node::ExpressionParser parser(formated);
+    rendergraph::node::FunctionParser parser(formated);
     parser.Parse();
 
     if (IsPinsChanged(true, parser.GetInputs()))
@@ -52,7 +52,7 @@ void CustomExpression::SetCode(const std::string& code)
     SetSizeChanged(true);
 }
 
-bool CustomExpression::IsPinsChanged(bool is_in, const std::vector<rendergraph::Variable>& new_vars) const
+bool CustomFunction::IsPinsChanged(bool is_in, const std::vector<rendergraph::Variable>& new_vars) const
 {
     auto& old_pins = is_in ? m_all_input : m_all_output;
     if (old_pins.size() != new_vars.size() + 1) {

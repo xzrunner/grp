@@ -16,8 +16,8 @@
 #include <rendergraph/node/BlendFunc.h>
 #include <rendergraph/node/Cull.h>
 #include <rendergraph/node/ZTest.h>
-#include <rendergraph/node/UserScript.h>
 #include <rendergraph/node/Clear.h>
+#include <rendergraph/node/CustomData.h>
 
 namespace renderlab
 {

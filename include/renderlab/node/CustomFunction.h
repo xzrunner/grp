@@ -9,13 +9,13 @@ namespace renderlab
 namespace node
 {
 
-class CustomExpression : public Node
+class CustomFunction : public Node
 {
 public:
-    CustomExpression()
-        : Node("CustomExpression", false)
+    CustomFunction()
+        : Node("CustomFunction", false)
     {
-        InitPins("custom_expression");
+        InitPins("custom_function");
 
         SetGroup("Utility");
     }
@@ -31,7 +31,7 @@ private:
 
     RTTR_ENABLE(Node)
 
-}; // CustomExpression
+}; // CustomFunction
 
 }
 }

@@ -1,6 +1,6 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/node/Shader.h"
-#include "renderlab/node/CustomExpression.h"
+#include "renderlab/node/CustomFunction.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -35,7 +35,7 @@ rttr::registration::class_<renderlab::Node>("renderlab::node")
 #undef EXE_FILEPATH
 
 // resource
-REGIST_NODE_RTTI(VertexArray, vertex_array,                                            \
+REGIST_NODE_RTTI(VertexArray, vertex_array,                               \
 .property("vertices_data", &renderlab::node::VertexArray::vertices_data)  \
 (                                                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VerticesData")) \
@@ -68,23 +68,23 @@ REGIST_NODE_RTTI(Model, model,                                         \
 
 // renderlab
 REGIST_NODE_RTTI_DEFAULT(Preview, preview)
-REGIST_NODE_RTTI(Shader, shader,                                                     \
+REGIST_NODE_RTTI(Shader, shader,                                                        \
 .property("vert", &renderlab::node::Shader::GetVert, &renderlab::node::Shader::SetVert) \
-(                                                                             \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),            \
-    rttr::metadata(ee0::PropEditCodeTag(), true)                            \
-)                                                                             \
+(                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),                      \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
+)                                                                                       \
 .property("frag", &renderlab::node::Shader::GetFrag, &renderlab::node::Shader::SetFrag) \
-(                                                                             \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),            \
-    rttr::metadata(ee0::PropEditCodeTag(), true)                            \
-)                                                                             \
+(                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),                      \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
+)                                                                                       \
 )
-REGIST_NODE_RTTI(CustomExpression, custom_expression,                                                         \
-.property("code", &renderlab::node::CustomExpression::GetCode, &renderlab::node::CustomExpression::SetCode) \
-(                                                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),                                \
-    rttr::metadata(ee0::PropLongStringTag(), true)                                                \
+REGIST_NODE_RTTI(CustomFunction, custom_function,                                                       \
+.property("code", &renderlab::node::CustomFunction::GetCode, &renderlab::node::CustomFunction::SetCode) \
+(                                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Code")),                                      \
+    rttr::metadata(ee0::PropLongStringTag(), true)                                                      \
 )
 )
 

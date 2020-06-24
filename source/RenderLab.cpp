@@ -2,6 +2,7 @@
 #include "renderlab/PinCallback.h"
 #include "renderlab/Node.h"
 #include "renderlab/RegistNodes.h"
+#include "renderlab/node/SubGraph.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
@@ -75,6 +76,8 @@ void RenderLab::InitNodes()
     m_nodes.push_back(std::make_shared<bp::node::Function>());
     m_nodes.push_back(std::make_shared<bp::node::Input>());
     m_nodes.push_back(std::make_shared<bp::node::Output>());
+
+	m_nodes.push_back(std::make_shared<node::SubGraph>());
 
 	for (auto& t : list)
 	{

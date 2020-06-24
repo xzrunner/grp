@@ -220,10 +220,6 @@
 #define PARM_NODE_NAME light_position
 #include EXE_FILEPATH
 
-#define PARM_NODE_TYPE CustomData
-#define PARM_NODE_NAME custom_data
-#include EXE_FILEPATH
-
 #undef NODES_GROUP_NAME
 
 //////////////////////////////////////////////////////////////////////////
@@ -235,6 +231,26 @@
 #define NO_PARM_FILEPATH
 #define PARM_NODE_TYPE ForEachLoop
 #define PARM_NODE_NAME for_each_loop
+#include EXE_FILEPATH
+
+#undef NODES_GROUP_NAME
+
+//////////////////////////////////////////////////////////////////////////
+// utility
+//////////////////////////////////////////////////////////////////////////
+
+#define NODES_GROUP_NAME Utility
+
+#define PARM_NODE_TYPE CustomData
+#define PARM_NODE_NAME custom_data
+#include EXE_FILEPATH
+
+#define PARM_NODE_TYPE Input
+#define PARM_NODE_NAME input
+#include EXE_FILEPATH
+
+#define PARM_NODE_TYPE Output
+#define PARM_NODE_NAME output
 #include EXE_FILEPATH
 
 #undef NODES_GROUP_NAME

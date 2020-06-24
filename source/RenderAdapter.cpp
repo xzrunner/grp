@@ -3,6 +3,7 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/node/CustomFunction.h"
 #include "renderlab/node/Shader.h"
+#include "renderlab/node/SubGraph.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -15,6 +16,7 @@
 #include <rendergraph/node/CustomData.h>
 #include <rendergraph/node/Shader.h>
 #include <rendergraph/node/Model.h>
+#include <rendergraph/node/SubGraph.h>
 #include <model/Model.h>
 #include <model/ModelInstance.h>
 #include <facade/ImageLoader.h>
@@ -24,6 +26,37 @@
 
 #include <assert.h>
 
+namespace
+{
+
+std::vector<std::pair<int, rendergraph::VariableType>> PAIR_TYPES = 
+{
+	{ bp::PIN_ANY_VAR,              rendergraph::VariableType::Any },
+	{ bp::PIN_PORT,                 rendergraph::VariableType::Port },
+	{ renderlab::PIN_TEXTURE,       rendergraph::VariableType::Texture },
+	{ renderlab::PIN_RENDERTARGET,  rendergraph::VariableType::RenderTarget },
+	{ renderlab::PIN_SHADER,        rendergraph::VariableType::Shader },
+	{ renderlab::PIN_MODEL,         rendergraph::VariableType::Model },
+	{ renderlab::PIN_INT,           rendergraph::VariableType::Int },
+	{ renderlab::PIN_BOOL,          rendergraph::VariableType::Bool },
+	{ renderlab::PIN_VECTOR1,       rendergraph::VariableType::Vector1 },
+	{ renderlab::PIN_VECTOR2,       rendergraph::VariableType::Vector2 },
+	{ renderlab::PIN_VECTOR3,       rendergraph::VariableType::Vector3 },
+	{ renderlab::PIN_VECTOR4,       rendergraph::VariableType::Vector4 },
+	{ renderlab::PIN_MATRIX2,       rendergraph::VariableType::Matrix2 },
+	{ renderlab::PIN_MATRIX3,       rendergraph::VariableType::Matrix3 },
+	{ renderlab::PIN_MATRIX4,       rendergraph::VariableType::Matrix4 },
+	{ renderlab::PIN_SAMPLER2D,     rendergraph::VariableType::Sampler2D },
+	{ renderlab::PIN_SAMPLE_CUBE,   rendergraph::VariableType::SamplerCube },
+	{ renderlab::PIN_VECTOR1_ARRAY, rendergraph::VariableType::Vec1Array },
+	{ renderlab::PIN_VECTOR2_ARRAY, rendergraph::VariableType::Vec2Array },
+	{ renderlab::PIN_VECTOR3_ARRAY, rendergraph::VariableType::Vec3Array },
+	{ renderlab::PIN_VECTOR4_ARRAY, rendergraph::VariableType::Vec4Array },
+	{ bp::PIN_ANY_VAR,              rendergraph::VariableType::UserType },
+};
+
+}
+
 namespace renderlab
 {
 
@@ -31,77 +64,13 @@ int RenderAdapter::TypeBackToFront(rendergraph::VariableType type, int count)
 {
     int ret = -1;
 
-    switch (type)
-    {
-    case rendergraph::VariableType::Any:
-        ret = bp::PIN_ANY_VAR;
-        break;
-    case rendergraph::VariableType::Port:
-        ret = bp::PIN_PORT;
-        break;
-    case rendergraph::VariableType::Texture:
-        ret = PIN_TEXTURE;
-        break;
-    case rendergraph::VariableType::RenderTarget:
-        ret = PIN_RENDERTARGET;
-        break;
-    case rendergraph::VariableType::Shader:
-        ret = PIN_SHADER;
-        break;
-    case rendergraph::VariableType::Model:
-        ret = PIN_MODEL;
-        break;
-    case rendergraph::VariableType::Int:
-        ret = PIN_INT;
-        break;
-    case rendergraph::VariableType::Bool:
-        ret = PIN_BOOL;
-        break;
-    case rendergraph::VariableType::Vector1:
-        ret = PIN_VECTOR1;
-        break;
-    case rendergraph::VariableType::Vector2:
-        ret = PIN_VECTOR2;
-        break;
-    case rendergraph::VariableType::Vector3:
-        ret = PIN_VECTOR3;
-        break;
-    case rendergraph::VariableType::Vector4:
-        ret = PIN_VECTOR4;
-        break;
-    case rendergraph::VariableType::Matrix2:
-        ret = PIN_MATRIX2;
-        break;
-    case rendergraph::VariableType::Matrix3:
-        ret = PIN_MATRIX3;
-        break;
-    case rendergraph::VariableType::Matrix4:
-        ret = PIN_MATRIX4;
-        break;
-    case rendergraph::VariableType::Sampler2D:
-        ret = PIN_SAMPLER2D;
-        break;
-    case rendergraph::VariableType::SamplerCube:
-        ret = PIN_SAMPLE_CUBE;
-        break;
-    case rendergraph::VariableType::Vec1Array:
-        ret = PIN_VECTOR1_ARRAY;
-        break;
-    case rendergraph::VariableType::Vec2Array:
-        ret = PIN_VECTOR2_ARRAY;
-        break;
-    case rendergraph::VariableType::Vec3Array:
-        ret = PIN_VECTOR3_ARRAY;
-        break;
-    case rendergraph::VariableType::Vec4Array:
-        ret = PIN_VECTOR4_ARRAY;
-        break;
-    case rendergraph::VariableType::UserType:
-        ret = bp::PIN_ANY_VAR;
-        break;
-    default:
-        assert(0);
-    }
+	for (auto& pair : PAIR_TYPES) {
+		if (pair.second == type) {
+			ret = pair.first;
+			break;
+		}
+	}
+	assert(ret >= 0);
 
     if (count > 1)
     {
@@ -125,6 +94,17 @@ int RenderAdapter::TypeBackToFront(rendergraph::VariableType type, int count)
     }
 
     return ret;
+}
+
+rendergraph::VariableType RenderAdapter::TypeFrontToBack(int type)
+{
+	for (auto& pair : PAIR_TYPES) {
+		if (pair.first == type) {
+			return pair.second;
+		}
+	}
+	assert(0);
+	return rendergraph::VariableType::Any;
 }
 
 void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
@@ -269,6 +249,32 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto model = facade::ResPool::Instance().Fetch<model::Model>(src.filepath, &dev);
         auto model_inst = std::make_shared<model::ModelInstance>(model);
         static_cast<rendergraph::node::Model&>(back).SetModel(model_inst);
+    }
+    else if (type == rttr::type::get<node::SubGraph>())
+    {
+        auto& src = static_cast<const node::SubGraph&>(front);
+        auto& dst = static_cast<rendergraph::node::SubGraph&>(back);
+
+		std::vector<dag::Node<rendergraph::Variable>::Port> dst_in, dst_out;
+		auto& src_in = src.GetAllInput();
+		auto& src_out = src.GetAllOutput();
+
+		//auto graph = src.GetGraph();
+		auto front2back = [](std::vector<dag::Node<rendergraph::Variable>::Port>& dst, 
+			                 const std::vector<std::shared_ptr<bp::Pin>>& src) 
+		{
+			dst.resize(src.size());
+			for (int i = 0, n = src.size(); i < n; ++i) 
+			{
+				auto type = TypeFrontToBack(src[i]->GetType());
+				auto name = src[i]->GetName();
+				dst[i] = dag::Node<rendergraph::Variable>::Port({ type, name });
+			}
+		};
+		front2back(dst_in, src_in);
+		front2back(dst_out, src_out);
+
+        dst.Setup(src.GetBackGraph(), dst_in, dst_out);
     }
     //// bp
     //else if (type == rttr::type::get<bp::node::Function>())

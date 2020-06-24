@@ -91,6 +91,9 @@
     <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h">
       <Filter>nodes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\SubGraph.h">
+      <Filter>nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -131,6 +134,9 @@
       <Filter>view\graph</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\node\CustomFunction.cpp">
+      <Filter>nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\SubGraph.cpp">
       <Filter>nodes</Filter>
     </ClCompile>
   </ItemGroup>

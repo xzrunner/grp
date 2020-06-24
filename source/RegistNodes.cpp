@@ -1,6 +1,7 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/node/Shader.h"
 #include "renderlab/node/CustomFunction.h"
+#include "renderlab/node/SubGraph.h"
 
 #include <ee0/ReflectPropTypes.h>
 
@@ -80,6 +81,17 @@ REGIST_NODE_RTTI(Shader, shader,                                                
     rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
 )                                                                                       \
 )
+
+// control
+REGIST_NODE_RTTI_DEFAULT(OutputToScreen, output_to_screen)
+REGIST_NODE_RTTI(PassEnd, pass_end,                                                             \
+.property("pass_end", &renderlab::node::PassEnd::GetOrder, &renderlab::node::PassEnd::SetOrder) \
+(                                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Order"))                              \
+)
+)
+
+// utility
 REGIST_NODE_RTTI(CustomFunction, custom_function,                                                       \
 .property("code", &renderlab::node::CustomFunction::GetCode, &renderlab::node::CustomFunction::SetCode) \
 (                                                                                                       \
@@ -88,12 +100,12 @@ REGIST_NODE_RTTI(CustomFunction, custom_function,                               
 )
 )
 
-// control
-REGIST_NODE_RTTI_DEFAULT(OutputToScreen, output_to_screen)
-REGIST_NODE_RTTI(PassEnd, pass_end,                                                             \
-.property("pass_end", &renderlab::node::PassEnd::GetOrder, &renderlab::node::PassEnd::SetOrder) \
-(                                                                                               \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Order"))                              \
+REGIST_NODE_RTTI(SubGraph, sub_graph,                                                                   \
+.property("filepath", &renderlab::node::SubGraph::GetFilepath, &renderlab::node::SubGraph::SetFilepath) \
+(                                                                                                       \
+    rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")),                                  \
+    rttr::metadata(js::RTTR::FilePathTag(), true),                                                      \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.json"))                                 \
 )
 )
 

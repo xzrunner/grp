@@ -29,7 +29,6 @@
 #include <blueprint/Blueprint.h>
 #include <blueprint/CompNode.h>
 #include <blueprint/NSCompNode.h>
-#include <blueprint/SerializeHelper.h>
 #include <renderlab/Node.h>
 #include <renderlab/RenderLab.h>
 #include <renderlab/RenderAdapter.h>

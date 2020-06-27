@@ -9,6 +9,7 @@
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
 #include <rendergraph/Variable.h>
+#include <facade/ResPool.h>
 
 #include <boost/filesystem.hpp>
 
@@ -25,14 +26,20 @@ SubGraph::SubGraph()
 	bp::NodeLayout::UpdateNodeStyle(*this);
 }
 
-void SubGraph::Draw(const ur::Device& dev, ur::Context& ctx, const n2::RenderParams& rp) const
+bool SubGraph::Update(const ur::Device& dev)
 {
-	Node::Draw(dev, ctx, rp);
+	bool dirty = false;
 
-	// fixme: move to update
-	if (m_need_rebuild) {
-		const_cast<SubGraph*>(this)->InitFromFile(dev, m_filepath);
+	if (Node::Update(dev)) {
+		dirty = true;
 	}
+
+	if (m_need_rebuild) {
+		//InitFromFile(dev, m_filepath);
+		dirty = true;
+	}
+	
+	return dirty;
 }
 
 void SubGraph::LoadFromJson(const ur::Device& dev, const std::string& dir, 
@@ -40,7 +47,19 @@ void SubGraph::LoadFromJson(const ur::Device& dev, const std::string& dir,
 {
     Node::LoadFromJson(dev, dir, val);
 
-	InitFromFile(dev, m_filepath);
+	m_graph->SetFrontToBackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
+		RenderAdapter::Front2Back(dev, front, back, dir);
+	});
+
+	auto filepath = boost::filesystem::absolute(val["filepath"].GetString(), dir);
+	auto casset = facade::ResPool::Instance().Query<n0::CompAsset>(filepath.string());
+	if (!casset) {
+		return;
+	}
+
+	assert(casset && casset->TypeID() == n0::GetAssetUniqueTypeID<n0::CompComplex>());
+	auto ccomplex = std::static_pointer_cast<n0::CompComplex>(casset);
+	Build(ccomplex->GetAllChildren());
 }
 
 void SubGraph::SetFilepath(const std::string& filepath) 
@@ -70,11 +89,52 @@ void SubGraph::InitFromFile(const ur::Device& dev, const std::string& filepath)
     auto& ccomplex = root->GetSharedComp<n0::CompComplex>();
     auto& children = ccomplex.GetAllChildren();
 
-	m_all_input.clear();
-	m_all_output.clear();
+	//m_all_input.clear();
+	//m_all_output.clear();
+
+	//std::vector<bp::NodePtr> bp_nodes;
+ //   for (auto& c : children)
+ //   {
+ //       if (!c->HasUniqueComp<bp::CompNode>()) {
+ //           continue;
+ //       }
+ //       auto bp_node = c->GetUniqueComp<bp::CompNode>().GetNode();
+	//	assert(bp_node);
+	//	bp_nodes.push_back(bp_node);
+
+	//	auto bp_type = bp_node->get_type();
+	//	if (bp_type == rttr::type::get<node::Input>()) 
+	//	{
+	//		auto input = std::static_pointer_cast<node::Input>(bp_node);
+	//		auto type = RenderAdapter::TypeBackToFront(input->m_var_type, 1);
+	//		m_all_input.push_back(std::make_shared<bp::Pin>(
+	//			true, m_all_input.size(), type, input->m_var_name, *this
+	//		));
+	//	} 
+	//	else if (bp_type == rttr::type::get<node::Output>()) 
+	//	{
+	//		auto output = std::static_pointer_cast<node::Output>(bp_node);
+	//		auto type = RenderAdapter::TypeBackToFront(output->m_var_type, 1);
+	//		m_all_output.push_back(std::make_shared<bp::Pin>(
+	//			true, m_all_output.size(), type, "_out", *this
+	//		));
+	//	}
+ //   }
+
+	//SetChildren(bp_nodes);
+	//bp::NodeLayout::UpdateNodeStyle(*this);
+
+	m_need_rebuild = false;
+}
+
+void SubGraph::Build(const std::vector<n0::SceneNodePtr>& nodes)
+{
+	assert(m_all_input.size() == 1 && m_all_output.size() == 1);
+	//m_all_input.clear();
+	//m_all_output.clear();
 
 	std::vector<bp::NodePtr> bp_nodes;
-    for (auto& c : children)
+    for (auto& c : nodes)
     {
         if (!c->HasUniqueComp<bp::CompNode>()) {
             continue;
@@ -97,15 +157,13 @@ void SubGraph::InitFromFile(const ur::Device& dev, const std::string& filepath)
 			auto output = std::static_pointer_cast<node::Output>(bp_node);
 			auto type = RenderAdapter::TypeBackToFront(output->m_var_type, 1);
 			m_all_output.push_back(std::make_shared<bp::Pin>(
-				true, m_all_output.size(), type, "_out", *this
+				false, m_all_output.size(), type, output->m_var_name, *this
 			));
 		}
     }
 
 	SetChildren(bp_nodes);
 	bp::NodeLayout::UpdateNodeStyle(*this);
-
-	m_need_rebuild = false;
 }
 
 }

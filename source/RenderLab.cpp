@@ -4,12 +4,16 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/node/SubGraph.h"
 
+#include <blueprint/CompNode.h>
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
 #include <blueprint/node/Function.h>
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
+#include <node0/CompIdentity.h>
+#include <node0/SceneNode.h>
+#include <node2/UpdateSystem.h>
 #include <renderpipeline/RenderPipeline.h>
 #include <rendergraph/RenderGraph.h>
 
@@ -48,6 +52,28 @@ void RenderLab::RegistRTTR()
 
 void RenderLab::Init()
 {
+	n2::UpdateSystem::Instance()->AddUpdateCompFunc([](const n0::SceneNode& node, const ur::Device* dev)->bool
+	{
+		if (!node.HasUniqueComp<bp::CompNode>()) {
+			return false;
+		}
+
+		bool dirty = false;
+
+		auto& cnode = node.GetUniqueComp<bp::CompNode>();
+
+		auto bp_node = cnode.GetNode();
+
+		if (bp_node->get_type().is_derived_from<node::SubGraph>()) 
+		{
+			assert(node.HasUniqueComp<n0::CompIdentity>());
+			auto filepath = std::static_pointer_cast<node::SubGraph>(bp_node)->GetFilepath();
+			node.GetUniqueComp<n0::CompIdentity>().SetFilepath(filepath);
+		}
+
+		return dirty;
+	});
+
 	//bp::NodeBuilder::Callback cb;
 	//cb.on_created = [](bp::Node& node, std::vector<n0::SceneNodePtr>& nodes) {
 	//	NodeBuilder::CreateDefaultInputs(nodes, node);

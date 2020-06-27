@@ -3,6 +3,7 @@
 #include <blueprint/node/SubGraph.h>
 
 #include <rendergraph/Variable.h>
+#include <node0/typedef.h>
 
 namespace renderlab
 {
@@ -14,8 +15,7 @@ class SubGraph : public bp::node::SubGraph<rendergraph::Variable>
 public:
     SubGraph();
 
-	virtual void Draw(const ur::Device& dev, ur::Context& ctx,
-		const n2::RenderParams& rp) const override;
+	virtual bool Update(const ur::Device& dev) override;
 
     virtual void LoadFromJson(const ur::Device& dev, const std::string& dir, 
 		const rapidjson::Value& val) override;
@@ -25,6 +25,8 @@ public:
 
 private:
 	void InitFromFile(const ur::Device& dev, const std::string& filepath);
+
+	void Build(const std::vector<n0::SceneNodePtr>& nodes);
 
 private:
 	std::string m_filepath;

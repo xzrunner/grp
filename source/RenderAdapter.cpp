@@ -255,11 +255,6 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::SubGraph&>(front);
         auto& dst = static_cast<rendergraph::node::SubGraph&>(back);
 
-		std::vector<dag::Node<rendergraph::Variable>::Port> dst_in, dst_out;
-		auto& src_in = src.GetAllInput();
-		auto& src_out = src.GetAllOutput();
-
-		//auto graph = src.GetGraph();
 		auto front2back = [](std::vector<dag::Node<rendergraph::Variable>::Port>& dst, 
 			                 const std::vector<std::shared_ptr<bp::Pin>>& src) 
 		{
@@ -271,8 +266,10 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
 				dst[i] = dag::Node<rendergraph::Variable>::Port({ type, name });
 			}
 		};
-		front2back(dst_in, src_in);
-		front2back(dst_out, src_out);
+
+        std::vector<dag::Node<rendergraph::Variable>::Port> dst_in, dst_out;
+		front2back(dst_in, src.GetAllInput());
+		front2back(dst_out, src.GetAllOutput());
 
         dst.Setup(src.GetBackGraph(), dst_in, dst_out);
     }

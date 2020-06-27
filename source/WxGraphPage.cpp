@@ -29,6 +29,8 @@ void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
     GetImpl().SetCanvas(canvas);
 
     auto ctx = std::make_shared<rendergraph::RenderContext>(m_script);
+    m_ctx = ctx;
+
     ctx->ur_dev = &canvas->GetRenderDevice();
     ctx->ur_ctx = canvas->GetRenderContext().ur_ctx.get();
 
@@ -39,20 +41,24 @@ void WxGraphPage::SetCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
 
 void WxGraphPage::OnEvalChangeed()
 {
-    std::vector<bp::NodePtr> nodes;
-    Traverse([&](const ee0::GameObj& obj)->bool
-    {
-        if (obj->HasUniqueComp<bp::CompNode>())
-        {
-            auto bp_node = obj->GetUniqueComp<bp::CompNode>().GetNode();
-            if (bp_node) {
-                nodes.push_back(bp_node);
-            }
-        }
-        return true;
-    });
+    auto root = GetSceneTree()->GetRootNode();
 
-    m_front_eval.Rebuild(nodes, *GetSceneTree()->GetCurrEval());
+    std::vector<bp::NodePtr> nodes;
+
+    assert(root->HasSharedComp<n0::CompComplex>());
+    auto& ccomplex = root->GetSharedComp<n0::CompComplex>();
+    for (auto& child : ccomplex.GetAllChildren())
+    {
+        if (!child->HasUniqueComp<bp::CompNode>()) {
+            continue;
+        }
+        auto bp_node = child->GetUniqueComp<bp::CompNode>().GetNode();
+        if (bp_node) {
+            nodes.push_back(bp_node);
+        }
+    }
+
+    m_front_eval.Rebuild(nodes, *GetSceneTree()->GetRootGraph());
 }
 
 }

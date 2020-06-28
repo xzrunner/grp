@@ -17,7 +17,7 @@ public:
 
 	virtual bool Update(const ur::Device& dev) override;
 
-    virtual void LoadFromJson(const ur::Device& dev, const std::string& dir, 
+    virtual void LoadFromJson(const ur::Device& dev, const std::string& dir,
 		const rapidjson::Value& val) override;
 
 	void SetFilepath(const std::string& filepath);
@@ -26,7 +26,7 @@ public:
 private:
 	void InitFromFile(const ur::Device& dev, const std::string& filepath);
 
-	void Build(const std::vector<n0::SceneNodePtr>& nodes);
+	void Build(const std::vector<n0::SceneNodePtr>& nodes, bool rebuild_graph);
 
 private:
 	std::string m_filepath;

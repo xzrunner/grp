@@ -38,6 +38,10 @@
 
 #define NODES_GROUP_NAME Operator
 
+#define PARM_NODE_TYPE AttachRT
+#define PARM_NODE_NAME attach_rt
+#include EXE_FILEPATH
+
 #define PARM_NODE_TYPE Clear
 #define PARM_NODE_NAME clear
 //#define ENABLE_NODE_PREVIEW

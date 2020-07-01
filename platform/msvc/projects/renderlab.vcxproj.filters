@@ -34,6 +34,9 @@
     <Filter Include="view\graph">
       <UniqueIdentifier>{b48ff869-a942-4c11-a6ee-b3a8902d76ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\code">
+      <UniqueIdentifier>{0ed61405-43e2-42c5-ba97-767a26c3626f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\renderlab\PinType.h">
@@ -94,6 +97,9 @@
     <ClInclude Include="..\..\..\include\renderlab\node\SubGraph.h">
       <Filter>nodes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxCodePanel.h">
+      <Filter>view\code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -138,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\node\SubGraph.cpp">
       <Filter>nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxCodePanel.cpp">
+      <Filter>view\code</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

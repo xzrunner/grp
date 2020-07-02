@@ -4,6 +4,7 @@
 #include <node0/CompComplex.h>
 #include <unirender/Factory.h>
 #include <ns/RegistCallback.h>
+#include <painting3/PerspCam.h>
 #include <facade/Facade.h>
 #include <renderpipeline/RenderMgr.h>
 #include <rendergraph/RenderGraph.h>
@@ -29,10 +30,13 @@
 #include <blueprint/Blueprint.h>
 #include <blueprint/CompNode.h>
 #include <blueprint/NSCompNode.h>
+#include <blueprint/SerializeHelper.h>
 #include <renderlab/Node.h>
 #include <renderlab/RenderLab.h>
 #include <renderlab/RenderAdapter.h>
 #include <renderlab/RegistNodes.h>
+#include <renderlab/Serializer.h>
+#include <renderlab/node/PassEnd.h>
 
 #include <gl/glew.h>
 #include <glfw3.h>
@@ -143,19 +147,19 @@ void build_drawlist(const std::vector<bp::NodePtr>& f_nodes, const std::vector<s
     }
 }
 
-void draw(std::shared_ptr<rendergraph::ScriptEnv>& script, const ur::Device& dev, 
-          ur::Context& ctx, const std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
+void draw(std::shared_ptr<rendergraph::ScriptEnv>& script, const ur::Device& dev,
+          ur::Context& ctx, const pt0::Camera& cam, const std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
 {
     rp::RenderMgr::Instance()->SetRenderer(dev, ctx, rp::RenderType::EXTERN);
 
     auto rc = std::make_shared<rendergraph::RenderContext>(script);
     script->SetRenderContext(rc);
-    //rc->cam_proj_mat = m_camera->GetProjectionMat();
-    //rc->cam_view_mat = m_camera->GetViewMat();
-    //if (m_camera->TypeID() == pt0::GetCamTypeID<pt3::PerspCam>()) {
-    //    auto persp = std::static_pointer_cast<pt3::PerspCam>(m_camera);
-    //    rc->cam_position = persp->GetPos();
-    //}
+    rc->cam_proj_mat = cam.GetProjectionMat();
+    rc->cam_view_mat = cam.GetViewMat();
+    if (cam.TypeID() == pt0::GetCamTypeID<pt3::PerspCam>()) {
+        auto& p_cam = static_cast<const pt3::PerspCam&>(cam);
+        rc->cam_position = p_cam.GetPos();
+    }
     rc->light_position.Set(0, 2, -4);
 
     rc->ur_dev = &dev;
@@ -202,9 +206,16 @@ void test_file(const ur::Device& dev, ur::Context& ctx,
 
     auto script = std::make_shared<rendergraph::ScriptEnv>();
 
+	rapidjson::Document doc;
+	js::RapidJsonHelper::ReadFromFile(filepath.c_str(), doc);
+	pt0::CameraPtr cam = std::make_shared<pt3::PerspCam>(
+		sm::vec3(0, 2, -2), sm::vec3(0, 0, 0), sm::vec3(0, 1, 0)
+	);
+	renderlab::Serializer::LoadCamera(cam, doc);
+
     std::vector<std::unique_ptr<rendergraph::DrawList>> drawlist;
     build_drawlist(front_nodes, back_nodes, drawlist);
-    draw(script, dev, ctx, drawlist);
+    draw(script, dev, ctx, *cam, drawlist);
 
     dev.ReadPixels(BUFFER, ur::TextureFormat::RGB, 0, 0, TEX_SIZE, TEX_SIZE);
 
@@ -245,7 +256,7 @@ int main()
 {
     init_gl();
 
-    auto dev = ur::CreateDeviceGL();
+    auto dev = ur::CreateDeviceGL(nullptr);
     auto ctx = ur::CreateContextGL(*dev);
 
     ns::RegistCallback::Init();

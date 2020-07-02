@@ -9,7 +9,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -73,7 +73,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -128,7 +128,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -182,7 +182,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -238,7 +238,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -294,7 +294,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -355,7 +355,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -390,7 +390,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -445,7 +445,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -506,7 +506,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -560,7 +560,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -614,7 +614,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -668,7 +668,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -716,5 +716,26 @@
         ]
     ],
     "comp_type": "n0_complex",
-    "page_type": "render_graph"
+    "page_type": "render_graph",
+    "camera": {
+        "pos": [
+            2.392637014389038,
+            3.1657304763793947,
+            -3.3682847023010256
+        ],
+        "target": [
+            -0.050260066986083987,
+            -0.05849957466125488,
+            -0.039381980895996097
+        ],
+        "up": [
+            -0.36412104964256289,
+            0.788174033164978,
+            0.4961828291416168
+        ],
+        "near": 0.009999999776482582,
+        "far": 1000.0,
+        "aspect": 0.7837837934494019,
+        "fov": 45.0
+    }
 }

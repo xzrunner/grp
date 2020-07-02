@@ -37,6 +37,21 @@
     <Filter Include="view\code">
       <UniqueIdentifier>{0ed61405-43e2-42c5-ba97-767a26c3626f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="nodes\utility">
+      <UniqueIdentifier>{900fca8f-b5ed-4dd4-b7d2-82bc81b50849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nodes\resource">
+      <UniqueIdentifier>{03826abc-aa1b-4202-8928-550547e8f12c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nodes\ctrl_flow">
+      <UniqueIdentifier>{ffde376b-835b-44b5-81bc-769d43ce2e56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\toolbar">
+      <UniqueIdentifier>{b40366be-4389-437d-913c-5b31f1587632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools\serializer">
+      <UniqueIdentifier>{372faa65-456f-4126-bcf9-971894bbe754}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\renderlab\PinType.h">
@@ -60,9 +75,6 @@
     <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
     <ClInclude Include="..\..\..\include\renderlab\Evaluator.h">
       <Filter>tools\eval</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\node\Shader.h">
-      <Filter>nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\node_def_gen.h">
       <Filter>tools\rtti</Filter>
@@ -91,14 +103,32 @@
     <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h">
       <Filter>view\graph</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h">
-      <Filter>nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\renderlab\node\SubGraph.h">
-      <Filter>nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\renderlab\WxCodePanel.h">
       <Filter>view\code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h">
+      <Filter>nodes\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\Shader.h">
+      <Filter>nodes\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\SubGraph.h">
+      <Filter>nodes\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\Preview.h">
+      <Filter>nodes\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\OutputToScreen.h">
+      <Filter>nodes\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\node\PassEnd.h">
+      <Filter>nodes\ctrl_flow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxDefaultProperty.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\Serializer.h">
+      <Filter>tools\serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,9 +151,6 @@
     <ClCompile Include="..\..\..\source\Evaluator.cpp">
       <Filter>tools\eval</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\node\Shader.cpp">
-      <Filter>nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\RenderAdapter.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
@@ -139,14 +166,23 @@
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
       <Filter>view\graph</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\node\CustomFunction.cpp">
-      <Filter>nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\node\SubGraph.cpp">
-      <Filter>nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\WxCodePanel.cpp">
       <Filter>view\code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\CustomFunction.cpp">
+      <Filter>nodes\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\Shader.cpp">
+      <Filter>nodes\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\node\SubGraph.cpp">
+      <Filter>nodes\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxDefaultProperty.cpp">
+      <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\Serializer.cpp">
+      <Filter>tools\serializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

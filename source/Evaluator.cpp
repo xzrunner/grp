@@ -1,5 +1,6 @@
 #include "renderlab/Evaluator.h"
 #include "renderlab/RegistNodes.h"
+#include "renderlab/node/PassEnd.h"
 
 #include <blueprint/Connecting.h>
 #include <blueprint/node/Function.h>

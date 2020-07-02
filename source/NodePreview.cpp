@@ -3,6 +3,7 @@
 #include "renderlab/RegistNodes.h"
 #include "renderlab/PinType.h"
 #include "renderlab/Evaluator.h"
+#include "renderlab/node/Preview.h"
 
 #include <blueprint/NodeHelper.h>
 

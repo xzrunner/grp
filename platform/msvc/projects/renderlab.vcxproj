@@ -16,6 +16,9 @@
     <ClInclude Include="..\..\..\include\renderlab\Node.h" />
     <ClInclude Include="..\..\..\include\renderlab\NodePreview.h" />
     <ClInclude Include="..\..\..\include\renderlab\node\CustomFunction.h" />
+    <ClInclude Include="..\..\..\include\renderlab\node\OutputToScreen.h" />
+    <ClInclude Include="..\..\..\include\renderlab\node\PassEnd.h" />
+    <ClInclude Include="..\..\..\include\renderlab\node\Preview.h" />
     <ClInclude Include="..\..\..\include\renderlab\node\Shader.h" />
     <ClInclude Include="..\..\..\include\renderlab\node\SubGraph.h" />
     <ClInclude Include="..\..\..\include\renderlab\node_def_gen.h" />
@@ -28,7 +31,9 @@
     <ClInclude Include="..\..\..\include\renderlab\RegistNodes.h" />
     <ClInclude Include="..\..\..\include\renderlab\RenderAdapter.h" />
     <ClInclude Include="..\..\..\include\renderlab\RenderLab.h" />
+    <ClInclude Include="..\..\..\include\renderlab\Serializer.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxCodePanel.h" />
+    <ClInclude Include="..\..\..\include\renderlab\WxDefaultProperty.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxGraphCanvas.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxPreviewCanvas.h" />
@@ -49,7 +54,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderAdapter.cpp" />
     <ClCompile Include="..\..\..\source\RenderLab.cpp" />
+    <ClCompile Include="..\..\..\source\Serializer.cpp" />
     <ClCompile Include="..\..\..\source\WxCodePanel.cpp" />
+    <ClCompile Include="..\..\..\source\WxDefaultProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphCanvas.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />

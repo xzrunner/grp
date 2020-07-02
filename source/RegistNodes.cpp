@@ -1,6 +1,9 @@
 #include "renderlab/RegistNodes.h"
+#include "renderlab/node/PassEnd.h"
 #include "renderlab/node/Shader.h"
 #include "renderlab/node/CustomFunction.h"
+#include "renderlab/node/OutputToScreen.h"
+#include "renderlab/node/Preview.h"
 #include "renderlab/node/SubGraph.h"
 
 #include <ee0/ReflectPropTypes.h>

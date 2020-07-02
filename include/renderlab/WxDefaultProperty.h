@@ -16,6 +16,8 @@ public:
 
 	bool IsSaveCamEnable() const;
 
+    void Reset();
+
 private:
     void InitLayout();
     void InitProps();

@@ -25,6 +25,11 @@ bool WxDefaultProperty::IsSaveCamEnable() const
 	return m_save_cam_prop->GetValue();
 }
 
+void WxDefaultProperty::Reset()
+{
+	m_save_cam_prop->SetValue(false);
+}
+
 void WxDefaultProperty::InitLayout()
 {
     auto sizer = new wxBoxSizer(wxVERTICAL);

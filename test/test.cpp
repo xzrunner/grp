@@ -228,15 +228,11 @@ void test_file(const ur::Device& dev, ur::Context& ctx,
 void test_folder(const ur::Device& dev, ur::Context& ctx,
                  const std::string& dir)
 {
-    ur::TextureDescription desc;
-    desc.target = ur::TextureTarget::Texture2D;
-    desc.width  = TEX_SIZE;
-    desc.height = TEX_SIZE;
-    desc.format = ur::TextureFormat::RGB;
-    auto tex = dev.CreateTexture(desc);
-
     auto fbo = dev.CreateFramebuffer();
-    fbo->SetAttachment(ur::AttachmentType::Color0, ur::TextureTarget::Texture2D, tex, nullptr);
+
+	auto color_rbo = dev.CreateRenderBuffer(TEX_SIZE, TEX_SIZE, ur::InternalFormat::RGB, ur::AttachmentType::Color0);
+    fbo->SetAttachment(ur::AttachmentType::Color0, ur::TextureTarget::Texture2D, nullptr, color_rbo);
+
 	auto depth_rbo = dev.CreateRenderBuffer(TEX_SIZE, TEX_SIZE, ur::InternalFormat::DepthComponent, ur::AttachmentType::Depth);
 	fbo->SetAttachment(ur::AttachmentType::Depth, ur::TextureTarget::Texture2D, nullptr, depth_rbo);
 

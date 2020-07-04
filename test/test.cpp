@@ -237,6 +237,8 @@ void test_folder(const ur::Device& dev, ur::Context& ctx,
 
     auto fbo = dev.CreateFramebuffer();
     fbo->SetAttachment(ur::AttachmentType::Color0, ur::TextureTarget::Texture2D, tex, nullptr);
+	auto depth_rbo = dev.CreateRenderBuffer(TEX_SIZE, TEX_SIZE, ur::InternalFormat::DepthComponent, ur::AttachmentType::Depth);
+	fbo->SetAttachment(ur::AttachmentType::Depth, ur::TextureTarget::Texture2D, nullptr, depth_rbo);
 
     boost::filesystem::recursive_directory_iterator itr(dir), end;
     while (itr != end)

@@ -165,6 +165,8 @@ void draw(std::shared_ptr<rendergraph::ScriptEnv>& script, const ur::Device& dev
     rc->ur_dev = &dev;
     rc->ur_ctx = &ctx;
 
+    rc->screen_size.Set(TEX_SIZE, TEX_SIZE);
+
     for (auto& p : drawlist) {
         bool finished = p->Draw(rc, nullptr);
         if (finished) {

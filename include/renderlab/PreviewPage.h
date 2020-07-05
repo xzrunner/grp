@@ -20,6 +20,8 @@ public:
 
     virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
 
+    auto& GetStagePage() const { return m_stage_page; }
+
 private:
     void Init(const ur::Device& dev, const ee0::RenderContext& rc);
 

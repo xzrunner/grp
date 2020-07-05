@@ -224,6 +224,11 @@
 #define PARM_NODE_NAME light_position
 #include EXE_FILEPATH
 
+#define NO_PARM_FILEPATH
+#define PARM_NODE_TYPE ScreenSize
+#define PARM_NODE_NAME screen_size
+#include EXE_FILEPATH
+
 #undef NODES_GROUP_NAME
 
 //////////////////////////////////////////////////////////////////////////

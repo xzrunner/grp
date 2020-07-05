@@ -2,6 +2,8 @@
 
 #include <painting3/PerspCam.h>
 
+#define ONLY_POS_AND_ANGLE
+
 namespace renderlab
 {
 
@@ -44,16 +46,18 @@ void Serializer::StoreCamera(const std::shared_ptr<pt0::Camera>& cam,
 	val_up.PushBack(up.z, alloc);
 	cam_val.AddMember("up", val_up, alloc);
 
+#ifndef ONLY_POS_AND_ANGLE
 	// projection
 	cam_val.AddMember("near",   p_cam->GetNear(), alloc);
 	cam_val.AddMember("far",    p_cam->GetFar(), alloc);
 	cam_val.AddMember("aspect", p_cam->GetAspect(), alloc);
 	cam_val.AddMember("fov",    p_cam->GetAngleOfView(), alloc);
+#endif // ONLY_POS_AND_ANGLE
 
 	val.AddMember("camera", cam_val, alloc);
 }
 
-void Serializer::LoadCamera(std::shared_ptr<pt0::Camera>& cam, const rapidjson::Value& val)
+void Serializer::LoadCamera(const std::shared_ptr<pt0::Camera>& cam, const rapidjson::Value& val)
 {
 	if (cam->TypeID() != pt0::GetCamTypeID<pt3::PerspCam>()) {
 		return;
@@ -77,6 +81,7 @@ void Serializer::LoadCamera(std::shared_ptr<pt0::Camera>& cam, const rapidjson::
 		p_cam->SetPosAndAngle(pos, target, up);
 	}
 
+#ifndef ONLY_POS_AND_ANGLE
 	if (cam_val.HasMember("near")) {
 		p_cam->SetNear(cam_val["near"].GetFloat());
 	}
@@ -89,6 +94,7 @@ void Serializer::LoadCamera(std::shared_ptr<pt0::Camera>& cam, const rapidjson::
 	if (cam_val.HasMember("fov")) {
 		p_cam->SetAngleOfView(cam_val["fov"].GetFloat());
 	}
+#endif // ONLY_POS_AND_ANGLE
 }
 
 }

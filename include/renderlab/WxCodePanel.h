@@ -3,6 +3,8 @@
 #include <ee0/Observer.h>
 #include <ee0/typedef.h>
 
+#include <node0/typedef.h>
+
 #include <wx/panel.h>
 #include <wx/notebook.h>
 
@@ -25,6 +27,11 @@ private:
 	void OnSelectionInsert(const ee0::VariantSet& variants);
 	void OnSelectionClear(const ee0::VariantSet& variants);
 
+	void OnSavePress(wxCommandEvent& event);
+	void OnTextChange(wxCommandEvent& event);
+
+	void ClearAllPagesTitle();
+
 private:
 	ee0::SubjectMgrPtr m_sub_mgr = nullptr;
 
@@ -32,6 +39,8 @@ private:
 
 	static const int PAGE_COUNT = 2;
 	ee0::WxCodeCtrl* m_pages[PAGE_COUNT];
+
+	n0::SceneNodePtr m_selected = nullptr;
 
 }; // WxCodePanel
 

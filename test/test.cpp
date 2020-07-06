@@ -107,7 +107,7 @@ bool init_gl()
 }
 
 void build_drawlist(const std::vector<bp::NodePtr>& f_nodes, const std::vector<std::shared_ptr<dag::Node<rendergraph::Variable>>>& b_nodes,
-                    std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
+                    std::vector<std::unique_ptr<rendergraph::DrawList>>& initlist, std::vector<std::unique_ptr<rendergraph::DrawList>>& drawlist)
 {
     // sort passes
     std::vector<std::shared_ptr<renderlab::node::PassEnd>> passes;
@@ -141,9 +141,11 @@ void build_drawlist(const std::vector<bp::NodePtr>& f_nodes, const std::vector<s
         assert(idx >= 0);
         auto back_node = b_nodes[idx];
         auto rg_node = std::static_pointer_cast<rendergraph::Node>(back_node);
-        std::vector<rendergraph::NodePtr> nodes;
-        rendergraph::DrawList::GetAntecedentNodes(rg_node, nodes);
-        drawlist.push_back(std::make_unique<rendergraph::DrawList>(nodes));
+        std::vector<rendergraph::NodePtr> init_nodes, draw_nodes;
+        rendergraph::DrawList::GetAntecedentNodes(rg_node, init_nodes, false);
+        rendergraph::DrawList::GetAntecedentNodes(rg_node, draw_nodes);
+        initlist.push_back(std::make_unique<rendergraph::DrawList>(init_nodes));
+        drawlist.push_back(std::make_unique<rendergraph::DrawList>(draw_nodes));
     }
 }
 
@@ -215,8 +217,9 @@ void test_file(const ur::Device& dev, ur::Context& ctx,
 	);
 	renderlab::Serializer::LoadCamera(cam, doc);
 
-    std::vector<std::unique_ptr<rendergraph::DrawList>> drawlist;
-    build_drawlist(front_nodes, back_nodes, drawlist);
+    std::vector<std::unique_ptr<rendergraph::DrawList>> initlist, drawlist;
+    build_drawlist(front_nodes, back_nodes, initlist, drawlist);
+    draw(script, dev, ctx, *cam, initlist);
     draw(script, dev, ctx, *cam, drawlist);
 
     dev.ReadPixels(BUFFER, ur::TextureFormat::RGB, 0, 0, TEX_SIZE, TEX_SIZE);

@@ -57,7 +57,7 @@ void Serializer::StoreCamera(const std::shared_ptr<pt0::Camera>& cam,
 	val.AddMember("camera", cam_val, alloc);
 }
 
-void Serializer::LoadCamera(const std::shared_ptr<pt0::Camera>& cam, const rapidjson::Value& val)
+void Serializer::LoadCamera(std::shared_ptr<pt0::Camera>& cam, const rapidjson::Value& val)
 {
 	if (cam->TypeID() != pt0::GetCamTypeID<pt3::PerspCam>()) {
 		return;

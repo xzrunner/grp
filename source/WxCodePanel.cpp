@@ -10,7 +10,6 @@
 #include <blueprint/Node.h>
 
 #include <node0/SceneNode.h>
-#include <rendergraph/Utility.h>
 
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -81,18 +80,18 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 	if (bp_type == rttr::type::get<node::Shader>())
 	{
 		auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
-		m_pages[0]->SetText(rendergraph::Utility::FormatCode(shader_node->GetVert()));
-		m_pages[1]->SetText(rendergraph::Utility::FormatCode(shader_node->GetFrag()));
+		m_pages[0]->SetText(shader_node->GetVert());
+		m_pages[1]->SetText(shader_node->GetFrag());
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())
 	{
 		auto data_node = std::static_pointer_cast<node::CustomData>(bp_node);
-		m_pages[0]->SetText(rendergraph::Utility::FormatCode(data_node->m_code));
+		m_pages[0]->SetText(data_node->m_code);
 	}
 	else if (bp_type == rttr::type::get<node::CustomFunction>())
 	{
 		auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
-		m_pages[0]->SetText(rendergraph::Utility::FormatCode(func_node->GetCode()));
+		m_pages[0]->SetText(func_node->GetCode());
 	}
 }
 

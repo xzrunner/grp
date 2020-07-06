@@ -3,7 +3,6 @@
 
 #include <blueprint/Pin.h>
 
-#include <cpputil/StringHelper.h>
 #include <rendergraph/node/FunctionParser.h>
 
 namespace renderlab
@@ -19,10 +18,7 @@ void CustomFunction::SetCode(const std::string& code)
 
     m_code = code;
 
-    auto formated = code;
-    cpputil::StringHelper::ReplaceAll(formated, "\\n", "\n");
-
-    rendergraph::node::FunctionParser parser(formated);
+    rendergraph::node::FunctionParser parser(code);
     parser.Parse();
 
     if (IsPinsChanged(true, parser.GetInputs()))

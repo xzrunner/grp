@@ -130,6 +130,9 @@
     <ClInclude Include="..\..\..\include\renderlab\Serializer.h">
       <Filter>tools\serializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\WxOutputWindow.h">
+      <Filter>view\code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -183,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Serializer.cpp">
       <Filter>tools\serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxOutputWindow.cpp">
+      <Filter>view\code</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

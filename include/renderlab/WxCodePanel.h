@@ -6,7 +6,10 @@
 #include <node0/typedef.h>
 
 #include <wx/panel.h>
-#include <wx/notebook.h>
+#include <glslang/Public/ShaderLang.h>
+
+class wxNotebook;
+class wxTextCtrl;
 
 namespace ee0 { class WxCodeCtrl; }
 
@@ -33,6 +36,20 @@ private:
 	void ClearAllPagesTitle();
 
 private:
+	class ShaderCompiler
+	{
+	public:
+		ShaderCompiler(EShLanguage lang);
+		~ShaderCompiler();
+
+		bool Validate(const std::string& code, std::string& msg);
+
+	private:
+		ShHandle m_compiler = nullptr;
+
+	}; // ShaderCompiler
+
+private:
 	ee0::SubjectMgrPtr m_sub_mgr = nullptr;
 
 	wxNotebook* m_notebook;
@@ -41,6 +58,10 @@ private:
 	ee0::WxCodeCtrl* m_pages[PAGE_COUNT];
 
 	n0::SceneNodePtr m_selected = nullptr;
+
+	wxTextCtrl* m_output_wnd = nullptr;
+
+	ShaderCompiler m_vert_c, m_frag_c;
 
 }; // WxCodePanel
 

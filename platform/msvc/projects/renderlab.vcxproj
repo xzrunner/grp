@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\..\include\renderlab\WxDefaultProperty.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxGraphCanvas.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h" />
+    <ClInclude Include="..\..\..\include\renderlab\WxOutputWindow.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxPreviewCanvas.h" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,7 @@
     <ClCompile Include="..\..\..\source\WxDefaultProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphCanvas.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
+    <ClCompile Include="..\..\..\source\WxOutputWindow.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -104,7 +106,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\dag\include;..\..\..\..\lexer\include;..\..\..\..\primitive\include;..\..\..\..\geoshape\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\rendergraph\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\facade\include;..\..\..\..\nserializer\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\external\boost\include;..\..\..\..\external-editor\wx\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\dag\include;..\..\..\..\lexer\include;..\..\..\..\primitive\include;..\..\..\..\geoshape\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\rendergraph\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\facade\include;..\..\..\..\nserializer\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\external\boost\include;..\..\..\..\external-editor\wx\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\glslang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -118,7 +120,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\dag\include;..\..\..\..\lexer\include;..\..\..\..\primitive\include;..\..\..\..\geoshape\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\rendergraph\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\facade\include;..\..\..\..\nserializer\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\external\boost\include;..\..\..\..\external-editor\wx\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\guard\include;..\..\..\..\cpputil\include;..\..\..\..\dag\include;..\..\..\..\lexer\include;..\..\..\..\primitive\include;..\..\..\..\geoshape\include;..\..\..\..\model\include;..\..\..\..\unirender\include;..\..\..\..\painting0\include;..\..\..\..\painting2\include;..\..\..\..\painting3\include;..\..\..\..\rendergraph\include;..\..\..\..\renderpipeline\include;..\..\..\..\node0\include;..\..\..\..\node2\include;..\..\..\..\facade\include;..\..\..\..\nserializer\include;..\..\..\..\js\include;..\..\..\..\easyeditor0\include;..\..\..\..\easyeditor2\include;..\..\..\..\easyeditor3\include;..\..\..\..\blueprint\include;..\..\..\..\external\boost\include;..\..\..\..\external-editor\wx\include;..\..\..\..\external\rttr\include;..\..\..\..\external\rapidjson\include;..\..\..\..\external\glslang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

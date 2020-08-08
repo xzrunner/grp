@@ -2,6 +2,7 @@
 
 #include "renderlab/Node.h"
 
+#include <unirender/ShaderType.h>
 #include <blueprint/BackendAdapter.h>
 
 namespace renderlab
@@ -31,9 +32,8 @@ private:
     static bool IsSameUniforms(const std::vector<bp::PinDesc>& v0,
         const std::vector<bp::PinDesc>& v1);
 
-    static void GetCodeUniforms(const std::string& code,
-        std::vector<bp::PinDesc>& uniforms,
-        std::set<std::string>& names);
+    static void GetCodeUniforms(ur::ShaderType type, const std::string& code,
+        std::vector<bp::PinDesc>& uniforms, std::set<std::string>& names);
 
 private:
     std::string m_vert;

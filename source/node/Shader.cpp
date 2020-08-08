@@ -5,7 +5,7 @@
 #include <blueprint/Connecting.h>
 #include <blueprint/BackendAdapter.h>
 
-#include <rendergraph/node/Shader.h>
+#include <rendergraph/node/ShaderInfo.h>
 
 namespace renderlab
 {
@@ -27,7 +27,7 @@ void Shader::SetVert(const std::string& vert)
         names.insert(p.name);
     }
 
-    GetCodeUniforms(m_vert, uniforms, names);
+    GetCodeUniforms(ur::ShaderType::VertexShader, m_vert, uniforms, names);
     if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
         m_vert_uniforms = uniforms;
         InitInputsFromUniforms();
@@ -49,7 +49,7 @@ void Shader::SetFrag(const std::string& frag)
         names.insert(p.name);
     }
 
-    GetCodeUniforms(m_frag, uniforms, names);
+    GetCodeUniforms(ur::ShaderType::FragmentShader, m_frag, uniforms, names);
     if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
         m_frag_uniforms = uniforms;
         InitInputsFromUniforms();
@@ -112,11 +112,12 @@ bool Shader::IsSameUniforms(const std::vector<bp::PinDesc>& v0,
     return true;
 }
 
-void Shader::GetCodeUniforms(const std::string& code, std::vector<bp::PinDesc>& uniforms,
+void Shader::GetCodeUniforms(ur::ShaderType type, const std::string& code, 
+                             std::vector<bp::PinDesc>& uniforms,
                              std::set<std::string>& names)
 {
     std::vector<rendergraph::Variable> rg_unifs;
-    rendergraph::node::Shader::GetCodeUniforms(code, rg_unifs, names);
+    rendergraph::node::ShaderInfo::GetCodeUniforms(type, code, rg_unifs, names);
     for (auto& u : rg_unifs)
     {
         bp::PinDesc desc;

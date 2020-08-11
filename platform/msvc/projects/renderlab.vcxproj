@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\..\include\renderlab\WxGraphPage.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxOutputWindow.h" />
     <ClInclude Include="..\..\..\include\renderlab\WxPreviewCanvas.h" />
+    <ClInclude Include="..\..\..\include\renderlab\WxShaderPage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
@@ -62,6 +63,7 @@
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxOutputWindow.cpp" />
     <ClCompile Include="..\..\..\source\WxPreviewCanvas.cpp" />
+    <ClCompile Include="..\..\..\source\WxShaderPage.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>renderlab</ProjectName>

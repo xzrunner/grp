@@ -6,7 +6,6 @@
 #include <node0/typedef.h>
 
 #include <wx/panel.h>
-#include <glslang/Public/ShaderLang.h>
 
 class wxNotebook;
 class wxTextCtrl;
@@ -15,6 +14,8 @@ namespace ee0 { class WxCodeCtrl; }
 
 namespace renderlab
 {
+
+class WxShaderPage;
 
 class WxCodePanel : public wxPanel, public ee0::Observer
 {
@@ -36,32 +37,17 @@ private:
 	void ClearAllPagesTitle();
 
 private:
-	class ShaderCompiler
-	{
-	public:
-		ShaderCompiler(EShLanguage lang);
-		~ShaderCompiler();
-
-		bool Validate(const std::string& code, std::string& msg);
-
-	private:
-		ShHandle m_compiler = nullptr;
-
-	}; // ShaderCompiler
-
-private:
 	ee0::SubjectMgrPtr m_sub_mgr = nullptr;
 
 	wxNotebook* m_notebook;
 
-	static const int PAGE_COUNT = 2;
-	ee0::WxCodeCtrl* m_pages[PAGE_COUNT];
+	WxShaderPage* m_vs_page = nullptr;
+	WxShaderPage* m_fs_page = nullptr;
+	ee0::WxCodeCtrl* m_other_page = nullptr;
 
 	n0::SceneNodePtr m_selected = nullptr;
 
 	wxTextCtrl* m_output_wnd = nullptr;
-
-	ShaderCompiler m_vert_c, m_frag_c;
 
 }; // WxCodePanel
 

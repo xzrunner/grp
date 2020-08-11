@@ -3,6 +3,7 @@
 #include "renderlab/node/CustomFunction.h"
 #include "renderlab/RegistNodes.h"
 #include "renderlab/WxOutputWindow.h"
+#include "renderlab/WxShaderPage.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/WxCodeCtrl.h>
@@ -18,126 +19,14 @@
 #include <wx/button.h>
 #include <wx/notebook.h>
 
-namespace glslang {
-
-const TBuiltInResource DefaultTBuiltInResource = {
-    /* .MaxLights = */ 32,
-    /* .MaxClipPlanes = */ 6,
-    /* .MaxTextureUnits = */ 32,
-    /* .MaxTextureCoords = */ 32,
-    /* .MaxVertexAttribs = */ 64,
-    /* .MaxVertexUniformComponents = */ 4096,
-    /* .MaxVaryingFloats = */ 64,
-    /* .MaxVertexTextureImageUnits = */ 32,
-    /* .MaxCombinedTextureImageUnits = */ 80,
-    /* .MaxTextureImageUnits = */ 32,
-    /* .MaxFragmentUniformComponents = */ 4096,
-    /* .MaxDrawBuffers = */ 32,
-    /* .MaxVertexUniformVectors = */ 128,
-    /* .MaxVaryingVectors = */ 8,
-    /* .MaxFragmentUniformVectors = */ 16,
-    /* .MaxVertexOutputVectors = */ 16,
-    /* .MaxFragmentInputVectors = */ 15,
-    /* .MinProgramTexelOffset = */ -8,
-    /* .MaxProgramTexelOffset = */ 7,
-    /* .MaxClipDistances = */ 8,
-    /* .MaxComputeWorkGroupCountX = */ 65535,
-    /* .MaxComputeWorkGroupCountY = */ 65535,
-    /* .MaxComputeWorkGroupCountZ = */ 65535,
-    /* .MaxComputeWorkGroupSizeX = */ 1024,
-    /* .MaxComputeWorkGroupSizeY = */ 1024,
-    /* .MaxComputeWorkGroupSizeZ = */ 64,
-    /* .MaxComputeUniformComponents = */ 1024,
-    /* .MaxComputeTextureImageUnits = */ 16,
-    /* .MaxComputeImageUniforms = */ 8,
-    /* .MaxComputeAtomicCounters = */ 8,
-    /* .MaxComputeAtomicCounterBuffers = */ 1,
-    /* .MaxVaryingComponents = */ 60,
-    /* .MaxVertexOutputComponents = */ 64,
-    /* .MaxGeometryInputComponents = */ 64,
-    /* .MaxGeometryOutputComponents = */ 128,
-    /* .MaxFragmentInputComponents = */ 128,
-    /* .MaxImageUnits = */ 8,
-    /* .MaxCombinedImageUnitsAndFragmentOutputs = */ 8,
-    /* .MaxCombinedShaderOutputResources = */ 8,
-    /* .MaxImageSamples = */ 0,
-    /* .MaxVertexImageUniforms = */ 0,
-    /* .MaxTessControlImageUniforms = */ 0,
-    /* .MaxTessEvaluationImageUniforms = */ 0,
-    /* .MaxGeometryImageUniforms = */ 0,
-    /* .MaxFragmentImageUniforms = */ 8,
-    /* .MaxCombinedImageUniforms = */ 8,
-    /* .MaxGeometryTextureImageUnits = */ 16,
-    /* .MaxGeometryOutputVertices = */ 256,
-    /* .MaxGeometryTotalOutputComponents = */ 1024,
-    /* .MaxGeometryUniformComponents = */ 1024,
-    /* .MaxGeometryVaryingComponents = */ 64,
-    /* .MaxTessControlInputComponents = */ 128,
-    /* .MaxTessControlOutputComponents = */ 128,
-    /* .MaxTessControlTextureImageUnits = */ 16,
-    /* .MaxTessControlUniformComponents = */ 1024,
-    /* .MaxTessControlTotalOutputComponents = */ 4096,
-    /* .MaxTessEvaluationInputComponents = */ 128,
-    /* .MaxTessEvaluationOutputComponents = */ 128,
-    /* .MaxTessEvaluationTextureImageUnits = */ 16,
-    /* .MaxTessEvaluationUniformComponents = */ 1024,
-    /* .MaxTessPatchComponents = */ 120,
-    /* .MaxPatchVertices = */ 32,
-    /* .MaxTessGenLevel = */ 64,
-    /* .MaxViewports = */ 16,
-    /* .MaxVertexAtomicCounters = */ 0,
-    /* .MaxTessControlAtomicCounters = */ 0,
-    /* .MaxTessEvaluationAtomicCounters = */ 0,
-    /* .MaxGeometryAtomicCounters = */ 0,
-    /* .MaxFragmentAtomicCounters = */ 8,
-    /* .MaxCombinedAtomicCounters = */ 8,
-    /* .MaxAtomicCounterBindings = */ 1,
-    /* .MaxVertexAtomicCounterBuffers = */ 0,
-    /* .MaxTessControlAtomicCounterBuffers = */ 0,
-    /* .MaxTessEvaluationAtomicCounterBuffers = */ 0,
-    /* .MaxGeometryAtomicCounterBuffers = */ 0,
-    /* .MaxFragmentAtomicCounterBuffers = */ 1,
-    /* .MaxCombinedAtomicCounterBuffers = */ 1,
-    /* .MaxAtomicCounterBufferSize = */ 16384,
-    /* .MaxTransformFeedbackBuffers = */ 4,
-    /* .MaxTransformFeedbackInterleavedComponents = */ 64,
-    /* .MaxCullDistances = */ 8,
-    /* .MaxCombinedClipAndCullDistances = */ 8,
-    /* .MaxSamples = */ 4,
-    /* .maxMeshOutputVerticesNV = */ 256,
-    /* .maxMeshOutputPrimitivesNV = */ 512,
-    /* .maxMeshWorkGroupSizeX_NV = */ 32,
-    /* .maxMeshWorkGroupSizeY_NV = */ 1,
-    /* .maxMeshWorkGroupSizeZ_NV = */ 1,
-    /* .maxTaskWorkGroupSizeX_NV = */ 32,
-    /* .maxTaskWorkGroupSizeY_NV = */ 1,
-    /* .maxTaskWorkGroupSizeZ_NV = */ 1,
-    /* .maxMeshViewCountNV = */ 4,
-    ///* .maxDualSourceDrawBuffersEXT = */ 1,
-
-    /* .limits = */ {
-        /* .nonInductiveForLoops = */ 1,
-        /* .whileLoops = */ 1,
-        /* .doWhileLoops = */ 1,
-        /* .generalUniformIndexing = */ 1,
-        /* .generalAttributeMatrixVectorIndexing = */ 1,
-        /* .generalVaryingIndexing = */ 1,
-        /* .generalSamplerIndexing = */ 1,
-        /* .generalVariableIndexing = */ 1,
-        /* .generalConstantMatrixVectorIndexing = */ 1,
-    }
-};
-
-}
-
 namespace renderlab
 {
 
 WxCodePanel::WxCodePanel(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr)
 	: wxPanel(parent)
 	, m_sub_mgr(sub_mgr)
-	, m_vert_c(EShLanguage::EShLangVertex)
-	, m_frag_c(EShLanguage::EShLangFragment)
+	//, m_vert_c(EShLanguage::EShLangVertex)
+	//, m_frag_c(EShLanguage::EShLangFragment)
 {
 	InitLayout();
 
@@ -179,19 +68,22 @@ void WxCodePanel::InitLayout()
 	sizer->Add(btn);
 
 	m_notebook = new wxNotebook(this, wxID_ANY);
-	for (int i = 0; i < PAGE_COUNT; ++i)
-	{
-		auto name = "page" + std::to_string(i);
-		auto page = new ee0::WxCodeCtrl(m_notebook, name);
-		page->InitializePrefs("GLSL");
-		page->SetReadOnly(false);
-		m_pages[i] = page;
 
-		Connect(m_pages[i]->GetId(), wxEVT_STC_CHANGE, 
-			wxCommandEventHandler(WxCodePanel::OnTextChange));
+	m_vs_page = new WxShaderPage(m_notebook, "vs", EShLanguage::EShLangVertex);
+	m_fs_page = new WxShaderPage(m_notebook, "fs", EShLanguage::EShLangFragment);
 
-		m_notebook->AddPage(m_pages[i], name);
-	}
+	Connect(m_vs_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	Connect(m_fs_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	m_notebook->AddPage(m_vs_page, m_vs_page->GetName());
+	m_notebook->AddPage(m_fs_page, m_fs_page->GetName());
+
+	m_other_page = new ee0::WxCodeCtrl(m_notebook, "default");
+	Connect(m_other_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	m_notebook->AddPage(m_other_page, m_other_page->GetName());
+
 	sizer->Add(m_notebook, 3, wxEXPAND);
 
 	m_output_wnd = new WxOutputWindow(this);
@@ -202,6 +94,10 @@ void WxCodePanel::InitLayout()
 
 void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 {
+	m_vs_page->Hide();
+	m_fs_page->Hide();
+	m_other_page->Hide();
+
 	auto var_obj = variants.GetVariant("obj");
 	assert(var_obj.m_type == ee0::VT_PVOID);
     const ee0::GameObj obj = *static_cast<const ee0::GameObj*>(var_obj.m_val.pv);
@@ -213,19 +109,26 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 	auto bp_type = bp_node->get_type();
 	if (bp_type == rttr::type::get<node::Shader>())
 	{
+		m_vs_page->Show();
+		m_fs_page->Show();
+
 		auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
-		m_pages[0]->SetText(shader_node->GetVert());
-		m_pages[1]->SetText(shader_node->GetFrag());
+		m_vs_page->SetText(shader_node->GetVert());
+		m_fs_page->SetText(shader_node->GetFrag());
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())
 	{
+		m_other_page->Show();
+
 		auto data_node = std::static_pointer_cast<node::CustomData>(bp_node);
-		m_pages[0]->SetText(data_node->m_code);
+		m_other_page->SetText(data_node->m_code);
 	}
 	else if (bp_type == rttr::type::get<node::CustomFunction>())
 	{
+		m_other_page->Show();
+
 		auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
-		m_pages[0]->SetText(func_node->GetCode());
+		m_other_page->SetText(func_node->GetCode());
 	}
 
 	ClearAllPagesTitle();
@@ -233,9 +136,9 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 
 void WxCodePanel::OnSelectionClear(const ee0::VariantSet& variants)
 {
-	for (int i = 0; i < PAGE_COUNT; ++i) {
-		m_pages[i]->SetText("");
-	}
+	m_vs_page->SetText("");
+	m_fs_page->SetText("");
+	m_other_page->SetText("");
 
 	m_selected = nullptr;
 	ClearAllPagesTitle();
@@ -244,7 +147,12 @@ void WxCodePanel::OnSelectionClear(const ee0::VariantSet& variants)
 void WxCodePanel::OnSavePress(wxCommandEvent& event)
 {
 	int idx = m_notebook->GetSelection();
-	m_notebook->SetPageText(idx, "page" + std::to_string(idx));
+	auto title = m_notebook->GetPageText(idx).ToStdString();
+	if (!title.empty() && title.back() == '*')
+	{
+		title.pop_back();
+		m_notebook->SetPageText(idx, title);
+	}
 
 	if (!m_selected) {
 		return;
@@ -258,39 +166,37 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
 		if (idx == 0) 
 		{
-			std::string code = m_pages[0]->GetText().ToStdString();
 			std::string msg;
-			if (!m_vert_c.Validate(code, msg)) {
+			if (!m_vs_page->IsShaderValid(msg)) {
 				m_output_wnd->SetValue(msg);
 			} else {
 				m_output_wnd->SetValue("");
 			}
-			shader_node->SetVert(code);
-		} 
+			shader_node->SetVert(m_vs_page->GetText().ToStdString());
+		}
 		else if (idx == 1) 
 		{
-			std::string code = m_pages[1]->GetText().ToStdString();
 			std::string msg;
-			if (!m_frag_c.Validate(code, msg)) {
+			if (!m_fs_page->IsShaderValid(msg)) {
 				m_output_wnd->SetValue(msg);
 			} else {
 				m_output_wnd->SetValue("");
 			}
-			shader_node->SetFrag(code);
+			shader_node->SetFrag(m_fs_page->GetText().ToStdString());
 		}
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())
 	{
 		if (idx == 0) {
 			auto data_node = std::static_pointer_cast<node::CustomData>(bp_node);
-			data_node->m_code = m_pages[0]->GetText().ToStdString();
+			data_node->m_code = m_other_page->GetText().ToStdString();
 		}
 	}
 	else if (bp_type == rttr::type::get<node::CustomFunction>())
 	{
 		if (idx == 0) {
 			auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
-			func_node->SetCode(m_pages[0]->GetText().ToStdString());
+			func_node->SetCode(m_other_page->GetText().ToStdString());
 		}
 	}
 
@@ -301,46 +207,24 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 void WxCodePanel::OnTextChange(wxCommandEvent& event)
 {
 	int idx = m_notebook->GetSelection();
-	m_notebook->SetPageText(idx, "page" + std::to_string(idx) + "*");
+	auto title = m_notebook->GetPageText(idx).ToStdString();
+	if (!title.empty() && title.back() != '*') {
+		title.append("*");
+		m_notebook->SetPageText(idx, title);
+	}
 }
 
 void WxCodePanel::ClearAllPagesTitle()
 {
-	for (int i = 0; i < PAGE_COUNT; ++i) {
-		m_notebook->SetPageText(i, "page" + std::to_string(i));
+	for (int i = 0, n = m_notebook->GetPageCount(); i < n; ++i) 
+	{
+		auto title = m_notebook->GetPageText(i).ToStdString();
+		if (!title.empty() && title.back() == '*') 
+		{
+			title.pop_back();
+			m_notebook->SetPageText(i, title);
+		}
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-// class WxCodePanel::ShaderCompiler
-//////////////////////////////////////////////////////////////////////////
-
-WxCodePanel::ShaderCompiler::ShaderCompiler(EShLanguage lang)
-{
-	ShInitialize();
-	ShInitialize();  // also test reference counting of users
-	ShFinalize();    // also test reference counting of users
-
-    m_compiler = ShConstructCompiler(lang, 0);
-}
-
-WxCodePanel::ShaderCompiler::~ShaderCompiler()
-{
-	ShDestruct(m_compiler);
-
-	ShFinalize();
-}
-
-
-bool WxCodePanel::ShaderCompiler::Validate(const std::string& code, std::string& msg)
-{
-	const char* shader_str = code.c_str();
-	int ret = ShCompile(m_compiler, &shader_str, 1, nullptr, EShOptNone, 
-		&glslang::DefaultTBuiltInResource, 0, 100, false, EShMsgDefault);
-
-	msg = ShGetInfoLog(m_compiler);
-
-	return ret != 0;
 }
 
 }

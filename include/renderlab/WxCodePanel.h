@@ -43,7 +43,8 @@ private:
 
 	WxShaderPage* m_vs_page = nullptr;
 	WxShaderPage* m_fs_page = nullptr;
-	ee0::WxCodeCtrl* m_other_page = nullptr;
+	ee0::WxCodeCtrl* m_default_page = nullptr;
+	ee0::WxCodeCtrl* m_fx_page = nullptr;
 
 	n0::SceneNodePtr m_selected = nullptr;
 

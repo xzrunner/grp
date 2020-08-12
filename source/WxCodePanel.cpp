@@ -14,6 +14,7 @@
 #include <blueprint/MessageID.h>
 
 #include <node0/SceneNode.h>
+#include <fxlang/Parser.h>
 
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -79,10 +80,15 @@ void WxCodePanel::InitLayout()
 	m_notebook->AddPage(m_vs_page, m_vs_page->GetName());
 	m_notebook->AddPage(m_fs_page, m_fs_page->GetName());
 
-	m_other_page = new ee0::WxCodeCtrl(m_notebook, "default");
-	Connect(m_other_page->GetId(), wxEVT_STC_CHANGE,
+	m_default_page = new ee0::WxCodeCtrl(m_notebook, "default");
+	Connect(m_default_page->GetId(), wxEVT_STC_CHANGE,
 		wxCommandEventHandler(WxCodePanel::OnTextChange));
-	m_notebook->AddPage(m_other_page, m_other_page->GetName());
+	m_notebook->AddPage(m_default_page, m_default_page->GetName());
+
+	m_fx_page = new ee0::WxCodeCtrl(m_notebook, "fx");
+	Connect(m_fx_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	m_notebook->AddPage(m_fx_page, m_fx_page->GetName());
 
 	sizer->Add(m_notebook, 3, wxEXPAND);
 
@@ -96,7 +102,8 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 {
 	m_vs_page->Hide();
 	m_fs_page->Hide();
-	m_other_page->Hide();
+	m_default_page->Hide();
+	m_fx_page->Hide();
 
 	auto var_obj = variants.GetVariant("obj");
 	assert(var_obj.m_type == ee0::VT_PVOID);
@@ -118,18 +125,20 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())
 	{
-		m_other_page->Show();
+		m_default_page->Show();
 
 		auto data_node = std::static_pointer_cast<node::CustomData>(bp_node);
-		m_other_page->SetText(data_node->m_code);
+		m_default_page->SetText(data_node->m_code);
 	}
 	else if (bp_type == rttr::type::get<node::CustomFunction>())
 	{
-		m_other_page->Show();
+		m_default_page->Show();
 
 		auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
-		m_other_page->SetText(func_node->GetCode());
+		m_default_page->SetText(func_node->GetCode());
 	}
+
+	m_fx_page->Show();
 
 	ClearAllPagesTitle();
 }
@@ -138,7 +147,8 @@ void WxCodePanel::OnSelectionClear(const ee0::VariantSet& variants)
 {
 	m_vs_page->SetText("");
 	m_fs_page->SetText("");
-	m_other_page->SetText("");
+	m_default_page->SetText("");
+	m_fx_page->SetText("");
 
 	m_selected = nullptr;
 	ClearAllPagesTitle();
@@ -152,6 +162,13 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 	{
 		title.pop_back();
 		m_notebook->SetPageText(idx, title);
+	}
+
+	if (idx == 3)
+	{
+		auto str = m_fx_page->GetText().ToStdString();
+		fxlang::Parser parser(str);
+		parser.Parse();
 	}
 
 	if (!m_selected) {
@@ -189,14 +206,14 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 	{
 		if (idx == 0) {
 			auto data_node = std::static_pointer_cast<node::CustomData>(bp_node);
-			data_node->m_code = m_other_page->GetText().ToStdString();
+			data_node->m_code = m_default_page->GetText().ToStdString();
 		}
 	}
 	else if (bp_type == rttr::type::get<node::CustomFunction>())
 	{
 		if (idx == 0) {
 			auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
-			func_node->SetCode(m_other_page->GetText().ToStdString());
+			func_node->SetCode(m_default_page->GetText().ToStdString());
 		}
 	}
 

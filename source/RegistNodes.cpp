@@ -83,6 +83,10 @@ REGIST_NODE_RTTI(Shader, shader,                                                
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),                      \
     rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
 )                                                                                       \
+.property("lang", &renderlab::node::Shader::GetLanguage, &renderlab::node::Shader::SetLanguage) \
+(                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Lang"))                       \
+)                                                                                       \
 )
 
 // control

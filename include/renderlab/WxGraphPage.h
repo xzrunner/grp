@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderlab/Evaluator.h"
+#include "renderlab/EffectBuilder.h"
 
 #include <blueprint/WxGraphPage.h>
 
@@ -27,6 +28,8 @@ public:
 
     auto& GetScriptEnv() const { return m_script; }
 
+    auto& GetEffectBuilder() const { return m_fx_builder; }
+
 protected:
     virtual void OnEvalChangeed() override;
 
@@ -36,6 +39,8 @@ private:
     std::string m_filepath;
 
     std::shared_ptr<rendergraph::ScriptEnv> m_script = nullptr;
+
+    EffectBuilder m_fx_builder;
 
 }; // WxGraphPage
 

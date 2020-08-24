@@ -175,7 +175,9 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
     else if (type == rttr::type::get<node::Shader>())
     {
         auto& src = static_cast<const node::Shader&>(front);
-        static_cast<rendergraph::node::Shader&>(back).SetCodes(src.GetVert(), src.GetFrag());
+        auto& dst = static_cast<rendergraph::node::Shader&>(back);
+        dst.SetLanguage(src.GetLanguage());
+        dst.SetCodes(src.GetVert(), src.GetFrag());
     }
     else if (type == rttr::type::get<node::Texture>())
     {

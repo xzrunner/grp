@@ -136,6 +136,9 @@
     <ClInclude Include="..\..\..\include\renderlab\WxShaderPage.h">
       <Filter>view\code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\renderlab\EffectBuilder.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -195,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxShaderPage.cpp">
       <Filter>view\code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\EffectBuilder.cpp">
+      <Filter>tools\trans</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

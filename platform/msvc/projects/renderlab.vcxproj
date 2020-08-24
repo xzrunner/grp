@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\renderlab\EffectBuilder.h" />
     <ClInclude Include="..\..\..\include\renderlab\Evaluator.h" />
     <ClInclude Include="..\..\..\include\renderlab\MessageID.h" />
     <ClInclude Include="..\..\..\include\renderlab\Node.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="..\..\..\include\renderlab\WxShaderPage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\EffectBuilder.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodePreview.cpp" />

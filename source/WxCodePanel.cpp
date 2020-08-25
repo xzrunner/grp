@@ -107,8 +107,8 @@ void WxCodePanel::InitLayout()
 	Connect(m_notebook->GetId(), wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING,
 		wxBookCtrlEventHandler(WxCodePanel::OnPageChanging));
 
-	m_vs_page = new WxShaderPage(m_notebook, "vs", EShLanguage::EShLangVertex);
-	m_fs_page = new WxShaderPage(m_notebook, "fs", EShLanguage::EShLangFragment);
+	m_vs_page = new WxShaderPage(m_notebook, "vs", shadertrans::ShaderStage::VertexShader, true);
+	m_fs_page = new WxShaderPage(m_notebook, "fs", shadertrans::ShaderStage::PixelShader, true);
 
 	Connect(m_vs_page->GetId(), wxEVT_STC_CHANGE,
 		wxCommandEventHandler(WxCodePanel::OnTextChange));
@@ -252,7 +252,7 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		if (idx == 0)
 		{
 			std::string msg;
-			if (!m_vs_page->IsShaderValid(msg)) {
+			if (!m_vs_page->IsShaderValid(m_lang_type->GetSelection() == 0, msg)) {
 				m_output_wnd->SetValue(msg);
 			} else {
 				m_output_wnd->SetValue("");
@@ -262,7 +262,7 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		else if (idx == 1)
 		{
 			std::string msg;
-			if (!m_fs_page->IsShaderValid(msg)) {
+			if (!m_fs_page->IsShaderValid(m_lang_type->GetSelection() == 0, msg)) {
 				m_output_wnd->SetValue(msg);
 			} else {
 				m_output_wnd->SetValue("");

@@ -2,7 +2,7 @@
 
 #include "ee0/WxCodeCtrl.h"
 
-#include <glslang/Public/ShaderLang.h>
+#include <shadertrans/ShaderValidator.h>
 
 namespace renderlab
 {
@@ -11,26 +11,12 @@ class WxShaderPage : public ee0::WxCodeCtrl
 {
 public:
 	WxShaderPage(wxWindow* parent, const std::string& name,
-		EShLanguage lang);
+		shadertrans::ShaderStage stage, bool glsl);
 
-	bool IsShaderValid(std::string& msg) const;
-
-private:
-	class ShaderCompiler
-	{
-	public:
-		ShaderCompiler(EShLanguage lang);
-		~ShaderCompiler();
-
-		bool Validate(const std::string& code, std::string& msg) const;
-
-	private:
-		ShHandle m_compiler = nullptr;
-
-	}; // ShaderCompiler
+	bool IsShaderValid(bool is_glsl, std::string& msg) const;
 
 private:
-	ShaderCompiler m_compiler;
+	shadertrans::ShaderValidator m_validator;
 
 }; // WxShaderPage
 

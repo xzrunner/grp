@@ -7,6 +7,8 @@
 
 #include <rendergraph/node/ShaderInfo.h>
 
+#include <iostream>
+
 namespace renderlab
 {
 namespace node
@@ -20,18 +22,7 @@ void Shader::SetVert(const std::string& vert)
 
     m_vert = vert;
 
-    std::vector<bp::PinDesc> uniforms;
-
-    std::set<std::string> names;
-    for (auto& p : m_frag_uniforms) {
-        names.insert(p.name);
-    }
-
-    GetCodeUniforms(ur::ShaderType::VertexShader, m_vert, m_lang, uniforms, names);
-    if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
-        m_vert_uniforms = uniforms;
-        InitInputsFromUniforms();
-    }
+    UpdateVertUniforms();
 }
 
 void Shader::SetFrag(const std::string& frag)
@@ -42,18 +33,19 @@ void Shader::SetFrag(const std::string& frag)
 
     m_frag = frag;
 
-    std::vector<bp::PinDesc> uniforms;
+    UpdateFragUniforms();
+}
 
-    std::set<std::string> names;
-    for (auto& p : m_vert_uniforms) {
-        names.insert(p.name);
+void Shader::SetLanguage(rendergraph::node::Shader::Language lang) 
+{ 
+    if (m_lang == lang) {
+        return;
     }
 
-    GetCodeUniforms(ur::ShaderType::FragmentShader, m_frag, m_lang, uniforms, names);
-    if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
-        m_frag_uniforms = uniforms;
-        InitInputsFromUniforms();
-    }
+    m_lang = lang; 
+
+    UpdateVertUniforms();
+    UpdateFragUniforms();
 }
 
 void Shader::InitInputsFromUniforms()
@@ -92,6 +84,46 @@ void Shader::InitInputsFromUniforms()
     Layout();
 
     SetSizeChanged(true);
+}
+
+void Shader::UpdateVertUniforms()
+{
+    std::vector<bp::PinDesc> uniforms;
+
+    std::set<std::string> names;
+    for (auto& p : m_frag_uniforms) {
+        names.insert(p.name);
+    }
+
+    try {
+        GetCodeUniforms(ur::ShaderType::VertexShader, m_vert, m_lang, uniforms, names);
+        if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
+            m_vert_uniforms = uniforms;
+            InitInputsFromUniforms();
+        }
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void Shader::UpdateFragUniforms()
+{
+    std::vector<bp::PinDesc> uniforms;
+
+    std::set<std::string> names;
+    for (auto& p : m_vert_uniforms) {
+        names.insert(p.name);
+    }
+
+    try {
+        GetCodeUniforms(ur::ShaderType::FragmentShader, m_frag, m_lang, uniforms, names);
+        if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
+            m_frag_uniforms = uniforms;
+            InitInputsFromUniforms();
+        }
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 bool Shader::IsSameUniforms(const std::vector<bp::PinDesc>& v0,

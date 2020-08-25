@@ -29,10 +29,13 @@ public:
     void  SetFrag(const std::string& frag);
 
     auto GetLanguage() const { return m_lang; }
-    void SetLanguage(rendergraph::node::Shader::Language lang) { m_lang = lang; }
+    void SetLanguage(rendergraph::node::Shader::Language lang);
 
 private:
     void InitInputsFromUniforms();
+
+    void UpdateVertUniforms();
+    void UpdateFragUniforms();
 
     static bool IsSameUniforms(const std::vector<bp::PinDesc>& v0,
         const std::vector<bp::PinDesc>& v1);

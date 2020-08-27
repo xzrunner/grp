@@ -96,7 +96,7 @@ void Shader::UpdateVertUniforms()
     }
 
     try {
-        GetCodeUniforms(ur::ShaderType::VertexShader, m_vert, m_lang, uniforms, names);
+        GetCodeUniforms(shadertrans::ShaderStage::VertexShader, m_vert, m_lang, uniforms, names);
         if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
             m_vert_uniforms = uniforms;
             InitInputsFromUniforms();
@@ -116,7 +116,7 @@ void Shader::UpdateFragUniforms()
     }
 
     try {
-        GetCodeUniforms(ur::ShaderType::FragmentShader, m_frag, m_lang, uniforms, names);
+        GetCodeUniforms(shadertrans::ShaderStage::PixelShader, m_frag, m_lang, uniforms, names);
         if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
             m_frag_uniforms = uniforms;
             InitInputsFromUniforms();
@@ -144,7 +144,7 @@ bool Shader::IsSameUniforms(const std::vector<bp::PinDesc>& v0,
     return true;
 }
 
-void Shader::GetCodeUniforms(ur::ShaderType stage, const std::string& code, rendergraph::node::Shader::Language lang,
+void Shader::GetCodeUniforms(shadertrans::ShaderStage stage, const std::string& code, rendergraph::node::Shader::Language lang,
                              std::vector<bp::PinDesc>& uniforms, std::set<std::string>& names)
 {
     std::vector<rendergraph::Variable> rg_unifs;

@@ -32,6 +32,9 @@ public:
     auto GetLanguage() const { return m_lang; }
     void SetLanguage(rendergraph::node::Shader::Language lang);
 
+    auto& GetVertUnifs() const { return m_vert_uniforms; }
+    auto& GetFragUnifs() const { return m_frag_uniforms; }
+
 private:
     void InitInputsFromUniforms();
 

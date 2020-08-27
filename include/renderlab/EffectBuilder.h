@@ -11,6 +11,8 @@
 namespace renderlab
 {
 
+class Node;
+
 class EffectBuilder
 {
 public:
@@ -22,7 +24,9 @@ public:
 	auto GetType() const { return m_type; }
 
 private:
-	void InsertNode(const bp::NodePtr& node, const sm::vec2& pos);
+	void InsertNode(const bp::NodePtr& node, const sm::vec2& pos) const;
+
+	std::shared_ptr<Node> BuildShaderNode() const;
 
 private:
 	const ee0::SubjectMgrPtr m_sub_mgr = nullptr;

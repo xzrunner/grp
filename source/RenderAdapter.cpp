@@ -24,6 +24,8 @@
 
 #include <boost/filesystem.hpp>
 
+#include <iostream>
+
 #include <assert.h>
 
 namespace
@@ -177,7 +179,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::Shader&>(front);
         auto& dst = static_cast<rendergraph::node::Shader&>(back);
         dst.SetLanguage(src.GetLanguage());
-        dst.SetCodes(src.GetVert(), src.GetFrag());
+        dst.SetCodes(src.GetVert(), src.GetFrag(), std::cerr);
     }
     else if (type == rttr::type::get<node::Texture>())
     {

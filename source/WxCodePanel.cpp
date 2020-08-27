@@ -238,7 +238,10 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 	{
 		auto fx = m_fx_page->GetText().ToStdString();
 		auto type = static_cast<fxlang::EffectType>(m_fx_type->GetSelection());
-		m_fx_builder.Build(fx, type);
+
+		std::stringstream ss;
+		m_fx_builder.Build(fx, type, ss);
+		m_output_wnd->SetValue(ss.str());
 
 		return;
 	}
@@ -251,9 +254,9 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
 		if (idx == 0)
 		{
-			std::string msg;
-			if (!m_vs_page->IsShaderValid(m_lang_type->GetSelection() == 0, msg)) {
-				m_output_wnd->SetValue(msg);
+			std::stringstream ss;
+			if (!m_vs_page->IsShaderValid(m_lang_type->GetSelection() == 0, ss)) {
+				m_output_wnd->SetValue(ss.str());
 			} else {
 				m_output_wnd->SetValue("");
 			}
@@ -261,9 +264,9 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		}
 		else if (idx == 1)
 		{
-			std::string msg;
-			if (!m_fs_page->IsShaderValid(m_lang_type->GetSelection() == 0, msg)) {
-				m_output_wnd->SetValue(msg);
+			std::stringstream ss;
+			if (!m_fs_page->IsShaderValid(m_lang_type->GetSelection() == 0, ss)) {
+				m_output_wnd->SetValue(ss.str());
 			} else {
 				m_output_wnd->SetValue("");
 			}

@@ -15,6 +15,7 @@
 #include <node0/SceneNode.h>
 #include <node2/CompBoundingBox.h>
 #include <node2/CompTransform.h>
+#include <shadertrans/ShaderValidator.h>
 
 #include <iostream>
 
@@ -26,7 +27,8 @@ EffectBuilder::EffectBuilder(const ee0::SubjectMgrPtr& sub_mgr)
 {
 }
 
-void EffectBuilder::Build(const std::string& fx, fxlang::EffectType type)
+void EffectBuilder::Build(const std::string& fx, fxlang::EffectType type,
+                          std::ostream& out)
 {
     m_sub_mgr->NotifyObservers(ee0::MSG_SCENE_NODE_CLEAR);
 
@@ -50,7 +52,7 @@ void EffectBuilder::Build(const std::string& fx, fxlang::EffectType type)
 
     bp::make_connecting(cull->GetAllOutput()[0], ztest->GetAllInput()[0]);
 
-    auto shader = BuildShaderNode();
+    auto shader = BuildShaderNode(out);
     InsertNode(shader, { -200, -150 });
 
     auto bind = std::make_shared<node::Bind>();
@@ -95,7 +97,7 @@ void EffectBuilder::InsertNode(const bp::NodePtr& bp_node, const sm::vec2& pos) 
 }
 
 std::shared_ptr<Node> 
-EffectBuilder::BuildShaderNode() const
+EffectBuilder::BuildShaderNode(std::ostream& out) const
 {
 	fxlang::EffectParser parser(m_fx, m_type);
     try {
@@ -119,6 +121,13 @@ EffectBuilder::BuildShaderNode() const
     auto& effect = parser.GetEffect();
     fxlang::ShaderGenerator gen(effect);
     gen.Gen(vs, fs);
+
+    shadertrans::ShaderValidator valid_vs(shadertrans::ShaderStage::VertexShader);
+    valid_vs.Validate(vs, shader->GetLanguage() == rendergraph::node::Shader::Language::GLSL, out);
+
+    shadertrans::ShaderValidator valid_fs(shadertrans::ShaderStage::PixelShader);
+    valid_fs.Validate(fs, shader->GetLanguage() == rendergraph::node::Shader::Language::GLSL, out);
+
     shader->SetVert(vs);
     shader->SetFrag(fs);
 

@@ -13,7 +13,7 @@ public:
 	WxShaderPage(wxWindow* parent, const std::string& name,
 		shadertrans::ShaderStage stage, bool glsl);
 
-	bool IsShaderValid(bool is_glsl, std::string& msg) const;
+	bool IsShaderValid(bool is_glsl, std::ostream& out) const;
 
 private:
 	shadertrans::ShaderValidator m_validator;

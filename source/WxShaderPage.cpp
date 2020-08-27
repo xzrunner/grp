@@ -12,10 +12,10 @@ WxShaderPage::WxShaderPage(wxWindow* parent, const std::string& name,
     SetReadOnly(false);
 }
 
-bool WxShaderPage::IsShaderValid(bool is_glsl, std::string& msg) const
+bool WxShaderPage::IsShaderValid(bool is_glsl, std::ostream& out) const
 {
     std::string code = GetText().ToStdString();
-    return m_validator.Validate(code, is_glsl, msg);
+    return m_validator.Validate(code, is_glsl, out);
 }
 
 }

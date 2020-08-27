@@ -148,7 +148,7 @@ void Shader::GetCodeUniforms(shadertrans::ShaderStage stage, const std::string& 
                              std::vector<bp::PinDesc>& uniforms, std::set<std::string>& names)
 {
     std::vector<rendergraph::Variable> rg_unifs;
-    rendergraph::node::ShaderInfo::GetCodeUniforms(stage, code, lang, rg_unifs, names);
+    rendergraph::node::ShaderInfo::GetCodeUniforms(stage, code, lang, rg_unifs, names, std::cerr);
     for (auto& u : rg_unifs)
     {
         bp::PinDesc desc;

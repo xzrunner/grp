@@ -237,11 +237,16 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 	if (!m_selected) 
 	{
 		auto fx = m_fx_page->GetText().ToStdString();
-		auto type = static_cast<fxlang::EffectType>(m_fx_type->GetSelection());
+		if (!fx.empty())
+		{
+			auto type = static_cast<fxlang::EffectType>(m_fx_type->GetSelection());
 
-		std::stringstream ss;
-		m_fx_builder.Build(fx, type, ss);
-		m_output_wnd->SetValue(ss.str());
+			std::stringstream ss;
+			m_fx_builder.Build(fx, type, ss);
+			m_output_wnd->SetValue(ss.str());
+
+			m_sub_mgr->NotifyObservers(bp::MSG_BP_CONN_REBUILD);
+		}
 
 		return;
 	}

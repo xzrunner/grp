@@ -61,6 +61,10 @@ GRP_DEFINE_NODE(Model, model, false, Resource, \
     std::string filepath;                      \
 )
 
+GRP_DEFINE_NODE(String, string, false, Value, \
+    std::string val;                          \
+)
+
 GRP_DEFINE_NODE(SeparableSSS, separable_sss, false, Pipeline, \
     int      nsamples = 7;                                    \
     sm::vec3 strength = sm::vec3(0.48f, 0.41f, 0.28f);        \

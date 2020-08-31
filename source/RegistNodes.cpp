@@ -89,6 +89,15 @@ REGIST_NODE_RTTI(Shader, shader,                                                
 )                                                                                       \
 )
 
+// value
+REGIST_NODE_RTTI(String, string,                                                        \
+.property("val", &renderlab::node::String::val)                                         \
+(                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Value")),                    \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
+)                                                                                       \
+)
+
 // control
 REGIST_NODE_RTTI_DEFAULT(OutputToScreen, output_to_screen)
 REGIST_NODE_RTTI(PassEnd, pass_end,                                                             \

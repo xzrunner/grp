@@ -14,6 +14,14 @@ namespace renderlab
 namespace node
 {
 
+Shader::Shader()
+    : Node("Shader", false)
+{
+    InitPins("shader");
+
+    SetGroup("Resource");
+}
+
 void Shader::SetVert(const std::string& vert)
 {
     if (m_vert == vert) {

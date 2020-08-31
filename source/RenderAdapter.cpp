@@ -39,6 +39,7 @@ std::vector<std::pair<int, rendergraph::VariableType>> PAIR_TYPES =
 	{ renderlab::PIN_RENDERTARGET,  rendergraph::VariableType::RenderTarget },
 	{ renderlab::PIN_SHADER,        rendergraph::VariableType::Shader },
 	{ renderlab::PIN_MODEL,         rendergraph::VariableType::Model },
+	{ bp::PIN_STRING,               rendergraph::VariableType::String },
 	{ renderlab::PIN_INT,           rendergraph::VariableType::Int },
 	{ renderlab::PIN_BOOL,          rendergraph::VariableType::Bool },
 	{ renderlab::PIN_VECTOR1,       rendergraph::VariableType::Vector1 },

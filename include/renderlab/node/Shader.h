@@ -16,13 +16,7 @@ namespace node
 class Shader : public Node
 {
 public:
-    Shader()
-        : Node("Shader", false)
-    {
-        InitPins("shader");
-
-        SetGroup("Resource");
-    }
+    Shader();
 
     auto& GetVert() const { return m_vert; }
     void  SetVert(const std::string& vert);

@@ -19,7 +19,7 @@ rttr::registration::class_<renderlab::node::PARM_NODE_TYPE>(XSTR(RTTR_NAME))
 .constructor<>()
 
 #define PARAM_INFO(id, type, name, member, default_val)        \
-.property(#name, &renderlab::node::##PARM_NODE_TYPE::member)  \
+.property(#name, &renderlab::node::##PARM_NODE_TYPE::member)   \
 (                                                              \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(#id)) \
 )

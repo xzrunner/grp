@@ -19,6 +19,7 @@
 #include <rendergraph/node/Clear.h>
 #include <rendergraph/node/CustomData.h>
 #include <rendergraph/node/AttachRT.h>
+#include <rendergraph/node/String.h>
 
 namespace renderlab
 {
@@ -63,6 +64,7 @@ GRP_DEFINE_NODE(Model, model, false, Resource, \
 
 GRP_DEFINE_NODE(String, string, false, Value, \
     std::string val;                          \
+    rendergraph::node::String::Type type;     \
 )
 
 GRP_DEFINE_NODE(SeparableSSS, separable_sss, false, Pipeline, \

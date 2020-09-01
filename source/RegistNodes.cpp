@@ -93,8 +93,12 @@ REGIST_NODE_RTTI(Shader, shader,                                                
 REGIST_NODE_RTTI(String, string,                                                        \
 .property("val", &renderlab::node::String::val)                                         \
 (                                                                                       \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Value")),                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Value")),                     \
     rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
+)                                                                                       \
+.property("type", &renderlab::node::String::type)                                       \
+(                                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))                       \
 )                                                                                       \
 )
 

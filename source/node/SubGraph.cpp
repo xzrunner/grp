@@ -61,7 +61,6 @@ void SubGraph::LoadFromJson(const ur::Device& dev, const std::string& dir,
 	}
 	else
 	{
-		PrepareGraph();
 		m_graph->SetFrontToBackCB([&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
 			RenderAdapter::Front2Back(dev, front, back, dir);
 		});

@@ -256,8 +256,8 @@
                         "small_title_font": false
                     },
                     "name": "node16",
-                    "vert": "#version 330 core\\nlayout (location = 0) in vec3 aPos;\\nvoid main()\\n{\\n    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\\n}",
-                    "frag": "#version 330 core\\nout vec4 FragColor;\\nvoid main()\\n{\\n    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\\n}"
+                    "vert": "#version 330 core\nlayout (location = 0) in vec3 aPos;\nvoid main()\n{\n    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n}",
+                    "frag": "#version 330 core\nout vec4 FragColor;\nvoid main()\n{\n    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n}"
                 },
                 "comp_type": "bp_node",
                 "connection": [

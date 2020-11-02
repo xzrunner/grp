@@ -206,6 +206,12 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 		auto func_node = std::static_pointer_cast<node::CustomFunction>(bp_node);
 		m_default_page->SetText(func_node->GetCode());
 	}
+	else if (bp_type == rttr::type::get<node::ShaderGraph>())
+	{
+		m_notebook->AddPage(m_fs_page, m_fs_page->GetName());
+		auto sg_node = std::static_pointer_cast<node::ShaderGraph>(bp_node);
+		m_fs_page->SetText(sg_node->m_shader_code);
+	}
 
 	ClearAllPagesTitle();
 }

@@ -8,6 +8,10 @@
 
 #define NODES_GROUP_NAME Resource
 
+#define PARM_NODE_TYPE ShaderGraph
+#define PARM_NODE_NAME shader_graph
+#include EXE_FILEPATH
+
 #define PARM_NODE_TYPE RenderTarget
 #define PARM_NODE_NAME render_target
 #include EXE_FILEPATH

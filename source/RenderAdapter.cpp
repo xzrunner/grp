@@ -7,6 +7,7 @@
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
+#include <shaderlab/ShaderAdapter.h>
 
 #include <cpputil/StringHelper.h>
 #include <unirender/Texture.h>
@@ -17,6 +18,7 @@
 #include <rendergraph/node/Shader.h>
 #include <rendergraph/node/Model.h>
 #include <rendergraph/node/SubGraph.h>
+#include <rendergraph/node/ShaderGraph.h>
 #include <model/Model.h>
 #include <model/ModelInstance.h>
 #include <facade/ImageLoader.h>
@@ -181,6 +183,14 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& dst = static_cast<rendergraph::node::Shader&>(back);
         dst.SetLanguage(src.GetLanguage());
         dst.SetCodes(src.GetVert(), src.GetFrag(), std::cerr);
+    }
+    else if (type == rttr::type::get<node::ShaderGraph>())
+    {
+        auto& src = static_cast<const node::ShaderGraph&>(front);
+        auto& dst = static_cast<rendergraph::node::ShaderGraph&>(back);
+        auto shader_code = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev);
+        const_cast<node::ShaderGraph&>(src).m_shader_code = shader_code;
+        dst.SetShaderCode(shader_code);
     }
     else if (type == rttr::type::get<node::Texture>())
     {

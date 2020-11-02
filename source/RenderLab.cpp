@@ -16,11 +16,17 @@
 #include <node2/UpdateSystem.h>
 #include <renderpipeline/RenderPipeline.h>
 #include <rendergraph/RenderGraph.h>
+#include <shaderlab/ReflectPropTypes.h>
 
 namespace bp
 {
 extern void regist_sm_rttr();
 extern void regist_pt0_rttr();
+}
+
+namespace shaderlab
+{
+extern void nodes_regist_rttr();
 }
 
 namespace renderlab
@@ -48,6 +54,9 @@ void RenderLab::RegistRTTR()
 
     prop_types_regist_rttr();
     nodes_regist_rttr();
+
+	shaderlab::prop_types_regist_rttr();
+	shaderlab::nodes_regist_rttr();
 }
 
 void RenderLab::Init()

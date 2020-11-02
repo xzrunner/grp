@@ -260,6 +260,8 @@ int main()
     init_gl();
 
     auto dev = ur::CreateDevice(ur::APIType::OpenGL);
+    dev->Init();
+
     auto ctx = ur::CreateContext(ur::APIType::OpenGL, *dev, nullptr);
 
     ns::RegistCallback::Init();

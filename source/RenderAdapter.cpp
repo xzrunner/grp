@@ -189,8 +189,8 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::ShaderGraph&>(front);
         auto& dst = static_cast<rendergraph::node::ShaderGraph&>(back);
 
-        auto fs = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev);
-        std::vector<std::pair<size_t, ur::TexturePtr>> textures;
+        std::vector<std::pair<std::string, ur::TexturePtr>> textures;
+        auto fs = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, textures);
         dst.Init(dev, fs, textures);
 
         const_cast<node::ShaderGraph&>(src).m_vert = dst.GetVert();

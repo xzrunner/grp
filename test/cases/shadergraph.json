@@ -4,7 +4,7 @@
             {
                 "position": [
                     -158.2032470703125,
-                    -26.04553985595703
+                    -27.145538330078126
                 ],
                 "comp_type": "n2_transform"
             },
@@ -28,10 +28,10 @@
                         "small_title_font": false
                     },
                     "name": "node0",
-                    "filepath": "..\\shadergraph\\add.json",
+                    "filepath": "..\\shadergraph\\sample_texture2d.json",
                     "vert_shader": "image",
                     "vert": "\n#version 330 core\nlayout (location = 0) in vec2 aPos;\nlayout (location = 1) in vec2 aTexCoord;\n\nout vec2 TexCoord;\n\nvoid main()\n{\n\tgl_Position = vec4(aPos, 0.0, 1.0);\n\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\n}\n",
-                    "frag": "#version 330 core\nout vec4 FragColor;\n\nvoid main()\n{\nvec4 f4 = vec4(0.000000, 0.500000, 0.000000, 0.000000);\nvec4 f40 = vec4(0.500000, 0.000000, 0.000000, 1.000000);\nvec4 add = f40 + f4;\nFragColor = vec4(add);\n\n}\n\t",
+                    "frag": "#version 330 core\nin vec2 TexCoord;\nuniform sampler2D tex;\nout vec4 FragColor;\n\nvoid main()\n{\nvec4 rgba = texture(tex, TexCoord);\n\nFragColor = vec4(rgba);\n\n}\n\t",
                     "props": []
                 },
                 "comp_type": "bp_node",
@@ -356,7 +356,7 @@
                     },
                     "name": "node21",
                     "type": "quad",
-                    "layout": "pos_norm_tex",
+                    "layout": "pos_tex",
                     "props": []
                 },
                 "comp_type": "bp_node",

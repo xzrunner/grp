@@ -188,9 +188,13 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
     {
         auto& src = static_cast<const node::ShaderGraph&>(front);
         auto& dst = static_cast<rendergraph::node::ShaderGraph&>(back);
-        auto shader_code = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev);
-        const_cast<node::ShaderGraph&>(src).m_shader_code = shader_code;
-        dst.SetShaderCode(shader_code);
+
+        auto fs = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev);
+        std::vector<std::pair<size_t, ur::TexturePtr>> textures;
+        dst.Init(dev, fs, textures);
+
+        const_cast<node::ShaderGraph&>(src).m_vert = dst.GetVert();
+        const_cast<node::ShaderGraph&>(src).m_frag = dst.GetFrag();
     }
     else if (type == rttr::type::get<node::Texture>())
     {

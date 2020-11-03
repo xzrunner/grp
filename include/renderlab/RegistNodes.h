@@ -20,6 +20,7 @@
 #include <rendergraph/node/CustomData.h>
 #include <rendergraph/node/AttachRT.h>
 #include <rendergraph/node/String.h>
+#include <rendergraph/node/ShaderGraph.h>
 
 namespace renderlab
 {

@@ -91,4 +91,9 @@ void WxPreviewCanvas::DrawForeground2D() const
 {
 }
 
+void WxPreviewCanvas::OnTimer()
+{
+    SetDirty();
+}
+
 }

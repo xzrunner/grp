@@ -29,6 +29,8 @@ protected:
     virtual void DrawForeground3D() const override;
     virtual void DrawForeground2D() const override;
 
+    virtual void OnTimer() override;
+
 private:
     const WxGraphPage* m_graph_page = nullptr;
 

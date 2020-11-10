@@ -192,7 +192,8 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
 
         std::vector<std::pair<std::string, ur::TexturePtr>> textures;
         bool time_updater;
-        auto fs = shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, textures, time_updater);
+        std::string vs, fs;
+        shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, time_updater);
         dst.Init(dev, fs, textures, time_updater);
 
         const_cast<node::ShaderGraph&>(src).m_vert = dst.GetVert();

@@ -5,6 +5,7 @@
 
 #include <rendergraph/typedef.h>
 #include <rendergraph/Variable.h>
+#include <rendergraph/DrawList.h>
 
 #include <boost/noncopyable.hpp>
 
@@ -12,7 +13,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace rendergraph { class DrawList; class RenderContext; }
+namespace rendergraph { class RenderContext; }
 
 namespace renderlab
 {

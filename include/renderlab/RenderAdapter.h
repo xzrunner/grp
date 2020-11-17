@@ -9,6 +9,8 @@ namespace ur { class Device; }
 namespace renderlab
 {
 
+class Evaluator;
+
 class RenderAdapter
 {
 public:
@@ -17,6 +19,9 @@ public:
 
     static void Front2Back(const ur::Device& dev, const bp::Node& front,
         dag::Node<rendergraph::Variable>& back, const std::string& dir);
+
+    static void BuildRenderer(const std::string& filepath, const ur::Device& dev,
+        Evaluator& eval);
 
 }; // RenderAdapter
 

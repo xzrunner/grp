@@ -1,12 +1,14 @@
 #include "renderlab/RenderAdapter.h"
 #include "renderlab/PinType.h"
 #include "renderlab/RegistNodes.h"
+#include "renderlab/Evaluator.h"
 #include "renderlab/node/CustomFunction.h"
 #include "renderlab/node/Shader.h"
 #include "renderlab/node/SubGraph.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
+#include <blueprint/CompNode.h>
 #include <shaderlab/ShaderAdapter.h>
 
 #include <cpputil/StringHelper.h>
@@ -23,6 +25,10 @@
 #include <model/ModelInstance.h>
 #include <facade/ImageLoader.h>
 #include <facade/ResPool.h>
+#include <js/RapidJsonHelper.h>
+#include <ns/CompFactory.h>
+#include <node0/CompComplex.h>
+#include <node0/SceneNode.h>
 
 #include <boost/filesystem.hpp>
 
@@ -191,10 +197,14 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         dst.SetVertexShader(src.m_vert_shader);
 
         std::vector<std::pair<std::string, ur::TexturePtr>> textures;
-        bool time_updater;
         std::string vs, fs;
-        shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, time_updater);
-        dst.Init(dev, fs, textures, time_updater);
+        uint32_t updaters = 0;
+        shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, updaters);
+        dst.Init(dev, vs, fs, textures);
+        auto shader = dst.GetShader();
+        if (shader) {
+            shaderlab::ShaderAdapter::InitShaderUpdaters(*shader, updaters);
+        }
 
         const_cast<node::ShaderGraph&>(src).m_vert = dst.GetVert();
         const_cast<node::ShaderGraph&>(src).m_frag = dst.GetFrag();
@@ -399,5 +409,43 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
 //    back.SetImports(imports);
 //    back.SetExports(exports);
 //}
+
+void RenderAdapter::BuildRenderer(const std::string& filepath, const ur::Device& dev, 
+                                  Evaluator& eval)
+{
+    rapidjson::Document doc;
+    js::RapidJsonHelper::ReadFromFile(filepath.c_str(), doc);
+
+    auto dir = boost::filesystem::path(filepath).parent_path().string();
+    n0::CompAssetPtr casset = ns::CompFactory::Instance()->CreateAsset(dev, doc, dir);
+    if (!casset) {
+        return;
+    }
+
+    assert(casset->TypeID() == n0::GetAssetUniqueTypeID<n0::CompComplex>());
+
+    bp::BackendGraph<rendergraph::Variable> front_eval("rendergraph", "renderlab", [&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
+        RenderAdapter::Front2Back(dev, front, back, dir);
+    });
+
+    std::vector<bp::NodePtr> nodes;
+    casset->Traverse([&](const n0::SceneNodePtr& node)->bool
+    {
+        if (!node->HasUniqueComp<bp::CompNode>()) {
+            return true;
+        }
+
+        auto& cnode = node->GetUniqueComp<bp::CompNode>();
+        auto bp_node = cnode.GetNode();
+        front_eval.OnAddNode(*bp_node);
+
+        nodes.push_back(bp_node);
+
+        return true;
+    });
+    front_eval.OnRebuildConnection();
+
+    eval.Rebuild(nodes, front_eval);
+}
 
 }

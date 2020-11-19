@@ -3,6 +3,7 @@
 #include <blueprint/typedef.h>
 #include <blueprint/BackendGraph.h>
 
+#include <unirender/typedef.h>
 #include <rendergraph/typedef.h>
 #include <rendergraph/Variable.h>
 #include <rendergraph/DrawList.h>
@@ -31,11 +32,15 @@ public:
 
     bool IsEmpty() const { return m_passes.empty(); }
 
+    void SetInputVar(const std::string& name, const ur::TexturePtr& tex);
+
 private:
     void Clear();
 
 private:
     std::vector<std::unique_ptr<rendergraph::DrawList>> m_passes;
+
+    std::vector<std::pair<rendergraph::VariableType, std::string>> m_input_vars;
 
 }; // Evaluator
 

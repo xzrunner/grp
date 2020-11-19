@@ -9,6 +9,7 @@
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
 #include <blueprint/CompNode.h>
+#include <blueprint/NSCompNode.h>
 #include <shaderlab/ShaderAdapter.h>
 
 #include <cpputil/StringHelper.h>
@@ -197,17 +198,66 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         dst.SetVertexShader(src.m_vert_shader);
 
         std::vector<std::pair<std::string, ur::TexturePtr>> textures;
+        std::vector<std::pair<shadergraph::VarType, std::string>> input_vars;
         std::string vs, fs;
         uint32_t updaters = 0;
-        shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, updaters);
-        dst.Init(dev, vs, fs, textures);
+        shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, input_vars, updaters);
+        dst.Init(dev, vs, fs, textures, input_vars);
         auto shader = dst.GetShader();
         if (shader) {
             shaderlab::ShaderAdapter::InitShaderUpdaters(*shader, updaters);
         }
 
+        // shader_graph back to front
         const_cast<node::ShaderGraph&>(src).m_vert = dst.GetVert();
         const_cast<node::ShaderGraph&>(src).m_frag = dst.GetFrag();
+        auto& inputs = const_cast<std::vector<std::shared_ptr<bp::Pin>>&>(src.GetAllInput());
+        inputs.clear();
+        inputs.reserve(input_vars.size());
+        for (auto& v : input_vars)
+        {
+            int type = bp::PIN_ANY_VAR;
+            switch (v.first)
+            {
+            case shadergraph::VarType::Int:
+                type = PIN_INT;
+                break;
+            case shadergraph::VarType::Bool:
+                type = PIN_BOOL;
+                break;
+            case shadergraph::VarType::Float:
+                type = PIN_VECTOR1;
+                break;
+            case shadergraph::VarType::Float2:
+                type = PIN_VECTOR2;
+                break;
+            case shadergraph::VarType::Float3:
+                type = PIN_VECTOR3;
+                break;
+            case shadergraph::VarType::Float4:
+                type = PIN_VECTOR4;
+                break;
+            case shadergraph::VarType::Matrix2:
+                type = PIN_MATRIX2;
+                break;
+            case shadergraph::VarType::Matrix3:
+                type = PIN_MATRIX3;
+                break;
+            case shadergraph::VarType::Matrix4:
+                type = PIN_MATRIX4;
+                break;
+            case shadergraph::VarType::Sampler2D:
+                type = PIN_SAMPLER2D;
+                break;
+            case shadergraph::VarType::SamplerCube:
+                type = PIN_SAMPLE_CUBE;
+                break;
+            default:
+                assert(0);
+            }
+            inputs.push_back(std::make_shared<bp::Pin>(true, 0, type, v.second, src));
+        }
+        bp::NodeLayout::UpdateNodeStyle(const_cast<node::ShaderGraph&>(src));
     }
     else if (type == rttr::type::get<node::Texture>())
     {
@@ -422,8 +472,6 @@ void RenderAdapter::BuildRenderer(const std::string& filepath, const ur::Device&
         return;
     }
 
-    assert(casset->TypeID() == n0::GetAssetUniqueTypeID<n0::CompComplex>());
-
     bp::BackendGraph<rendergraph::Variable> front_eval("rendergraph", "renderlab", [&](const bp::Node& front, dag::Node<rendergraph::Variable>& back) {
         RenderAdapter::Front2Back(dev, front, back, dir);
     });
@@ -443,6 +491,11 @@ void RenderAdapter::BuildRenderer(const std::string& filepath, const ur::Device&
 
         return true;
     });
+
+    assert(casset->TypeID() == n0::GetAssetUniqueTypeID<n0::CompComplex>());
+    auto ccomplex = std::static_pointer_cast<n0::CompComplex>(casset);
+    bp::NSCompNode::LoadConnection(ccomplex->GetAllChildren(), doc["nodes"]);
+
     front_eval.OnRebuildConnection();
 
     eval.Rebuild(nodes, front_eval);

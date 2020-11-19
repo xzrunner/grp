@@ -59,8 +59,18 @@ void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes,
         }
         auto rg_node = std::static_pointer_cast<rendergraph::Node>(back_node);
         std::vector<rendergraph::NodePtr> nodes;
-        rendergraph::DrawList::GetAntecedentNodes(rg_node, nodes);
+        rendergraph::DrawList::GetAntecedentNodes(rg_node, nodes, false);
         m_passes.push_back(std::make_unique<rendergraph::DrawList>(nodes));
+    }
+
+    // input vars
+    for (auto& n : nodes) 
+    {
+        if (n->get_type() == rttr::type::get<node::Input>()) 
+        {
+            auto input = std::static_pointer_cast<node::Input>(n);
+            m_input_vars.push_back({ input->m_var_type, input->m_var_name });
+        }
     }
 }
 
@@ -72,6 +82,13 @@ void Evaluator::Draw(const std::shared_ptr<rendergraph::RenderContext>& rc,
         if (finished) {
             break;
         }
+    }
+}
+
+void Evaluator::SetInputVar(const std::string& name, const ur::TexturePtr& tex)
+{
+    for (auto& p : m_passes) {
+        p->SetInputVar(name, tex);
     }
 }
 

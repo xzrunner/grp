@@ -198,7 +198,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         dst.SetVertexShader(src.m_vert_shader);
 
         std::vector<std::pair<std::string, ur::TexturePtr>> textures;
-        std::vector<std::pair<shadergraph::VarType, std::string>> input_vars;
+        std::vector<shadergraph::Variant> input_vars;
         std::string vs, fs;
         uint32_t updaters = 0;
         shaderlab::ShaderAdapter::BuildShaderCode(src.m_filepath, dev, vs, fs, textures, input_vars, updaters);
@@ -217,7 +217,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         for (auto& v : input_vars)
         {
             int type = bp::PIN_ANY_VAR;
-            switch (v.first)
+            switch (v.type)
             {
             case shadergraph::VarType::Int:
                 type = PIN_INT;
@@ -255,7 +255,7 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
             default:
                 assert(0);
             }
-            inputs.push_back(std::make_shared<bp::Pin>(true, 0, type, v.second, src));
+            inputs.push_back(std::make_shared<bp::Pin>(true, 0, type, v.name, src));
         }
         bp::NodeLayout::UpdateNodeStyle(const_cast<node::ShaderGraph&>(src));
     }

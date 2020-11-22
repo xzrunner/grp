@@ -49,7 +49,7 @@ void Shader::SetLanguage(rendergraph::node::Shader::Language lang)
 }
 
 void Shader::InitInputsFromUniforms()
-{
+{    
     std::vector<bp::PinDesc> uniforms;
     for (auto& us : m_uniforms) {
         std::copy(us.begin(), us.end(), std::back_inserter(uniforms));
@@ -72,17 +72,33 @@ void Shader::InitInputsFromUniforms()
         return;
     }
 
-    for (int i = rendergraph::node::Shader::I_MAX_NUM, n = m_all_input.size(); i < n; ++i) {
-        for (auto& c : m_all_input[i]->GetConnecting()) {
-            bp::disconnect(c);
-        }
+    std::vector<std::shared_ptr<bp::Pin>> cache_old_pins;
+    for (auto& p : m_all_input) {
+        cache_old_pins.push_back(p);
     }
-    m_all_input.erase(m_all_input.begin() + rendergraph::node::Shader::I_MAX_NUM, m_all_input.end());
 
-    for (auto& desc : uniforms) {
-        auto pin = std::make_shared<bp::Pin>(true, m_all_input.size(), desc.type, desc.name, *this);
+    m_all_input.erase(m_all_input.begin() + rendergraph::node::Shader::I_MAX_NUM, m_all_input.end());
+    for (auto& desc : uniforms) 
+    {
+        std::shared_ptr<bp::Pin> pin = nullptr;
+
+        for (auto& old : cache_old_pins)
+        {
+            if (old->GetName() == desc.name &&
+                old->GetOldType() == desc.type) {
+                pin = old;
+                break;
+            }
+        }
+        if (pin) {
+            pin->SetPosIdx(m_all_input.size());
+        } else {
+            pin = std::make_shared<bp::Pin>(true, m_all_input.size(), desc.type, desc.name, *this);
+        }
+
         m_all_input.push_back(pin);
     }
+
     Layout();
 
     SetSizeChanged(true);

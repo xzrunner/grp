@@ -9,7 +9,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -22,6 +22,7 @@
             {
                 "node_type": "renderlab::clear",
                 "node_val": {
+                    "title": "Clear",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -73,7 +74,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -86,6 +87,7 @@
             {
                 "node_type": "renderlab::bind",
                 "node_val": {
+                    "title": "Bind",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -128,7 +130,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -141,6 +143,7 @@
             {
                 "node_type": "renderlab::draw",
                 "node_val": {
+                    "title": "Draw",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -182,7 +185,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -195,6 +198,7 @@
             {
                 "node_type": "renderlab::primitive_shape",
                 "node_val": {
+                    "title": "PrimitiveShape",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -238,7 +242,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -251,13 +255,15 @@
             {
                 "node_type": "renderlab::shader",
                 "node_val": {
+                    "title": "Shader",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
                     },
                     "name": "node22",
-                    "vert": "#version 330 core\r\nlayout (location = 0) in vec3 aPos;\r\nlayout (location = 1) in vec2 aTexCoord;\r\n\r\nout vec2 TexCoord;\r\n\r\nuniform mat4 transform;\r\n\r\nvoid main()\r\n{\r\n\tgl_Position = transform * vec4(aPos, 1.0);\r\n\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\r\n}",
+                    "vert": "#version 330 core\r\nlayout (location = 0) in vec3 aPos;\r\nlayout (location = 1) in vec2 aTexCoord;\r\n\r\nout vec2 TexCoord;\r\n\r\nuniform UBO\r\n{\r\nmat4 transform;\r\n};\r\n\r\nvoid main()\r\n{\r\n\tgl_Position = transform * vec4(aPos, 1.0);\r\n\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\r\n}",
                     "frag": "#version 330 core\r\nout vec4 FragColor;\r\n\r\nin vec2 TexCoord;\r\n\r\n// texture samplers\r\nuniform sampler2D texture1;\r\nuniform sampler2D texture2;\r\n\r\nvoid main()\r\n{\r\n\t// linearly interpolate between both textures (80% container, 20% awesomeface)\r\n\tFragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);\r\n}",
+                    "lang": "glsl",
                     "props": []
                 },
                 "comp_type": "bp_node",
@@ -294,7 +300,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -307,6 +313,7 @@
             {
                 "node_type": "renderlab::texture",
                 "node_val": {
+                    "title": "Texture",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -325,23 +332,13 @@
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "texture1"
-                            }
-                        ]
+                        "to": []
                     }
                 ],
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "texture1"
-                            }
-                        ]
+                        "to": []
                     }
                 ]
             }
@@ -355,7 +352,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -368,6 +365,7 @@
             {
                 "node_type": "renderlab::pass_end",
                 "node_val": {
+                    "title": "PassEnd0",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -390,7 +388,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -403,6 +401,7 @@
             {
                 "node_type": "renderlab::cull",
                 "node_val": {
+                    "title": "Cull",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -445,7 +444,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -458,6 +457,7 @@
             {
                 "node_type": "renderlab::texture",
                 "node_val": {
+                    "title": "Texture",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -476,23 +476,13 @@
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "texture2"
-                            }
-                        ]
+                        "to": []
                     }
                 ],
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "texture2"
-                            }
-                        ]
+                        "to": []
                     }
                 ]
             }
@@ -506,7 +496,7 @@
                 "comp_type": "n2_transform"
             },
             {
-                "filepath": ".",
+                "filepath": "",
                 "name": "",
                 "id": 0,
                 "comp_type": "n0_identity"
@@ -519,6 +509,7 @@
             {
                 "node_type": "renderlab::matrix4",
                 "node_val": {
+                    "title": "Matrix4",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -601,6 +592,7 @@
             {
                 "node_type": "renderlab::scale",
                 "node_val": {
+                    "title": "Scale",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -660,6 +652,7 @@
             {
                 "node_type": "renderlab::rotate",
                 "node_val": {
+                    "title": "Rotate",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -720,6 +713,7 @@
             {
                 "node_type": "renderlab::mul",
                 "node_val": {
+                    "title": "Mul",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -731,23 +725,13 @@
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "transform"
-                            }
-                        ]
+                        "to": []
                     }
                 ],
                 "connection": [
                     {
                         "from": "out",
-                        "to": [
-                            {
-                                "node_idx": 4,
-                                "pin": "transform"
-                            }
-                        ]
+                        "to": []
                     }
                 ]
             }

@@ -22,6 +22,7 @@
             {
                 "node_type": "renderlab::clear",
                 "node_val": {
+                    "title": "Clear",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -86,6 +87,7 @@
             {
                 "node_type": "renderlab::bind",
                 "node_val": {
+                    "title": "Bind",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -141,6 +143,7 @@
             {
                 "node_type": "renderlab::draw",
                 "node_val": {
+                    "title": "Draw",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -195,6 +198,7 @@
             {
                 "node_type": "renderlab::primitive_shape",
                 "node_val": {
+                    "title": "PrimitiveShape",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -251,13 +255,15 @@
             {
                 "node_type": "renderlab::shader",
                 "node_val": {
+                    "title": "Shader",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
                     },
                     "name": "node22",
-                    "vert": "#version 330 core\r\nlayout (location = 0) in vec3 aPos;\r\nlayout (location = 1) in vec2 aTexCoord;\r\n\r\nout vec2 TexCoord;\r\n\r\nuniform mat4 model;\r\nuniform mat4 view;\r\nuniform mat4 projection;\r\n\r\nvoid main()\r\n{\r\n\tgl_Position = projection * view * model * vec4(aPos, 1.0f);\r\n\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\r\n}",
+                    "vert": "#version 330 core\r\nlayout (location = 0) in vec3 aPos;\r\nlayout (location = 1) in vec2 aTexCoord;\r\n\r\nout vec2 TexCoord;\r\n\r\nuniform UBO\r\n{\r\nmat4 model;\r\nmat4 view;\r\nmat4 projection;\r\n} ubo;\r\n\r\nvoid main()\r\n{\r\n\tgl_Position = ubo.projection * ubo.view * ubo.model * vec4(aPos, 1.0f);\r\n\tTexCoord = vec2(aTexCoord.x, aTexCoord.y);\r\n}",
                     "frag": "#version 330 core\r\nout vec4 FragColor;\r\n\r\nin vec2 TexCoord;\r\n\r\n// texture samplers\r\nuniform sampler2D texture1;\r\nuniform sampler2D texture2;\r\n\r\nvoid main()\r\n{\r\n\t// linearly interpolate between both textures (80% container, 20% awesomeface)\r\n\tFragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);\r\n}",
+                    "lang": "glsl",
                     "props": []
                 },
                 "comp_type": "bp_node",
@@ -307,6 +313,7 @@
             {
                 "node_type": "renderlab::texture",
                 "node_val": {
+                    "title": "Texture",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -368,6 +375,7 @@
             {
                 "node_type": "renderlab::pass_end",
                 "node_val": {
+                    "title": "PassEnd0",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -403,6 +411,7 @@
             {
                 "node_type": "renderlab::cull",
                 "node_val": {
+                    "title": "Cull",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -458,6 +467,7 @@
             {
                 "node_type": "renderlab::texture",
                 "node_val": {
+                    "title": "Texture",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -519,6 +529,7 @@
             {
                 "node_type": "renderlab::view_mat",
                 "node_val": {
+                    "title": "ViewMat",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -533,7 +544,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "view"
+                                "pin": "ubo.view"
                             }
                         ]
                     }
@@ -544,7 +555,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "view"
+                                "pin": "ubo.view"
                             }
                         ]
                     }
@@ -573,6 +584,7 @@
             {
                 "node_type": "renderlab::project_mat",
                 "node_val": {
+                    "title": "ProjectMat",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -587,7 +599,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "projection"
+                                "pin": "ubo.projection"
                             }
                         ]
                     }
@@ -598,7 +610,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "projection"
+                                "pin": "ubo.projection"
                             }
                         ]
                     }
@@ -627,6 +639,7 @@
             {
                 "node_type": "renderlab::model_mat",
                 "node_val": {
+                    "title": "ModelMat",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -641,7 +654,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "model"
+                                "pin": "ubo.model"
                             }
                         ]
                     }
@@ -652,7 +665,7 @@
                         "to": [
                             {
                                 "node_idx": 4,
-                                "pin": "model"
+                                "pin": "ubo.model"
                             }
                         ]
                     }
@@ -681,6 +694,7 @@
             {
                 "node_type": "renderlab::ztest",
                 "node_val": {
+                    "title": "ZTest",
                     "style": {
                         "only_title": false,
                         "small_title_font": false
@@ -716,26 +730,5 @@
         ]
     ],
     "comp_type": "n0_complex",
-    "page_type": "render_graph",
-    "camera": {
-        "pos": [
-            2.392637014389038,
-            3.1657304763793947,
-            -3.3682847023010256
-        ],
-        "target": [
-            -0.050260066986083987,
-            -0.05849957466125488,
-            -0.039381980895996097
-        ],
-        "up": [
-            -0.36412104964256289,
-            0.788174033164978,
-            0.4961828291416168
-        ],
-        "near": 0.009999999776482582,
-        "far": 1000.0,
-        "aspect": 0.7837837934494019,
-        "fov": 45.0
-    }
+    "page_type": "render_graph"
 }

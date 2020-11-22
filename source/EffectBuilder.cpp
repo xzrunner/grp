@@ -128,89 +128,92 @@ EffectBuilder::BuildShaderNode(std::ostream& out) const
     shadertrans::ShaderValidator valid_fs(shadertrans::ShaderStage::PixelShader);
     valid_fs.Validate(fs, shader->GetLanguage() == rendergraph::node::Shader::Language::GLSL, out);
 
-    shader->SetVert(vs);
-    shader->SetFrag(fs);
+    shader->SetCode(node::Shader::Stage::Vertex, vs);
+    shader->SetCode(node::Shader::Stage::Fragment, fs);
 
-    std::vector<bp::PinDesc> uniforms = shader->GetVertUnifs();
-    std::copy(shader->GetFragUnifs().begin(), shader->GetFragUnifs().end(), std::back_inserter(uniforms));
-    for (size_t i = 0, n = uniforms.size(); i < n; ++i)
+    int idx = 0;
+    for (auto& us : shader->GetUniforms())
     {
-        std::shared_ptr<bp::Node> input = nullptr;
-
-        auto& unif = uniforms[i];
-        switch (unif.type)
+        for (auto& unif : us)
         {
-        case PIN_INT:
-            input = std::make_shared<node::Int>();
-            break;
-        case PIN_BOOL:
-            input = std::make_shared<node::Bool>();
-            break;
-        case PIN_VECTOR1:
-            input = std::make_shared<node::Vector1>();
-            break;
-        case PIN_VECTOR2:
-            input = std::make_shared<node::Vector2>();
-            break;
-        case PIN_VECTOR3:
-            input = std::make_shared<node::Vector3>();
-            break;
-        case PIN_VECTOR4:
-            input = std::make_shared<node::Vector4>();
-            break;
-        case PIN_SAMPLER2D:
-            input = std::make_shared<node::Texture>();
-            break;
-        }
+            std::shared_ptr<bp::Node> input = nullptr;
 
-        if (input) 
-        {
-            const fxlang::Uniform* desc = nullptr;
-            for (auto& u : effect.uniforms) {
-                if (u.var.name == unif.name) {
-                    desc = &u;
-                    break;
-                }
+            switch (unif.type)
+            {
+            case PIN_INT:
+                input = std::make_shared<node::Int>();
+                break;
+            case PIN_BOOL:
+                input = std::make_shared<node::Bool>();
+                break;
+            case PIN_VECTOR1:
+                input = std::make_shared<node::Vector1>();
+                break;
+            case PIN_VECTOR2:
+                input = std::make_shared<node::Vector2>();
+                break;
+            case PIN_VECTOR3:
+                input = std::make_shared<node::Vector3>();
+                break;
+            case PIN_VECTOR4:
+                input = std::make_shared<node::Vector4>();
+                break;
+            case PIN_SAMPLER2D:
+                input = std::make_shared<node::Texture>();
+                break;
             }
-            if (!desc) {
+
+            if (input) 
+            {
+                const fxlang::Uniform* desc = nullptr;
                 for (auto& u : effect.uniforms) {
-                    if ("_Globals." + u.var.name == unif.name) {
+                    if (u.var.name == unif.name) {
                         desc = &u;
                         break;
                     }
                 }
-            }
-
-            if (desc) 
-            {
-                switch (desc->var.type)
-                {
-                case fxlang::VariableType::Bool:
-                    std::static_pointer_cast<node::Bool>(input)->m_val = desc->var.b;
-                    break;
-                case fxlang::VariableType::Int:
-                    std::static_pointer_cast<node::Int>(input)->m_val = desc->var.i;
-                    break;
-                case fxlang::VariableType::Float:
-                    std::static_pointer_cast<node::Vector1>(input)->m_val = desc->var.f;
-                    break;
-                case fxlang::VariableType::Float2:
-                    std::static_pointer_cast<node::Vector2>(input)->m_val
-                        = sm::vec2(desc->var.f2[0], desc->var.f2[1]);
-                    break;
-                case fxlang::VariableType::Float3:
-                    std::static_pointer_cast<node::Vector3>(input)->m_val 
-                        = sm::vec3(desc->var.f3[0], desc->var.f3[1], desc->var.f3[2]);
-                    break;
-                case fxlang::VariableType::Float4:
-                    std::static_pointer_cast<node::Vector4>(input)->m_val 
-                        = sm::vec4(desc->var.f4[0], desc->var.f4[1], desc->var.f4[2], desc->var.f4[3]);
-                    break;
+                if (!desc) {
+                    for (auto& u : effect.uniforms) {
+                        if ("_Globals." + u.var.name == unif.name) {
+                            desc = &u;
+                            break;
+                        }
+                    }
                 }
+
+                if (desc) 
+                {
+                    switch (desc->var.type)
+                    {
+                    case fxlang::VariableType::Bool:
+                        std::static_pointer_cast<node::Bool>(input)->m_val = desc->var.b;
+                        break;
+                    case fxlang::VariableType::Int:
+                        std::static_pointer_cast<node::Int>(input)->m_val = desc->var.i;
+                        break;
+                    case fxlang::VariableType::Float:
+                        std::static_pointer_cast<node::Vector1>(input)->m_val = desc->var.f;
+                        break;
+                    case fxlang::VariableType::Float2:
+                        std::static_pointer_cast<node::Vector2>(input)->m_val
+                            = sm::vec2(desc->var.f2[0], desc->var.f2[1]);
+                        break;
+                    case fxlang::VariableType::Float3:
+                        std::static_pointer_cast<node::Vector3>(input)->m_val 
+                            = sm::vec3(desc->var.f3[0], desc->var.f3[1], desc->var.f3[2]);
+                        break;
+                    case fxlang::VariableType::Float4:
+                        std::static_pointer_cast<node::Vector4>(input)->m_val 
+                            = sm::vec4(desc->var.f4[0], desc->var.f4[1], desc->var.f4[2], desc->var.f4[3]);
+                        break;
+                    }
+                }
+
+                InsertNode(input, sm::vec2(-380.0f, -50.0f * idx));
+                bp::make_connecting(input->GetAllOutput()[0], shader->GetAllInput()[idx]);
             }
 
-            InsertNode(input, sm::vec2(-380.0f, -50.0f * i));
-            bp::make_connecting(input->GetAllOutput()[0], shader->GetAllInput()[i]);
+            ++idx;
         }
     }
 

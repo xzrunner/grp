@@ -109,13 +109,21 @@ void WxCodePanel::InitLayout()
 
 	m_vs_page = new WxShaderPage(m_notebook, "vs", shadertrans::ShaderStage::VertexShader, true);
 	m_fs_page = new WxShaderPage(m_notebook, "fs", shadertrans::ShaderStage::PixelShader, true);
+	m_tcs_page = new WxShaderPage(m_notebook, "tcs", shadertrans::ShaderStage::TessCtrlShader, true);
+	m_tes_page = new WxShaderPage(m_notebook, "tes", shadertrans::ShaderStage::TessEvalShader, true);
 
 	Connect(m_vs_page->GetId(), wxEVT_STC_CHANGE,
 		wxCommandEventHandler(WxCodePanel::OnTextChange));
 	Connect(m_fs_page->GetId(), wxEVT_STC_CHANGE,
 		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	Connect(m_tcs_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
+	Connect(m_tes_page->GetId(), wxEVT_STC_CHANGE,
+		wxCommandEventHandler(WxCodePanel::OnTextChange));
 	m_notebook->AddPage(m_vs_page, m_vs_page->GetName());
 	m_notebook->AddPage(m_fs_page, m_fs_page->GetName());
+	m_notebook->AddPage(m_tcs_page, m_tcs_page->GetName());
+	m_notebook->AddPage(m_tes_page, m_tes_page->GetName());
 
 	m_default_page = new ee0::WxCodeCtrl(m_notebook, "default");
 	Connect(m_default_page->GetId(), wxEVT_STC_CHANGE,
@@ -174,6 +182,8 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 
 		m_notebook->AddPage(m_vs_page, m_vs_page->GetName());
 		m_notebook->AddPage(m_fs_page, m_fs_page->GetName());
+		m_notebook->AddPage(m_tcs_page, m_tcs_page->GetName());
+		m_notebook->AddPage(m_tes_page, m_tes_page->GetName());
 
 		auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
 
@@ -189,8 +199,10 @@ void WxCodePanel::OnSelectionInsert(const ee0::VariantSet& variants)
 			assert(0);
 		}
 
-		m_vs_page->SetText(shader_node->GetVert());
-		m_fs_page->SetText(shader_node->GetFrag());
+		m_vs_page->SetText(shader_node->GetCode(node::Shader::Stage::Vertex));
+		m_fs_page->SetText(shader_node->GetCode(node::Shader::Stage::Fragment));
+		m_tcs_page->SetText(shader_node->GetCode(node::Shader::Stage::TessCtrl));
+		m_tes_page->SetText(shader_node->GetCode(node::Shader::Stage::TessEval));
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())
 	{
@@ -274,7 +286,7 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 			} else {
 				m_output_wnd->SetValue("");
 			}
-			shader_node->SetVert(m_vs_page->GetText().ToStdString());
+			shader_node->SetCode(node::Shader::Stage::Vertex, m_vs_page->GetText().ToStdString());
 		}
 		else if (idx == 1)
 		{
@@ -284,7 +296,27 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 			} else {
 				m_output_wnd->SetValue("");
 			}
-			shader_node->SetFrag(m_fs_page->GetText().ToStdString());
+			shader_node->SetCode(node::Shader::Stage::Fragment, m_fs_page->GetText().ToStdString());
+		}
+		else if (idx == 2)
+		{
+			std::stringstream ss;
+			if (!m_tcs_page->IsShaderValid(m_lang_type->GetSelection() == 0, ss)) {
+				m_output_wnd->SetValue(ss.str());
+			} else {
+				m_output_wnd->SetValue("");
+			}
+			shader_node->SetCode(node::Shader::Stage::TessCtrl, m_tcs_page->GetText().ToStdString());
+		}
+		else if (idx == 3)
+		{
+			std::stringstream ss;
+			if (!m_tes_page->IsShaderValid(m_lang_type->GetSelection() == 0, ss)) {
+				m_output_wnd->SetValue(ss.str());
+			} else {
+				m_output_wnd->SetValue("");
+			}
+			shader_node->SetCode(node::Shader::Stage::TessEval, m_tes_page->GetText().ToStdString());
 		}
 	}
 	else if (bp_type == rttr::type::get<node::CustomData>())

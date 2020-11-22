@@ -16,24 +16,38 @@ namespace node
 class Shader : public Node
 {
 public:
+    enum class Stage
+    {
+        Vertex,
+        TessCtrl,
+        TessEval,
+        Fragment,
+
+        StageMax
+    };
+
+public:
     Shader();
 
-    auto& GetVert() const { return m_vert; }
-    void  SetVert(const std::string& vert);
-    auto& GetFrag() const { return m_frag; }
-    void  SetFrag(const std::string& frag);
+    auto& GetCode(Stage stage) const { return m_codes[static_cast<int>(stage)]; }
+    void  SetCode(Stage stage, const std::string& code);
+
+    auto& GetUniforms() const { return m_uniforms; }
+    auto& GetUniforms(Stage stage) const { return m_uniforms[static_cast<int>(stage)]; }
 
     auto GetLanguage() const { return m_lang; }
     void SetLanguage(rendergraph::node::Shader::Language lang);
 
-    auto& GetVertUnifs() const { return m_vert_uniforms; }
-    auto& GetFragUnifs() const { return m_frag_uniforms; }
+    // for rtti
+    const std::string& GetVert() const { return GetCode(Stage::Vertex); }
+    const std::string& GetFrag() const { return GetCode(Stage::Fragment); }
+    void SetVert(const std::string& code) { SetCode(Stage::Vertex, code); }
+    void SetFrag(const std::string& code) { SetCode(Stage::Fragment, code); }
 
 private:
     void InitInputsFromUniforms();
 
-    void UpdateVertUniforms();
-    void UpdateFragUniforms();
+    void UpdateUniforms(Stage stage);
 
     static bool IsSameUniforms(const std::vector<bp::PinDesc>& v0,
         const std::vector<bp::PinDesc>& v1);
@@ -44,10 +58,8 @@ private:
 private:
     rendergraph::node::Shader::Language m_lang = rendergraph::node::Shader::Language::GLSL;
 
-    std::string m_vert;
-    std::string m_frag;
-    std::vector<bp::PinDesc> m_vert_uniforms;
-    std::vector<bp::PinDesc> m_frag_uniforms;
+    std::string m_codes[static_cast<int>(Stage::StageMax)];
+    std::vector<bp::PinDesc> m_uniforms[static_cast<int>(Stage::StageMax)];
 
     RTTR_ENABLE(Node)
 

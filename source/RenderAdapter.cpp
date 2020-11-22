@@ -189,7 +189,13 @@ void RenderAdapter::Front2Back(const ur::Device& dev, const bp::Node& front,
         auto& src = static_cast<const node::Shader&>(front);
         auto& dst = static_cast<rendergraph::node::Shader&>(back);
         dst.SetLanguage(src.GetLanguage());
-        dst.SetCodes(src.GetVert(), src.GetFrag(), std::cerr);
+        dst.SetCodes(
+            src.GetCode(node::Shader::Stage::Vertex),
+            src.GetCode(node::Shader::Stage::Fragment),
+            src.GetCode(node::Shader::Stage::TessCtrl),
+            src.GetCode(node::Shader::Stage::TessEval),
+            std::cerr
+        );
     }
     else if (type == rttr::type::get<node::ShaderGraph>())
     {

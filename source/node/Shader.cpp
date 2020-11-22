@@ -22,26 +22,17 @@ Shader::Shader()
     SetGroup("Resource");
 }
 
-void Shader::SetVert(const std::string& vert)
+void Shader::SetCode(Stage stage, const std::string& code)
 {
-    if (m_vert == vert) {
+    int stage_idx = static_cast<int>(stage);
+
+    if (m_codes[stage_idx] == code) {
         return;
     }
 
-    m_vert = vert;
+    m_codes[stage_idx] = code;
 
-    UpdateVertUniforms();
-}
-
-void Shader::SetFrag(const std::string& frag)
-{
-    if (m_frag == frag) {
-        return;
-    }
-
-    m_frag = frag;
-
-    UpdateFragUniforms();
+    UpdateUniforms(stage);
 }
 
 void Shader::SetLanguage(rendergraph::node::Shader::Language lang) 
@@ -52,17 +43,20 @@ void Shader::SetLanguage(rendergraph::node::Shader::Language lang)
 
     m_lang = lang; 
 
-    UpdateVertUniforms();
-    UpdateFragUniforms();
+    for (int i = 0, n = static_cast<int>(Stage::StageMax); i < n; ++i) {
+        UpdateUniforms(static_cast<Stage>(i));
+    }
 }
 
 void Shader::InitInputsFromUniforms()
 {
-    std::vector<bp::PinDesc> uniforms = m_vert_uniforms;
-    std::copy(m_frag_uniforms.begin(), m_frag_uniforms.end(), std::back_inserter(uniforms));
+    std::vector<bp::PinDesc> uniforms;
+    for (auto& us : m_uniforms) {
+        std::copy(us.begin(), us.end(), std::back_inserter(uniforms));
+    }
 
     bool same = true;
-    if (uniforms.size() == m_all_input.size() - 1) {
+    if (uniforms.size() == m_all_input.size() - rendergraph::node::Shader::I_MAX_NUM) {
         for (int i = 0, n = uniforms.size(); i < n; ++i) {
             if (uniforms[i].type != m_all_input[1 + i]->GetOldType() ||
                 uniforms[i].name != m_all_input[1 + i]->GetName()) {
@@ -78,12 +72,12 @@ void Shader::InitInputsFromUniforms()
         return;
     }
 
-    for (int i = 1, n = m_all_input.size(); i < n; ++i) {
+    for (int i = rendergraph::node::Shader::I_MAX_NUM, n = m_all_input.size(); i < n; ++i) {
         for (auto& c : m_all_input[i]->GetConnecting()) {
             bp::disconnect(c);
         }
     }
-    m_all_input.clear();
+    m_all_input.erase(m_all_input.begin() + rendergraph::node::Shader::I_MAX_NUM, m_all_input.end());
 
     for (auto& desc : uniforms) {
         auto pin = std::make_shared<bp::Pin>(true, m_all_input.size(), desc.type, desc.name, *this);
@@ -94,39 +88,27 @@ void Shader::InitInputsFromUniforms()
     SetSizeChanged(true);
 }
 
-void Shader::UpdateVertUniforms()
+void Shader::UpdateUniforms(Stage stage)
 {
+    int stage_idx = static_cast<int>(stage);
+
     std::vector<bp::PinDesc> uniforms;
 
     std::set<std::string> names;
-    for (auto& p : m_frag_uniforms) {
+    for (auto& p : m_uniforms[stage_idx]) {
         names.insert(p.name);
     }
 
     try {
-        GetCodeUniforms(shadertrans::ShaderStage::VertexShader, m_vert, m_lang, uniforms, names);
-        if (!IsSameUniforms(uniforms, m_vert_uniforms)) {
-            m_vert_uniforms = uniforms;
-            InitInputsFromUniforms();
-        }
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
-}
-
-void Shader::UpdateFragUniforms()
-{
-    std::vector<bp::PinDesc> uniforms;
-
-    std::set<std::string> names;
-    for (auto& p : m_vert_uniforms) {
-        names.insert(p.name);
-    }
-
-    try {
-        GetCodeUniforms(shadertrans::ShaderStage::PixelShader, m_frag, m_lang, uniforms, names);
-        if (!IsSameUniforms(uniforms, m_frag_uniforms)) {
-            m_frag_uniforms = uniforms;
+        const shadertrans::ShaderStage st_stages[] = {
+            shadertrans::ShaderStage::VertexShader,
+            shadertrans::ShaderStage::TessCtrlShader,
+            shadertrans::ShaderStage::TessEvalShader,
+            shadertrans::ShaderStage::PixelShader
+        };
+        GetCodeUniforms(st_stages[stage_idx], m_codes[stage_idx], m_lang, uniforms, names);
+        if (!IsSameUniforms(uniforms, m_uniforms[stage_idx])) {
+            m_uniforms[stage_idx] = uniforms;
             InitInputsFromUniforms();
         }
     } catch (std::exception& e) {

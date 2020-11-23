@@ -34,7 +34,7 @@ rttr::registration::enumeration<renderlab::ShaderUniformType>("shader_uniform_ty
     REGIST_ENUM_ITEM(renderlab::ShaderUniformType::Matrix3,     "mat3",     "Matrix3"),
     REGIST_ENUM_ITEM(renderlab::ShaderUniformType::Matrix4,     "mat4",     "Matrix4"),
     REGIST_ENUM_ITEM(renderlab::ShaderUniformType::Sampler2D,   "tex_2d",   "Sampler2D"),
-    REGIST_ENUM_ITEM(renderlab::ShaderUniformType::SamplerCube, "tex_cubd", "SamplerCube")
+    REGIST_ENUM_ITEM(renderlab::ShaderUniformType::SamplerCube, "tex_cube", "SamplerCube")
 );
 
 }

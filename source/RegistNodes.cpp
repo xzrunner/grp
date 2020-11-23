@@ -72,21 +72,31 @@ REGIST_NODE_RTTI(Model, model,                                         \
 
 // renderlab
 REGIST_NODE_RTTI_DEFAULT(Preview, preview)
-REGIST_NODE_RTTI(Shader, shader,                                                        \
-.property("vert", &renderlab::node::Shader::GetVert, &renderlab::node::Shader::SetVert) \
-(                                                                                       \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),                      \
-    rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
-)                                                                                       \
-.property("frag", &renderlab::node::Shader::GetFrag, &renderlab::node::Shader::SetFrag) \
-(                                                                                       \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),                      \
-    rttr::metadata(ee0::PropEditCodeTag(), true)                                        \
-)                                                                                       \
-.property("lang", &renderlab::node::Shader::GetLanguage, &renderlab::node::Shader::SetLanguage) \
-(                                                                                       \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Lang"))                       \
-)                                                                                       \
+REGIST_NODE_RTTI(Shader, shader,                                                                     \
+.property("vert", &renderlab::node::Shader::GetVert, &renderlab::node::Shader::SetVert)              \
+(                                                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vert")),                                   \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                                     \
+)                                                                                                    \
+.property("tess_ctrl", &renderlab::node::Shader::GetTessCtrl, &renderlab::node::Shader::SetTessCtrl) \
+(                                                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TessCtrl")),                               \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                                     \
+)                                                                                                    \
+.property("tess_eval", &renderlab::node::Shader::GetTessEval, &renderlab::node::Shader::SetTessEval) \
+(                                                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TessEval")),                               \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                                     \
+)                                                                                                    \
+.property("frag", &renderlab::node::Shader::GetFrag, &renderlab::node::Shader::SetFrag)              \
+(                                                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Frag")),                                   \
+    rttr::metadata(ee0::PropEditCodeTag(), true)                                                     \
+)                                                                                                    \
+.property("lang", &renderlab::node::Shader::GetLanguage, &renderlab::node::Shader::SetLanguage)      \
+(                                                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Lang"))                                    \
+)                                                                                                    \
 )
 
 // value

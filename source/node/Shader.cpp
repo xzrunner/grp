@@ -99,6 +99,23 @@ void Shader::InitInputsFromUniforms()
         m_all_input.push_back(pin);
     }
 
+    // disconnect old pins
+    for (auto& old : cache_old_pins) 
+    {
+        bool find = false;
+        for (auto& _new : m_all_input) {
+            if (_new == old) {
+                find = true;
+                break;
+            }
+        }
+        if (!find) {
+            for (auto& conn : old->GetConnecting()) {
+                bp::disconnect(conn);
+            }
+        }
+    }
+
     Layout();
 
     SetSizeChanged(true);
@@ -106,22 +123,18 @@ void Shader::InitInputsFromUniforms()
 
 void Shader::UpdateUniforms(Stage stage)
 {
+    const shadertrans::ShaderStage st_stages[] = {
+        shadertrans::ShaderStage::VertexShader,
+        shadertrans::ShaderStage::TessCtrlShader,
+        shadertrans::ShaderStage::TessEvalShader,
+        shadertrans::ShaderStage::PixelShader
+    };
     int stage_idx = static_cast<int>(stage);
 
     std::vector<bp::PinDesc> uniforms;
-
     std::set<std::string> names;
-    for (auto& p : m_uniforms[stage_idx]) {
-        names.insert(p.name);
-    }
 
     try {
-        const shadertrans::ShaderStage st_stages[] = {
-            shadertrans::ShaderStage::VertexShader,
-            shadertrans::ShaderStage::TessCtrlShader,
-            shadertrans::ShaderStage::TessEvalShader,
-            shadertrans::ShaderStage::PixelShader
-        };
         GetCodeUniforms(st_stages[stage_idx], m_codes[stage_idx], m_lang, uniforms, names);
         if (!IsSameUniforms(uniforms, m_uniforms[stage_idx])) {
             m_uniforms[stage_idx] = uniforms;

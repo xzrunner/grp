@@ -40,8 +40,12 @@ public:
 
     // for rtti
     const std::string& GetVert() const { return GetCode(Stage::Vertex); }
+    const std::string& GetTessCtrl() const { return GetCode(Stage::TessCtrl); }
+    const std::string& GetTessEval() const { return GetCode(Stage::TessEval); }
     const std::string& GetFrag() const { return GetCode(Stage::Fragment); }
     void SetVert(const std::string& code) { SetCode(Stage::Vertex, code); }
+    void SetTessCtrl(const std::string& code) { SetCode(Stage::TessCtrl, code); }
+    void SetTessEval(const std::string& code) { SetCode(Stage::TessEval, code); }
     void SetFrag(const std::string& code) { SetCode(Stage::Fragment, code); }
 
 private:

@@ -21,6 +21,7 @@
 #include <rendergraph/node/AttachRT.h>
 #include <rendergraph/node/String.h>
 #include <rendergraph/node/ShaderGraph.h>
+#include <rendergraph/node/Rasterization.h>
 
 namespace renderlab
 {

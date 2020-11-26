@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ee0/Observer.h>
-#include <ee0/typedef.h>
 
 #include <node0/typedef.h>
 
@@ -13,18 +12,19 @@ class wxChoice;
 class wxBookCtrlEvent;
 
 namespace ee0 { class WxCodeCtrl; }
+namespace ur { class Device; }
 
 namespace renderlab
 {
 
 class WxShaderPage;
 class WxGraphPage;
-class EffectBuilder;
+class WxGraphPage;
 
 class WxCodePanel : public wxPanel, public ee0::Observer
 {
 public:
-	WxCodePanel(wxWindow* parent, const WxGraphPage& stage);
+	WxCodePanel(wxWindow* parent, const ur::Device& dev, WxGraphPage* stage);
 	virtual ~WxCodePanel();
 
 	virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
@@ -46,10 +46,12 @@ private:
 
 	void OnShaderTypeChanged(wxCommandEvent& event);
 
-private:
-	ee0::SubjectMgrPtr m_sub_mgr = nullptr;
+	void OutputLogger();
 
-	EffectBuilder& m_fx_builder;
+private:
+	const ur::Device& m_dev;
+
+	WxGraphPage* m_stage = nullptr;
 
 	wxChoice* m_lang_type = nullptr;
 	wxChoice* m_fx_type   = nullptr;

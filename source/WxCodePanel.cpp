@@ -17,6 +17,8 @@
 
 #include <node0/SceneNode.h>
 #include <fxlang/EffectParser.h>
+#include <rendergraph/node/Shader.h>
+#include <unirender/Device.h>
 
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -26,15 +28,17 @@
 namespace renderlab
 {
 
-WxCodePanel::WxCodePanel(wxWindow* parent, const WxGraphPage& stage)
+WxCodePanel::WxCodePanel(wxWindow* parent, const ur::Device& dev, WxGraphPage* stage)
 	: wxPanel(parent)
-	, m_sub_mgr(stage.GetSubjectMgr())
-	, m_fx_builder(const_cast<EffectBuilder&>(stage.GetEffectBuilder()))
+	, m_dev(dev)
+	, m_stage(stage)
 {
 	InitLayout();
 
-	m_sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
-	m_sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
+	auto sub_mgr = m_stage->GetSubjectMgr();
+	sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
+	sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
+	sub_mgr->RegisterObserver(bp::MSG_BP_CONN_REBUILD, this);
 
 	wxAcceleratorEntry entries[1];
 	entries[0].Set(wxACCEL_CTRL, (int)'S', wxID_SAVE);
@@ -44,8 +48,10 @@ WxCodePanel::WxCodePanel(wxWindow* parent, const WxGraphPage& stage)
 
 WxCodePanel::~WxCodePanel()
 {
-	m_sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
-	m_sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
+	auto sub_mgr = m_stage->GetSubjectMgr();
+	sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
+	sub_mgr->UnregisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
+	sub_mgr->UnregisterObserver(bp::MSG_BP_CONN_REBUILD, this);
 }
 
 void WxCodePanel::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
@@ -58,6 +64,10 @@ void WxCodePanel::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
     case ee0::MSG_NODE_SELECTION_CLEAR:
 		OnSelectionClear(variants);
         break;
+
+	case bp::MSG_BP_CONN_REBUILD:
+		OutputLogger();
+		break;
 	}
 }
 
@@ -263,10 +273,10 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 			auto type = static_cast<fxlang::EffectType>(m_fx_type->GetSelection());
 
 			std::stringstream ss;
-			m_fx_builder.Build(fx, type, ss);
+			const_cast<EffectBuilder&>(m_stage->GetEffectBuilder()).Build(fx, type, ss);
 			m_output_wnd->SetValue(ss.str());
 
-			m_sub_mgr->NotifyObservers(bp::MSG_BP_CONN_REBUILD);
+			m_stage->GetSubjectMgr()->NotifyObservers(bp::MSG_BP_CONN_REBUILD);
 		}
 
 		return;
@@ -330,8 +340,11 @@ void WxCodePanel::OnSavePress(wxCommandEvent& event)
 		func_node->SetCode(m_default_page->GetText().ToStdString());
 	}
 
-	m_sub_mgr->NotifyObservers(ee0::MSG_SET_CANVAS_DIRTY);
-	ee0::MsgHelper::SendObjMsg(*m_sub_mgr, m_selected, bp::MSG_BP_NODE_PROP_CHANGED);
+	auto sub_mgr = m_stage->GetSubjectMgr();
+	sub_mgr->NotifyObservers(ee0::MSG_SET_CANVAS_DIRTY);
+	ee0::MsgHelper::SendObjMsg(*sub_mgr, m_selected, bp::MSG_BP_NODE_PROP_CHANGED);
+
+	OutputLogger();
 }
 
 void WxCodePanel::OnTextChange(wxCommandEvent& event)
@@ -374,6 +387,19 @@ void WxCodePanel::OnShaderTypeChanged(wxCommandEvent& event)
 	assert(bp_type == rttr::type::get<node::Shader>());
 	auto shader_node = std::static_pointer_cast<node::Shader>(bp_node);
 	shader_node->SetLanguage(static_cast<rendergraph::node::Shader::Language>(m_lang_type->GetSelection()));
+}
+
+void WxCodePanel::OutputLogger()
+{
+	auto& ss = static_cast<std::ostringstream&>(m_dev.GetLogger());
+
+	//std::stringstream ss;
+	//ss << static_cast<std::ostringstream&>(m_dev.GetLogger()).rdbuf();
+
+	std::string err_log = ss.str();
+	if (!err_log.empty()) {
+		m_output_wnd->SetValue(err_log);
+	}
 }
 
 }

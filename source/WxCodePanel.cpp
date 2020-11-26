@@ -397,8 +397,18 @@ void WxCodePanel::OutputLogger()
 	//ss << static_cast<std::ostringstream&>(m_dev.GetLogger()).rdbuf();
 
 	std::string err_log = ss.str();
-	if (!err_log.empty()) {
+
+	if (err_log.empty())
+	{
+		m_output_wnd->SetValue("");
+	}
+	else
+	{
 		m_output_wnd->SetValue(err_log);
+
+		// clear ss
+		ss.str("");
+		ss.clear();
 	}
 }
 

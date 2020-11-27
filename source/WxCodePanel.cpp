@@ -404,6 +404,8 @@ void WxCodePanel::OutputLogger()
 	}
 	else
 	{
+		std::cerr << err_log;
+
 		m_output_wnd->SetValue(err_log);
 
 		// clear ss

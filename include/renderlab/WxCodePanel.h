@@ -62,6 +62,7 @@ private:
 	WxShaderPage*    m_tcs_page     = nullptr;
 	WxShaderPage*    m_tes_page     = nullptr;
 	WxShaderPage*    m_fs_page      = nullptr;
+	WxShaderPage*    m_cs_page      = nullptr;
 
 	ee0::WxCodeCtrl* m_default_page = nullptr;
 	ee0::WxCodeCtrl* m_fx_page      = nullptr;

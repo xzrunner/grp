@@ -127,7 +127,8 @@ void Shader::UpdateUniforms(Stage stage)
         shadertrans::ShaderStage::VertexShader,
         shadertrans::ShaderStage::TessCtrlShader,
         shadertrans::ShaderStage::TessEvalShader,
-        shadertrans::ShaderStage::PixelShader
+        shadertrans::ShaderStage::PixelShader,
+        shadertrans::ShaderStage::ComputeShader
     };
     int stage_idx = static_cast<int>(stage);
 

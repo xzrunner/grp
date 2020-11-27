@@ -23,6 +23,8 @@ public:
         TessEval,
         Fragment,
 
+        Compute,
+
         StageMax
     };
 
@@ -43,10 +45,12 @@ public:
     const std::string& GetTessCtrl() const { return GetCode(Stage::TessCtrl); }
     const std::string& GetTessEval() const { return GetCode(Stage::TessEval); }
     const std::string& GetFrag() const { return GetCode(Stage::Fragment); }
+    const std::string& GetCompute() const { return GetCode(Stage::Compute); }
     void SetVert(const std::string& code) { SetCode(Stage::Vertex, code); }
     void SetTessCtrl(const std::string& code) { SetCode(Stage::TessCtrl, code); }
     void SetTessEval(const std::string& code) { SetCode(Stage::TessEval, code); }
     void SetFrag(const std::string& code) { SetCode(Stage::Fragment, code); }
+    void SetCompute(const std::string& code) { SetCode(Stage::Compute, code); }
 
 private:
     void InitInputsFromUniforms();

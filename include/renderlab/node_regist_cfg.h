@@ -61,6 +61,11 @@
 #include EXE_FILEPATH
 
 #define NO_PARM_FILEPATH
+#define PARM_NODE_TYPE Compute
+#define PARM_NODE_NAME compute
+#include EXE_FILEPATH
+
+#define NO_PARM_FILEPATH
 #define PARM_NODE_TYPE Draw
 #define PARM_NODE_NAME draw
 #include EXE_FILEPATH

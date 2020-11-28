@@ -136,7 +136,18 @@ void Shader::UpdateUniforms(Stage stage)
     std::set<std::string> names;
 
     try {
-        GetCodeUniforms(st_stages[stage_idx], m_codes[stage_idx], m_lang, uniforms, names);
+        rendergraph::node::ShaderInfo si;
+        si.Parse(st_stages[stage_idx], m_codes[stage_idx], m_lang, std::cerr);
+
+        for (auto& u : si.GetUniforms())
+        {
+            bp::PinDesc desc;
+
+            desc.name = u.GetDisplayName();
+            desc.type = RenderAdapter::TypeBackToFront(u.type, u.count);
+
+            uniforms.push_back(desc);
+        }
         if (!IsSameUniforms(uniforms, m_uniforms[stage_idx])) {
             m_uniforms[stage_idx] = uniforms;
             InitInputsFromUniforms();
@@ -162,22 +173,6 @@ bool Shader::IsSameUniforms(const std::vector<bp::PinDesc>& v0,
     }
 
     return true;
-}
-
-void Shader::GetCodeUniforms(shadertrans::ShaderStage stage, const std::string& code, rendergraph::node::Shader::Language lang,
-                             std::vector<bp::PinDesc>& uniforms, std::set<std::string>& names)
-{
-    std::vector<rendergraph::Variable> rg_unifs;
-    rendergraph::node::ShaderInfo::GetCodeUniforms(stage, code, lang, rg_unifs, names, std::cerr);
-    for (auto& u : rg_unifs)
-    {
-        bp::PinDesc desc;
-
-        desc.name = u.GetDisplayName();
-        desc.type = RenderAdapter::TypeBackToFront(u.type, u.count);
-
-        uniforms.push_back(desc);
-    }
 }
 
 }

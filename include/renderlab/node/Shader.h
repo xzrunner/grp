@@ -60,9 +60,6 @@ private:
     static bool IsSameUniforms(const std::vector<bp::PinDesc>& v0,
         const std::vector<bp::PinDesc>& v1);
 
-    static void GetCodeUniforms(shadertrans::ShaderStage stage, const std::string& code,
-        rendergraph::node::Shader::Language lang, std::vector<bp::PinDesc>& uniforms, std::set<std::string>& names);
-
 private:
     rendergraph::node::Shader::Language m_lang = rendergraph::node::Shader::Language::GLSL;
 

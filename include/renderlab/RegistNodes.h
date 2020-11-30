@@ -17,6 +17,7 @@
 #include <rendergraph/node/Cull.h>
 #include <rendergraph/node/ZTest.h>
 #include <rendergraph/node/Clear.h>
+#include <rendergraph/node/Barrier.h>
 #include <rendergraph/node/CustomData.h>
 #include <rendergraph/node/AttachRT.h>
 #include <rendergraph/node/String.h>

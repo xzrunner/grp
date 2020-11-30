@@ -74,6 +74,10 @@
 #define PARM_NODE_NAME set_uniform
 #include EXE_FILEPATH
 
+#define PARM_NODE_TYPE Barrier
+#define PARM_NODE_NAME barrier
+#include EXE_FILEPATH
+
 #undef NODES_GROUP_NAME
 
 //////////////////////////////////////////////////////////////////////////

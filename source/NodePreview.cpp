@@ -116,7 +116,7 @@ bool NodePreview::DrawToRT(const ur::Device& dev, ur::Context& ctx, const std::s
             sm::Matrix2D mat;
             mat.Scale(static_cast<float>(TEX_SIZE), static_cast<float>(TEX_SIZE));
             auto rs = ur::DefaultRenderState2D();
-            pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex, sm::rect(1, 1), mat);
+            pt2::RenderSystem::DrawTexture(dev, ctx, rs, tex->GetWidth(), tex->GetHeight(), tex, sm::rect(1, 1), mat, false);
         }
         else
         {

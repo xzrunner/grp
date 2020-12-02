@@ -32,7 +32,7 @@
                     "tess_ctrl": "",
                     "tess_eval": "",
                     "frag": "",
-                    "compute": "#version 430\r\n \r\n#define LOCAL_SIZE 32 \r\n\r\nlayout(local_size_x = LOCAL_SIZE, local_size_y = LOCAL_SIZE, local_size_z = 1) in;\r\n\r\nlayout(binding = 1, rgba8) writeonly uniform image2D tex_out;\r\n\r\nuniform sampler2D tex_in;\r\n\r\nuniform UBO\r\n{\r\nivec2 tex_sz;\r\n};\r\n\r\nvoid main()\r\n{\r\n    ivec2 x         = ivec2(gl_GlobalInvocationID.xy);\r\n    vec2  tex_coord = gl_GlobalInvocationID.xy / tex_sz;\r\n    \r\n    imageStore(tex_out, x, vec4(1, 1, 0, 1));\r\n}",
+                    "compute": "#version 430\r\n \r\n#define LOCAL_SIZE 32 \r\n\r\nlayout(local_size_x = LOCAL_SIZE, local_size_y = LOCAL_SIZE, local_size_z = 1) in;\r\n\r\nlayout(binding = 1, rgba8) writeonly uniform image2D tex_out;\r\n\r\nuniform sampler2D tex_in;\r\n\r\nuniform UBO\r\n{\r\nvec2 tex_sz;\r\n};\r\n\r\nvoid make_kernel(inout vec4 n[9], sampler2D tex, vec2 coord)\r\n{\r\n\tfloat w = 1.0 / tex_sz.x;\r\n\tfloat h = 1.0 / tex_sz.y;\r\n\r\n\tn[0] = texture(tex, coord + vec2( -w, -h));\r\n\tn[1] = texture(tex, coord + vec2(0.0, -h));\r\n\tn[2] = texture(tex, coord + vec2(  w, -h));\r\n\tn[3] = texture(tex, coord + vec2( -w, 0.0));\r\n\tn[4] = texture(tex, coord);\r\n\tn[5] = texture(tex, coord + vec2(  w, 0.0));\r\n\tn[6] = texture(tex, coord + vec2( -w, h));\r\n\tn[7] = texture(tex, coord + vec2(0.0, h));\r\n\tn[8] = texture(tex, coord + vec2(  w, h));\r\n}\r\n\r\nvoid main()\r\n{\r\n    ivec2 x         = ivec2(gl_GlobalInvocationID.xy);\r\n    vec2  tex_coord = gl_GlobalInvocationID.xy / tex_sz;\r\n\r\n\tvec4 n[9];\r\n\tmake_kernel(n, tex_in, tex_coord);\r\n\r\n\tvec4 sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6]);\r\n  \tvec4 sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8]);\r\n\tvec4 sobel = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v));\r\n\r\n    imageStore(tex_out, x, vec4( 1.0 - sobel.rgb, 1.0 ));\r\n}",
                     "lang": "glsl",
                     "props": []
                 },
@@ -154,7 +154,7 @@
                             },
                             {
                                 "node_idx": 0,
-                                "pin": "void.tex_sz"
+                                "pin": "tex_sz"
                             }
                         ]
                     }
@@ -178,7 +178,7 @@
                             },
                             {
                                 "node_idx": 0,
-                                "pin": "void.tex_sz"
+                                "pin": "tex_sz"
                             }
                         ]
                     }
